@@ -1,12 +1,20 @@
-<%= for report <- @reports do %>
-<h2><%= report.client %></h2>
-<p>
-$<%= report.fee %>, <%= report.hours %>/<%= report.budget %> hours for <%= report.month %>
-</p>
-<p>
-  <%= report.weekdays_left %> weekdays left,
-  <%= report.hours_per_day %> hours per workday needed to reach goal
-</p>
-<% end %>
-
-<button class="btn btn-primary">Something</button>
+<div class="columns">
+  <div class="column">
+  </div>
+  <div class="column is-6">
+    <div class="box">
+      <%= for report <- @reports do %>
+      <h1><%= report.client %></h1>
+      <p>
+        $<%= report.fee %>, <%= report.hours %>/<%= report.budget %> hours for <%= report.month %>
+      </p>
+      <p>
+        <%= report.weekdays_left %> weekdays left <br>
+        <%= report.hours_per_day %> hours per workday needed to reach goal
+      </p>
+      <% end %>
+    </div>
+  </div>
+  <div class="column">
+  </div>
+</div>

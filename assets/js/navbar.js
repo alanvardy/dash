@@ -1,5 +1,4 @@
 // Collapsing navbar
-console.log("IT SORKS")
 document.addEventListener('DOMContentLoaded', () => {
 
   // Get all "navbar-burger" elements

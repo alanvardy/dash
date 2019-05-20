@@ -1,6 +1,4 @@
 /* This file is for your main application css. */
+@import "./colors";
 @import "bulma";
-
-h1 {
-  font-size: 1.5rem;
-}
+@import "./components";

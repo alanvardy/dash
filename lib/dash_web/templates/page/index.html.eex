@@ -9,4 +9,4 @@ $<%= report.fee %>, <%= report.hours %>/<%= report.budget %> hours for <%= repor
 </p>
 <% end %>
 
-<button class="button1">Something</button>
+<button class="btn btn-primary">Something</button>

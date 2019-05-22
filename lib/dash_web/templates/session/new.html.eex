@@ -1,0 +1,21 @@
+<div class="columns">
+  <div class="column"></div>
+  <div class="column is-6">
+    <h1>Login</h1>
+
+    <%= form_for @conn, Routes.session_path(@conn, :create), [as: :session], fn f -> %>
+    <div class="field">
+      <%= text_input f, :email, placeholder: "email", class: "input" %>
+      <%= error_tag f, :email %>
+    </div>
+
+    <div class="field">
+      <%= password_input f, :password, placeholder: "Password", class: "input" %>
+      <%= error_tag f, :password %>
+    </div>
+
+    <%= submit "Log in", class: "button is-primary" %>
+    <% end %>
+  </div>
+  <div class="column"></div>
+</div>

@@ -3,6 +3,9 @@ defmodule DashWeb.UserController do
 
   alias Dash.Accounts
   alias Dash.Accounts.User
+  alias DashWeb.Auth
+
+  plug :authenticate when action in [:index, :show]
 
   def index(conn, _params) do
     users = Accounts.list_users()
@@ -18,6 +21,7 @@ defmodule DashWeb.UserController do
     case Accounts.create_user(user_params) do
       {:ok, user} ->
         conn
+        |> Auth.login(user)
         |> put_flash(:info, "User created successfully.")
         |> redirect(to: Routes.user_path(conn, :show, user))
 
@@ -58,5 +62,16 @@ defmodule DashWeb.UserController do
     conn
     |> put_flash(:info, "User deleted successfully.")
     |> redirect(to: Routes.user_path(conn, :index))
+  end
+
+  defp authenticate(conn, _opts) do
+    if conn.assigns.current_user do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must be logged in to access that page")
+      |> redirect(to: Routes.page_path(conn, :index))
+      |> halt()
+    end
   end
 end

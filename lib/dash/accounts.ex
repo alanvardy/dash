@@ -8,6 +8,27 @@ defmodule Dash.Accounts do
 
   alias Dash.Accounts.User
 
+  def get_user_by_email(email) do
+    from(u in User, where: u.email == ^email)
+    |> Repo.one()
+  end
+
+  def authenticate_by_email_and_pass(email, given_pass) do
+    user = get_user_by_email(email)
+
+    cond do
+      user && Comeonin.Pbkdf2.checkpw(given_pass, user.password_hash) ->
+        {:ok, user}
+
+      user ->
+        {:error, :unauthorized}
+
+      true ->
+        Comeonin.Pbkdf2.dummy_checkpw()
+        {:error, :not_found}
+    end
+  end
+
   @doc """
   Returns the list of users.
 
@@ -36,6 +57,7 @@ defmodule Dash.Accounts do
 
   """
   def get_user!(id), do: Repo.get!(User, id)
+  def get_user(id), do: Repo.get(User, id)
 
   @doc """
   Creates a user.

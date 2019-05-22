@@ -18,11 +18,14 @@
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
+        <%= if @current_user do %>
+            <%= link "Log out", to: Routes.session_path(@conn, :delete, @current_user), method: :delete, class: "button is-primary" %>
+        <% else %>
         <%= link to: Routes.user_path(@conn, :new), class: "button is-primary" do %>
             <strong>Sign up</strong>
         <% end %>
-          <a class="button is-light">
-            Log in
+          <%= link "Log in", to: Routes.session_path(@conn, :new), class: "button is-light" %>
+        <% end %>
           </a>
         </div>
       </div>

@@ -22,12 +22,15 @@ defmodule DashWeb.UserControllerTest do
   describe "new user" do
     test "renders form", %{conn: conn} do
       conn = get(conn, Routes.user_path(conn, :new))
-      assert html_response(conn, 200) =~ "New User"
+      assert html_response(conn, 200) =~ "Sign Up"
     end
   end
 
   describe "create user" do
+    setup [:create_user]
+
     test "redirects to show when data is valid", %{conn: conn} do
+      conn = put_session(conn, user_id, user.id)
       conn = post(conn, Routes.user_path(conn, :create), user: @create_attrs)
 
       assert %{id: id} = redirected_params(conn)

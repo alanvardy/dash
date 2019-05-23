@@ -44,7 +44,7 @@ defmodule Dash.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:httpoison, "~> 1.4"},
-      {:poison, "~> 3.1"},
+      {:poison, "~> 4.0"},
       {:timex, "~> 3.0"},
       {:comeonin, "~> 4.1"},
       {:pbkdf2_elixir, "~> 0.12"}

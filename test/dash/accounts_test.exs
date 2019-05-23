@@ -6,9 +6,9 @@ defmodule Dash.AccountsTest do
   describe "users" do
     alias Dash.Accounts.User
 
-    @valid_attrs %{email: "some email", name: "some name", password_hash: "some password_hash"}
-    @update_attrs %{email: "some updated email", name: "some updated name", password_hash: "some updated password_hash"}
-    @invalid_attrs %{email: nil, name: nil, password_hash: nil}
+    @valid_attrs %{email: "some email", name: "some name", password: "some password", password_confirmation: "some password"}
+    @update_attrs %{email: "some updated email", name: "some updated name", password: "some updated password", password_confirmation: "some updated password"}
+    @invalid_attrs %{email: nil, name: nil, password: nil, password_confirmation: nil}
 
     def user_fixture(attrs \\ %{}) do
       {:ok, user} =
@@ -17,6 +17,8 @@ defmodule Dash.AccountsTest do
         |> Accounts.create_user()
 
       user
+      |> Map.put(:password, nil)
+      |> Map.put(:password_confirmation, nil)
     end
 
     test "list_users/0 returns all users" do
@@ -33,7 +35,6 @@ defmodule Dash.AccountsTest do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
       assert user.email == "some email"
       assert user.name == "some name"
-      assert user.password_hash == "some password_hash"
     end
 
     test "create_user/1 with invalid data returns error changeset" do
@@ -45,7 +46,6 @@ defmodule Dash.AccountsTest do
       assert {:ok, %User{} = user} = Accounts.update_user(user, @update_attrs)
       assert user.email == "some updated email"
       assert user.name == "some updated name"
-      assert user.password_hash == "some updated password_hash"
     end
 
     test "update_user/2 with invalid data returns error changeset" do

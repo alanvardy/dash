@@ -2,6 +2,13 @@
   <div class="column">
   </div>
   <div class="column is-6">
+    <div class="section">
+      <h1>Welcome to Dash</h1>
+      <p>
+      An app of minor convenience, currently featuring a summary of your Harvest
+        projects and convenience calculations around it.
+        </p>
+    </div>
     <%= for report <- @reports do %>
     <div class="box tile is-ancestor">
       <div class="tile is-vertical is-parent">

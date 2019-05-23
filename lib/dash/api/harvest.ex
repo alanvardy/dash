@@ -1,5 +1,5 @@
 defmodule DashWeb.Api.Harvest do
-  alias DashWeb.FakeData
+  alias DashWeb.Api.FakeData
 
   @moduledoc """
     For interacting with the Harvest API

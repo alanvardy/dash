@@ -1,5 +1,5 @@
-defmodule DashWeb.FakeData do
-  def time_entries do
+defmodule DashWeb.Api.FakeData do
+  def time_entries() do
     [
       %{hours: 1.25, project_id: 21_015_864, spent_date: "2019-05-22"},
       %{hours: 1.04, project_id: 21_015_864, spent_date: "2019-05-22"},
@@ -11,7 +11,7 @@ defmodule DashWeb.FakeData do
     ]
   end
 
-  def projects do
+  def projects() do
     [
       %{
         budget: 100,

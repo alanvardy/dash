@@ -10,7 +10,7 @@ defmodule DashWeb.Api.Harvest do
     "Harvest-Account-ID": @account_id,
     "User-Agent": "Alan Vardy"
   ]
-  @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 2000]
+  @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 3000]
 
   # Pull in all projects as a map
   @spec projects() :: [Map.t()]

@@ -47,7 +47,7 @@ defmodule Dash.MixProject do
       {:poison, "~> 4.0"},
       {:timex, "~> 3.0"},
       {:comeonin, "~> 5.1"},
-      {:pbkdf2_elixir, "~> 0.12"}
+      {:pbkdf2_elixir, "~> 1.0"}
     ]
   end
 

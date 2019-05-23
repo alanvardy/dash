@@ -1,31 +1,46 @@
 defmodule DashWeb.Api.Harvest do
+  alias DashWeb.FakeData
+
   @moduledoc """
     For interacting with the Harvest API
   """
   @api_key Application.get_env(:dash, :harvest_api_key)
   @account_id Application.get_env(:dash, :harvest_account_id)
+  @skip_api Application.get_env(:dash, :skip_api)
 
   @headers [
     Authorization: "Bearer #{@api_key}",
     "Harvest-Account-ID": @account_id,
     "User-Agent": "Alan Vardy"
   ]
-  @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 3000]
+  @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 2000]
 
   # Pull in all projects as a map
   @spec projects() :: [Map.t()]
   def projects do
-    get("/v2/projects")
-    |> Map.get("projects")
-    |> report_keys()
+    cond do
+      @skip_api ->
+        FakeData.projects()
+
+      true ->
+        get("/v2/projects")
+        |> Map.get("projects")
+        |> report_keys()
+    end
   end
 
   # Pull in all time entries as a map
   @spec time_entries() :: [Map.t()]
   def time_entries do
-    get("/v2/time_entries")
-    |> Map.get("time_entries")
-    |> entry_keys()
+    cond do
+      @skip_api ->
+        FakeData.time_entries()
+
+      true ->
+        get("/v2/time_entries")
+        |> Map.get("time_entries")
+        |> entry_keys()
+    end
   end
 
   @doc "cherry pick the report attributes we want"

@@ -9,7 +9,7 @@ addons:
 services:
   - postgresql
 
-before_script:
+before_install:
   - cp config/travis.exs config/test.exs
   - cp config/travis.secret.exs config/dev.secret.exs
   - mix do ecto.create, ecto.migrate

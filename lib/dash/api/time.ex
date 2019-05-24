@@ -30,6 +30,6 @@ defmodule DashWeb.Api.Time do
 
   @spec hours_per_day(Integer.t(), Integer.t(), Integer.t()) :: Float.t()
   def hours_per_day(budget, hours, days_left) do
-    (budget - hours)/days_left
+    (budget - hours) / days_left
   end
 end

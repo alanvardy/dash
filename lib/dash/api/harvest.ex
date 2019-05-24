@@ -45,7 +45,6 @@ defmodule DashWeb.Api.Harvest do
   @doc "cherry pick the report attributes we want"
   def report_keys(projects) do
     projects
-    |> IO.inspect(label: "48")
     |> Enum.filter(fn b -> Map.get(b, "budget") end)
     |> Enum.map(fn b ->
       %{

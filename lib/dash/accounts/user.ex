@@ -1,4 +1,7 @@
 defmodule Dash.Accounts.User do
+  @moduledoc """
+  Site user
+  """
   use Ecto.Schema
   import Ecto.Changeset
 

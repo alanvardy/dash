@@ -1,6 +1,6 @@
 defmodule DashWeb.Api do
   @moduledoc """
-  
+  Logic around APIs
   """
   alias DashWeb.Api.Harvest
   alias DashWeb.Api.Time

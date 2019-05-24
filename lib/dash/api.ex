@@ -1,4 +1,7 @@
 defmodule DashWeb.Api do
+  @moduledoc """
+  
+  """
   alias DashWeb.Api.Harvest
   alias DashWeb.Api.Time
 

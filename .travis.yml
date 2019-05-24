@@ -11,6 +11,7 @@ services:
 
 before_install:
   - cp config/travis.exs config/test.exs
+  - cp config/travis.secret.exs config/dev.secret.exs
 
 before_script:
   - mix local.hex --force
@@ -18,3 +19,4 @@ before_script:
 
 script:
   - mix test
+  - mix credo

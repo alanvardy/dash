@@ -9,7 +9,8 @@ defmodule Dash.Accounts do
   alias Dash.Accounts.User
 
   def get_user_by_email(email) do
-    from(u in User, where: u.email == ^email)
+    User
+    |> where([u], u.email == ^email)
     |> Repo.one()
   end
 

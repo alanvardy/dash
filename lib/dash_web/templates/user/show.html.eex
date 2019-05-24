@@ -14,7 +14,7 @@
 
   <li>
     <strong>Settings:</strong>
-    <%= link "Settings", to: Routes.settings_path(@conn, :show, @user.settings.user_id) %>
+    <%= link "Settings", to: Routes.settings_path(@conn, :show, @user.settings) %>
   </li>
 
 </ul>

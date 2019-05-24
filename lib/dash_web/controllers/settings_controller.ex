@@ -8,29 +8,29 @@ defmodule DashWeb.SettingsController do
 
   plug :authenticate when action in [:show, :edit, :update]
 
-  def show(conn, %{"id" => user_id}) do
-    IO.inspect(user_id, label: 12)
-    settings = Accounts.get_settings!(user_id)
+  def show(conn, %{"id" => id}) do
+    IO.inspect(id, label: 12)
+    settings = Accounts.get_settings!(id)
     render(conn, "show.html", settings: settings)
   end
 
   def edit(conn, %{"id" => id}) do
-    user = Accounts.get_user!(id)
-    changeset = Accounts.change_user(user)
-    render(conn, "edit.html", user: user, changeset: changeset)
+    settings = Accounts.get_settings!(id)
+    changeset = Accounts.change_settings(settings)
+    render(conn, "edit.html", settings: settings, changeset: changeset)
   end
 
-  def update(conn, %{"id" => id, "user" => user_params}) do
-    user = Accounts.get_user!(id)
+  def update(conn, %{"id" => id, "settings" => settings_params}) do
+    settings = Accounts.get_settings!(id)
 
-    case Accounts.update_user(user, user_params) do
-      {:ok, user} ->
+    case Accounts.update_settings(settings, settings_params) do
+      {:ok, settings} ->
         conn
-        |> put_flash(:info, "User updated successfully.")
-        |> redirect(to: Routes.user_path(conn, :show, user))
+        |> put_flash(:info, "Settings updated successfully.")
+        |> redirect(to: Routes.settings_path(conn, :show, settings))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", user: user, changeset: changeset)
+        render(conn, "edit.html", settings: settings, changeset: changeset)
     end
   end
 

@@ -31,7 +31,7 @@ defmodule Dash.Accounts do
         {:error, :unauthorized}
 
       true ->
-        Comeonin.Pbkdf2.dummy_checkpw()
+        Pbkdf2.no_user_verify
         {:error, :not_found}
     end
   end
@@ -69,11 +69,11 @@ defmodule Dash.Accounts do
     |> Repo.get!(id)
   end
   def get_user(id), do: Repo.get(User, id)
-  def get_settings!(user_id) do
+  def get_settings!(id) do
+
     Settings
-    |> where([s], s.user_id == ^user_id)
     |> preload(:user)
-    |> Repo.one!()
+    |> Repo.get!(id)
   end
 
   @doc """
@@ -89,14 +89,10 @@ defmodule Dash.Accounts do
 
   """
   def create_user(attrs \\ %{}) do
-    {:ok, user} = %User{}
+    %User{}
     |> User.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:settings)
     |> Repo.insert()
-
-    %Settings{}
-    |> Settings.changeset(%{user_id: user.id})
-    |> Repo.insert()
-
   end
 
   @doc """
@@ -114,6 +110,12 @@ defmodule Dash.Accounts do
   def update_user(%User{} = user, attrs) do
     user
     |> User.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def update_settings(%Settings{} = settings, attrs) do
+    settings
+    |> Settings.changeset(attrs)
     |> Repo.update()
   end
 
@@ -144,5 +146,9 @@ defmodule Dash.Accounts do
   """
   def change_user(%User{} = user) do
     User.changeset(user, %{})
+  end
+
+  def change_settings(%Settings{} = settings) do
+    Settings.changeset(settings, %{})
   end
 end

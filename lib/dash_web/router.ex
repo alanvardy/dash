@@ -20,6 +20,7 @@ defmodule DashWeb.Router do
     get "/", PageController, :index
     resources "/users", UserController
     resources "/sessions", SessionController, only: [:new, :create, :delete]
+    resources "/settings", SettingsController, only: [:show, :edit, :update]
   end
 
   # Other scopes may use custom stacks.

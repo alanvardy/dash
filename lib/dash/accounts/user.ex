@@ -1,9 +1,9 @@
 defmodule Dash.Accounts.User do
-  @moduledoc """
-  Site user
-  """
+  @moduledoc "Site user"
   use Ecto.Schema
   import Ecto.Changeset
+
+  alias Dash.Accounts.Settings
 
   schema "users" do
     field :email, :string
@@ -11,6 +11,7 @@ defmodule Dash.Accounts.User do
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
     field :password_hash, :string
+    has_one :settings, Settings
 
     timestamps()
   end

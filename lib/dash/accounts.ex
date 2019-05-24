@@ -3,14 +3,20 @@ defmodule Dash.Accounts do
   The Accounts context.
   """
 
-  import Ecto.Query, warn: false
-  alias Dash.Repo
-
   alias Dash.Accounts.User
+  alias Dash.Accounts.Settings
+  alias Dash.Repo
+  import Ecto.Query, warn: false
 
   def get_user_by_email(email) do
     User
     |> where([u], u.email == ^email)
+    |> Repo.one()
+  end
+
+  def get_settings_by_user(user) do
+    Settings
+    |> where([u], u.user_id == ^user.id)
     |> Repo.one()
   end
 
@@ -57,8 +63,18 @@ defmodule Dash.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    User
+    |> preload(:settings)
+    |> Repo.get!(id)
+  end
   def get_user(id), do: Repo.get(User, id)
+  def get_settings!(user_id) do
+    Settings
+    |> where([s], s.user_id == ^user_id)
+    |> preload(:user)
+    |> Repo.one!()
+  end
 
   @doc """
   Creates a user.
@@ -73,9 +89,14 @@ defmodule Dash.Accounts do
 
   """
   def create_user(attrs \\ %{}) do
-    %User{}
+    {:ok, user} = %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
+
+    %Settings{}
+    |> Settings.changeset(%{user_id: user.id})
+    |> Repo.insert()
+
   end
 
   @doc """

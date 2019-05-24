@@ -13,8 +13,8 @@
   </li>
 
   <li>
-    <strong>Password hash:</strong>
-    <%= @user.password_hash %>
+    <strong>Settings:</strong>
+    <%= link "Settings", to: Routes.settings_path(@conn, :show, @user.settings.user_id) %>
   </li>
 
 </ul>

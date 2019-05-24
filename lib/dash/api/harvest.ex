@@ -1,12 +1,11 @@
 defmodule DashWeb.Api.Harvest do
-  alias DashWeb.Api.FakeData
+  alias Dash.FakeData
 
   @moduledoc """
     For interacting with the Harvest API
   """
   @api_key Application.get_env(:dash, :harvest_api_key)
   @account_id Application.get_env(:dash, :harvest_account_id)
-  @skip_api Application.get_env(:dash, :skip_api)
 
   @headers [
     Authorization: "Bearer #{@api_key}",
@@ -18,11 +17,11 @@ defmodule DashWeb.Api.Harvest do
   # Pull in all projects as a map
   @spec projects() :: [Map.t()]
   def projects do
-    cond do
-      @skip_api ->
+    case Mix.env do
+      :test ->
         FakeData.projects()
 
-      true ->
+      _ ->
         get("/v2/projects")
         |> Map.get("projects")
         |> report_keys()
@@ -32,11 +31,11 @@ defmodule DashWeb.Api.Harvest do
   # Pull in all time entries as a map
   @spec time_entries() :: [Map.t()]
   def time_entries do
-    cond do
-      @skip_api ->
+    case Mix.env do
+      :test ->
         FakeData.time_entries()
 
-      true ->
+      _ ->
         get("/v2/time_entries")
         |> Map.get("time_entries")
         |> entry_keys()
@@ -46,6 +45,7 @@ defmodule DashWeb.Api.Harvest do
   @doc "cherry pick the report attributes we want"
   def report_keys(projects) do
     projects
+    |> IO.inspect(label: "48")
     |> Enum.filter(fn b -> Map.get(b, "budget") end)
     |> Enum.map(fn b ->
       %{

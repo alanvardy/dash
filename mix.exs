@@ -6,6 +6,14 @@ defmodule Dash.MixProject do
       app: :dash,
       version: "0.1.0",
       elixir: "~> 1.5",
+      elixirc_paths: elixirc_paths(Mix.env),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ],
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -47,7 +55,8 @@ defmodule Dash.MixProject do
       {:poison, "~> 4.0"},
       {:timex, "~> 3.0"},
       {:comeonin, "~> 5.1"},
-      {:pbkdf2_elixir, "~> 1.0"}
+      {:pbkdf2_elixir, "~> 1.0"},
+      {:excoveralls, "~> 0.10", only: :test}
     ]
   end
 
@@ -64,4 +73,7 @@ defmodule Dash.MixProject do
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib","test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 end

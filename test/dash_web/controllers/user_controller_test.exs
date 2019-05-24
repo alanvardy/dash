@@ -1,5 +1,5 @@
 defmodule DashWeb.UserControllerTest do
-  use DashWeb.ConnCase
+  use DashWeb.ConnCase, async: true
 
   import Plug.Test
 

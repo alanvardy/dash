@@ -1,16 +1,10 @@
 defmodule DashWeb.UserControllerTest do
-
-  alias Dash.Accounts
+  @moduledoc false
+  import Dash.Factory
   use DashWeb.ConnCase, async: true
 
-  @create_attrs %{email: "some email", name: "some name", password: "password", password_confirmation: "password"}
   @update_attrs %{email: "some updated email", name: "some updated name", password: "some updated password_hash", password_confirmation: "some updated password_hash"}
   @invalid_attrs %{email: nil, name: nil, password: nil, password_confirmation: nil}
-
-  def fixture(:user) do
-    {:ok, %{user: user, settings: _settings}} = Accounts.create_user(@create_attrs)
-    user
-  end
 
   describe "index" do
     test "lists all users", %{conn: conn} do
@@ -28,8 +22,6 @@ defmodule DashWeb.UserControllerTest do
   end
 
   describe "create user" do
-    setup [:create_user]
-
   #   test "redirects to show when data is valid", %{conn: conn} do
       # conn = conn
       # |> init_test_session(user_id: user.id)
@@ -47,18 +39,16 @@ defmodule DashWeb.UserControllerTest do
   end
 
   describe "edit user" do
-    setup [:create_user]
-
-    test "renders form for editing chosen user", %{conn: conn, user: user} do
+    test "renders form for editing chosen user", %{conn: conn} do
+      user = insert(:user)
       conn = get(conn, Routes.user_path(conn, :edit, user))
       assert html_response(conn, 200) =~ "Edit User"
     end
   end
 
   describe "update user" do
-    setup [:create_user]
-
-    test "redirects when data is valid but user not logged in", %{conn: conn, user: user} do
+    test "redirects when data is valid but user not logged in", %{conn: conn} do
+      user = insert(:user)
       conn = put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
@@ -78,9 +68,8 @@ defmodule DashWeb.UserControllerTest do
   end
 
   describe "delete user" do
-    setup [:create_user]
-
-    test "doesn't delete chosen user when not logged in", %{conn: conn, user: user} do
+    test "doesn't delete chosen user when not logged in", %{conn: conn} do
+      user = insert(:user)
       conn = delete(conn, Routes.user_path(conn, :delete, user))
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
@@ -91,10 +80,5 @@ defmodule DashWeb.UserControllerTest do
     #     get(conn, Routes.user_path(conn, :show, user))
     #   end
     # end
-  end
-
-  defp create_user(_) do
-    user = fixture(:user)
-    {:ok, user: user}
   end
 end

@@ -1,7 +1,9 @@
 defmodule Dash.AccountsTest do
+  @moduledoc false
   alias Dash.Accounts
   alias Dash.Accounts.User
-  use Dash.DataCase
+  import Dash.Factory
+  use Dash.DataCase, async: true
 
   describe "users" do
 
@@ -9,36 +11,15 @@ defmodule Dash.AccountsTest do
     @update_attrs %{email: "some updated email", name: "some updated name", password: "some updated password", password_confirmation: "some updated password"}
     @invalid_attrs %{email: nil, name: nil, password: nil, password_confirmation: nil}
 
-    def user_fixture(attrs \\ %{}) do
-      {:ok, %{user: user, settings: _settings}} = attrs
-        |> Enum.into(@valid_attrs)
-        |> Accounts.create_user()
-
-        user
-          |> Map.put(:password, nil)
-          |> Map.put(:password_confirmation, nil)
-    end
-
-    def user_fixture_with_assoc(attrs \\ %{}) do
-      {:ok, %{user: user, settings: settings}} = attrs
-        |> Enum.into(@valid_attrs)
-        |> Accounts.create_user()
-
-        user
-          |> Map.put(:password, nil)
-          |> Map.put(:password_confirmation, nil)
-          |> Map.put(:settings, settings)
-    end
-
     test "list_users/0 returns all users" do
-      user = user_fixture()
+      user = insert(:user)
       users = Accounts.list_users()
 
       assert users == [user]
     end
 
     test "get_user!/1 returns the user with given id" do
-      user = user_fixture_with_assoc()
+      user = insert(:user_with_nil_settings)
       assert Accounts.get_user!(user.id) == user
     end
 
@@ -53,26 +34,26 @@ defmodule Dash.AccountsTest do
     end
 
     test "update_user/2 with valid data updates the user" do
-      user = user_fixture()
+      user = insert(:user)
       assert {:ok, %User{} = user} = Accounts.update_user(user, @update_attrs)
       assert user.email == "some updated email"
       assert user.name == "some updated name"
     end
 
     test "update_user/2 with invalid data returns error changeset" do
-      user = user_fixture_with_assoc()
+      user = insert(:user_with_settings)
       assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, @invalid_attrs)
       assert user == Accounts.get_user!(user.id)
     end
 
     test "delete_user/1 deletes the user" do
-      user = user_fixture()
+      user = insert(:user)
       assert {:ok, %User{}} = Accounts.delete_user(user)
       assert_raise Ecto.NoResultsError, fn -> Accounts.get_user!(user.id) end
     end
 
     test "change_user/1 returns a user changeset" do
-      user = user_fixture()
+      user = insert(:user)
       assert %Ecto.Changeset{} = Accounts.change_user(user)
     end
   end

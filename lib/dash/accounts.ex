@@ -70,7 +70,11 @@ defmodule Dash.Accounts do
     |> Repo.get!(id)
   end
 
-  def get_user(id), do: Repo.get(User, id)
+  def get_user(id) do
+    User
+    |> preload(:settings)
+    |> Repo.get(id)
+  end
 
   def get_settings!(id) do
     Settings

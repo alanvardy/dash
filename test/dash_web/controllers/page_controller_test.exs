@@ -1,4 +1,5 @@
 defmodule DashWeb.PageControllerTest do
+  @moduledoc false
   use DashWeb.ConnCase, async: true
 
   test "GET /", %{conn: conn} do

@@ -4,6 +4,7 @@ defmodule DashWeb.UserControllerTest do
   import Plug.Test
 
   alias Dash.Accounts
+  alias Dash.AccountsTest
 
   @create_attrs %{email: "some email", name: "some name", password: "password", password_confirmation: "password"}
   @create_attrs2 %{email: "some email2", name: "some name", password: "password", password_confirmation: "password"}
@@ -11,7 +12,7 @@ defmodule DashWeb.UserControllerTest do
   @invalid_attrs %{email: nil, name: nil, password: nil, password_confirmation: nil}
 
   def fixture(:user) do
-    {:ok, user} = Accounts.create_user(@create_attrs)
+    {:ok, %{user: user, settings: settings}} = Accounts.create_user(@create_attrs)
     user
   end
 
@@ -34,8 +35,8 @@ defmodule DashWeb.UserControllerTest do
     setup [:create_user]
 
     test "redirects to show when data is valid", %{conn: conn, user: user} do
-      conn = conn
-      |> init_test_session(user_id: user.id)
+      # conn = conn
+      # |> init_test_session(user_id: user.id)
 
       %Plug.Conn{assigns: %{current_user: user2}} = post(conn, Routes.user_path(conn, :create), user: @create_attrs2)
 

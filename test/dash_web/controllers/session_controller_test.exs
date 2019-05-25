@@ -7,7 +7,7 @@ defmodule DashWeb.SessionControllerTest do
   @create_attrs %{email: "some email", name: "some name", password: "password", password_confirmation: "password"}
 
   def fixture(:user) do
-    {:ok, user} = Accounts.create_user(@create_attrs)
+    {:ok, %{user: user, settings: settings}} = Accounts.create_user(@create_attrs)
     user
   end
 

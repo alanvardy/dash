@@ -11,7 +11,7 @@ defmodule Dash.Accounts.User do
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
     field :password_hash, :string
-    has_one :settings, Settings
+    has_one :settings, Settings, on_delete: :delete_all
 
     timestamps()
   end

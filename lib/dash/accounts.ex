@@ -6,6 +6,7 @@ defmodule Dash.Accounts do
   alias Dash.Accounts.User
   alias Dash.Accounts.Settings
   alias Dash.Repo
+  alias Ecto.Multi
   import Ecto.Query, warn: false
 
   def get_user_by_email(email) do
@@ -31,7 +32,7 @@ defmodule Dash.Accounts do
         {:error, :unauthorized}
 
       true ->
-        Pbkdf2.no_user_verify
+        Pbkdf2.no_user_verify()
         {:error, :not_found}
     end
   end
@@ -68,9 +69,10 @@ defmodule Dash.Accounts do
     |> preload(:settings)
     |> Repo.get!(id)
   end
-  def get_user(id), do: Repo.get(User, id)
-  def get_settings!(id) do
 
+  def get_user(id), do: Repo.get(User, id)
+
+  def get_settings!(id) do
     Settings
     |> preload(:user)
     |> Repo.get!(id)
@@ -89,10 +91,12 @@ defmodule Dash.Accounts do
 
   """
   def create_user(attrs \\ %{}) do
-    %User{}
-    |> User.changeset(attrs)
-    |> Ecto.Changeset.cast_assoc(:settings)
-    |> Repo.insert()
+      Multi.new()
+      |> Multi.insert(:user, User.changeset(%User{}, attrs))
+      |> Multi.insert(:settings, fn %{user: user} ->
+        Ecto.build_assoc(user, :settings)
+      end)
+      |> Repo.transaction()
   end
 
   @doc """

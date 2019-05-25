@@ -49,7 +49,7 @@ defmodule DashWeb.UserControllerTest do
       user2 = insert(:user2_with_pw)
       conn = log_in_(conn, user2)
       conn = get(conn, Routes.user_path(conn, :edit, user))
-      assert redirected_to(conn) == Routes.session_path(conn, :new)
+      assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
     test "renders form for editing chosen user when user", %{conn: conn} do
       user = insert(:user_with_pw)

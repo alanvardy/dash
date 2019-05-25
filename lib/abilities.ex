@@ -1,5 +1,5 @@
 defmodule Dash.Abilities do
-  @moduledoc "User authorization rules"
+  @moduledoc "User authorization"
   alias Dash.Accounts.User
 
   defimpl Canada.Can, for: User do

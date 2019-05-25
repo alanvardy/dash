@@ -6,7 +6,7 @@ defmodule Dash.MixProject do
       app: :dash,
       version: "0.1.0",
       elixir: "~> 1.5",
-      elixirc_paths: elixirc_paths(Mix.env),
+      elixirc_paths: elixirc_paths(Mix.env()),
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
         coveralls: :test,
@@ -73,7 +73,8 @@ defmodule Dash.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       # for when you get a timeout on `mix deps.get`, just type mix deps
       deps: [&no_parallel/1, &long_timeout/1, "deps.get"],
-      test: ["ecto.create --quiet", "ecto.migrate", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate", "test"],
+      credo: ["credo --strict"]
     ]
   end
 
@@ -81,6 +82,7 @@ defmodule Dash.MixProject do
   defp no_parallel(_) do
     Mix.shell().info("HEX_HTTP_CONCURRENCY=1")
   end
+
   defp long_timeout(_) do
     Mix.shell().info("HEX_HTTP_TIMEOUT=120")
   end

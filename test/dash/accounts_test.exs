@@ -1,6 +1,5 @@
 defmodule Dash.AccountsTest do
   alias Dash.Accounts
-  alias Dash.Accounts.Settings
   alias Dash.Accounts.User
   use Dash.DataCase
 
@@ -11,7 +10,7 @@ defmodule Dash.AccountsTest do
     @invalid_attrs %{email: nil, name: nil, password: nil, password_confirmation: nil}
 
     def user_fixture(attrs \\ %{}) do
-      {:ok, %{user: user, settings: settings}} = attrs
+      {:ok, %{user: user, settings: _settings}} = attrs
         |> Enum.into(@valid_attrs)
         |> Accounts.create_user()
 
@@ -35,7 +34,7 @@ defmodule Dash.AccountsTest do
       user = user_fixture()
       users = Accounts.list_users()
 
-      == [user]
+      assert users == [user]
     end
 
     test "get_user!/1 returns the user with given id" do
@@ -44,7 +43,7 @@ defmodule Dash.AccountsTest do
     end
 
     test "create_user/1 with valid data creates a user" do
-      {:ok, %{user: user, settings: settings}} = Accounts.create_user(@valid_attrs)
+      {:ok, %{user: user, settings: _settings}} = Accounts.create_user(@valid_attrs)
       assert user.email == "some email"
       assert user.name == "some name"
     end

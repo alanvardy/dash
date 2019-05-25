@@ -2,7 +2,7 @@ defmodule Dash.FakeData do
   @moduledoc """
   Fake API data for development testing and Travis CI
   """
-  def time_entries() do
+  def time_entries do
     [
       %{hours: 1.25, project_id: 12_345, spent_date: "2019-05-22"},
       %{hours: 1.04, project_id: 12_345, spent_date: "2019-05-22"},
@@ -14,7 +14,7 @@ defmodule Dash.FakeData do
     ]
   end
 
-  def projects() do
+  def projects do
     [
       %{
         budget: 80,

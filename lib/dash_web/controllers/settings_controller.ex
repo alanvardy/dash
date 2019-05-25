@@ -2,14 +2,10 @@ defmodule DashWeb.SettingsController do
   use DashWeb, :controller
 
   alias Dash.Accounts
-  alias Dash.Accounts.User
-  alias Dash.Accounts.Settings
-  alias DashWeb.Auth
 
   plug :authenticate when action in [:show, :edit, :update]
 
   def show(conn, %{"id" => id}) do
-    IO.inspect(id, label: 12)
     settings = Accounts.get_settings!(id)
     render(conn, "show.html", settings: settings)
   end

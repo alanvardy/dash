@@ -13,6 +13,8 @@ defmodule DashWeb.ConnCase do
   of the test unless the test case is marked as async.
   """
 
+  alias Ecto.Adapters.SQL.Sandbox
+
   use ExUnit.CaseTemplate
 
   using do
@@ -27,10 +29,10 @@ defmodule DashWeb.ConnCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Dash.Repo)
+    :ok = Sandbox.checkout(Dash.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Dash.Repo, {:shared, self()})
+      Sandbox.mode(Dash.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}

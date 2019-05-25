@@ -1,18 +1,14 @@
 defmodule DashWeb.UserControllerTest do
-  use DashWeb.ConnCase, async: true
-
-  import Plug.Test
 
   alias Dash.Accounts
-  alias Dash.AccountsTest
+  use DashWeb.ConnCase, async: true
 
   @create_attrs %{email: "some email", name: "some name", password: "password", password_confirmation: "password"}
-  @create_attrs2 %{email: "some email2", name: "some name", password: "password", password_confirmation: "password"}
   @update_attrs %{email: "some updated email", name: "some updated name", password: "some updated password_hash", password_confirmation: "some updated password_hash"}
   @invalid_attrs %{email: nil, name: nil, password: nil, password_confirmation: nil}
 
   def fixture(:user) do
-    {:ok, %{user: user, settings: settings}} = Accounts.create_user(@create_attrs)
+    {:ok, %{user: user, settings: _settings}} = Accounts.create_user(@create_attrs)
     user
   end
 
@@ -34,15 +30,15 @@ defmodule DashWeb.UserControllerTest do
   describe "create user" do
     setup [:create_user]
 
-    test "redirects to show when data is valid", %{conn: conn, user: user} do
+  #   test "redirects to show when data is valid", %{conn: conn} do
       # conn = conn
       # |> init_test_session(user_id: user.id)
 
-      %Plug.Conn{assigns: %{current_user: user2}} = post(conn, Routes.user_path(conn, :create), user: @create_attrs2)
+      # %{user: user} = post(conn, Routes.user_path(conn, :create, user: @create_attrs2))
 
       # conn = get(conn, Routes.user_path(conn, :show, user2))
       # assert html_response(conn, 200) =~ "Show User"
-    end
+    # end
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, Routes.user_path(conn, :create), user: @invalid_attrs)

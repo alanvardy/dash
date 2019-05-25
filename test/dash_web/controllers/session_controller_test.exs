@@ -1,13 +1,12 @@
 defmodule DashWeb.SessionControllerTest do
-  use DashWeb.ConnCase, async: true
 
-  import Plug.Test
   alias Dash.Accounts
+  use DashWeb.ConnCase, async: true
 
   @create_attrs %{email: "some email", name: "some name", password: "password", password_confirmation: "password"}
 
   def fixture(:user) do
-    {:ok, %{user: user, settings: settings}} = Accounts.create_user(@create_attrs)
+    {:ok, %{user: user, settings: _settings}} = Accounts.create_user(@create_attrs)
     user
   end
 

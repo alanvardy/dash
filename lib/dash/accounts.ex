@@ -3,8 +3,8 @@ defmodule Dash.Accounts do
   The Accounts context.
   """
 
-  alias Dash.Accounts.User
   alias Dash.Accounts.Settings
+  alias Dash.Accounts.User
   alias Dash.Repo
   alias Ecto.Multi
   import Ecto.Query, warn: false

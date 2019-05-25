@@ -1,10 +1,9 @@
 defmodule Dash.Accounts.Settings do
+  use Ecto.Schema
   @moduledoc "Stores all user settings"
 
   alias Dash.Accounts.User
   import Ecto.Changeset
-  use Ecto.Schema
-
 
   schema "settings" do
     field :harvest_account_id, :integer

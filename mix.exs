@@ -57,7 +57,8 @@ defmodule Dash.MixProject do
       {:comeonin, "~> 5.1"},
       {:pbkdf2_elixir, "~> 1.0"},
       {:excoveralls, "~> 0.10", only: :test},
-      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
+      {:ex_machina, "~> 2.3", only: :test},
     ]
   end
 

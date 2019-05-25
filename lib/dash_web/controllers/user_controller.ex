@@ -5,7 +5,8 @@ defmodule DashWeb.UserController do
   alias Dash.Accounts.User
   alias DashWeb.Auth
 
-  plug :authenticate when action in [:index, :show, :update, :delete]
+  plug :authenticate when action in [:index, :show, :edit, :update, :delete]
+  plug :load_and_authorize_resource, model: User, preload: :settings, except: [:new, :create]
 
   def index(conn, _params) do
     users = Accounts.list_users()

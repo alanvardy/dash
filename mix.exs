@@ -51,11 +51,17 @@ defmodule Dash.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
+      # json and api
       {:httpoison, "~> 1.4"},
       {:poison, "~> 4.0"},
       {:timex, "~> 3.0"},
+      # authentication
       {:comeonin, "~> 5.1"},
       {:pbkdf2_elixir, "~> 1.0"},
+      #authorization
+      {:canada, "~> 1.0.1"},
+      {:canary, "~> 1.1.1"},
+      # testing
       {:excoveralls, "~> 0.10", only: :test},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:ex_machina, "~> 2.3", only: :test},
@@ -74,6 +80,7 @@ defmodule Dash.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       # for when you get a timeout on `mix deps.get`, just type mix deps
       deps: [&no_parallel/1, &long_timeout/1, "deps.get"],
+      alldeps: [&no_parallel/1, &long_timeout/1, "deps.update --all"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"],
       credo: ["credo --strict"]
     ]

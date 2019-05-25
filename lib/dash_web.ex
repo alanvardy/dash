@@ -20,7 +20,7 @@ defmodule DashWeb do
   def controller do
     quote do
       use Phoenix.Controller, namespace: DashWeb
-
+      import Canary.Plugs
       import Plug.Conn
       import DashWeb.Gettext
       alias DashWeb.Router.Helpers, as: Routes

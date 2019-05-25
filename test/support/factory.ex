@@ -13,10 +13,30 @@ defmodule Dash.Factory do
     }
   end
 
+  @spec user2_factory() :: Dash.Accounts.User.t()
+  def user2_factory do
+    %User{
+      name: "User2",
+      email: "email2@otherplace.com",
+      password_hash: Pbkdf2.hash_pwd_salt("password")
+    }
+  end
+
   @spec user_with_pw_factory() :: Dash.Accounts.User.t()
   def user_with_pw_factory do
     struct!(
       user_factory(),
+      %{
+        password: "password",
+        password_confirmation: "password",
+    }
+      )
+  end
+
+  @spec user2_with_pw_factory() :: Dash.Accounts.User.t()
+  def user2_with_pw_factory do
+    struct!(
+      user2_factory(),
       %{
         password: "password",
         password_confirmation: "password",

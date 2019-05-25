@@ -39,8 +39,21 @@ defmodule DashWeb.UserControllerTest do
   end
 
   describe "edit user" do
-    test "renders form for editing chosen user", %{conn: conn} do
+    test "redirects from editing chosen user when not logged in", %{conn: conn} do
       user = insert(:user)
+      conn = get(conn, Routes.user_path(conn, :edit, user))
+      assert redirected_to(conn) == Routes.session_path(conn, :new)
+    end
+    test "redirects from editing chosen user when different user", %{conn: conn} do
+      user = insert(:user_with_pw)
+      user2 = insert(:user2_with_pw)
+      conn = log_in_(conn, user2)
+      conn = get(conn, Routes.user_path(conn, :edit, user))
+      assert redirected_to(conn) == Routes.page_path(conn, :index)
+    end
+    test "renders form for editing chosen user when user", %{conn: conn} do
+      user = insert(:user_with_pw)
+      conn = log_in_(conn, user)
       conn = get(conn, Routes.user_path(conn, :edit, user))
       assert html_response(conn, 200) =~ "Edit User"
     end
@@ -80,5 +93,9 @@ defmodule DashWeb.UserControllerTest do
     #     get(conn, Routes.user_path(conn, :show, user))
     #   end
     # end
+  end
+
+  defp log_in_(conn, user) do
+    post(conn, Routes.session_path(conn, :create), session: %{email: user.email, password: user.password})
   end
 end

@@ -1,25 +1,23 @@
 defmodule DashWeb.Api do
-  @moduledoc """
-  Logic around APIs
-  """
+  @moduledoc "Logic around APIs"
   alias DashWeb.Api.Harvest
   alias DashWeb.Api.Time
 
   @doc "Gets all reports from Harvest API"
   @spec get_harvest_reports() :: [Map.t()]
-  def get_harvest_reports() do
+  def get_harvest_reports do
     Harvest.projects()
   end
 
   @doc "Gets all time entries from Harvest API"
   @spec get_time_entries() :: [Map.t()]
-  def get_time_entries() do
+  def get_time_entries do
     Harvest.time_entries()
   end
 
   @doc "returns a view friendly list of maps"
   @spec interpret_reports() :: [Map.t()]
-  def interpret_reports() do
+  def interpret_reports do
     first_step =
       Enum.map(Harvest.projects(), fn x ->
         x

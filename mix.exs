@@ -71,10 +71,17 @@ defmodule Dash.MixProject do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
+      # for when you get a timeout on `mix deps.get`, just type mix deps
+      deps: [&no_parallel/1, &long_timeout/1, "deps.get"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 
-  defp elixirc_paths(:test), do: ["lib","test/support"]
-  defp elixirc_paths(_), do: ["lib"]
+  # To handle dependency timeout issues
+  defp no_parallel(_) do
+    Mix.shell().info("HEX_HTTP_CONCURRENCY=1")
+  end
+  defp long_timeout(_) do
+    Mix.shell().info("HEX_HTTP_TIMEOUT=120")
+  end
 end

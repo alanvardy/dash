@@ -12,6 +12,10 @@ defmodule Dash.DataCase do
   of the test unless the test case is marked as async.
   """
 
+  alias Dash.Repo
+  alias Ecto.Adapters.SQL.Sandbox
+  alias Ecto.Changeset
+
   use ExUnit.CaseTemplate
 
   using do
@@ -26,10 +30,10 @@ defmodule Dash.DataCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Dash.Repo)
+    :ok = Sandbox.checkout(Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Dash.Repo, {:shared, self()})
+      Sandbox.mode(Repo, {:shared, self()})
     end
 
     :ok
@@ -44,7 +48,7 @@ defmodule Dash.DataCase do
 
   """
   def errors_on(changeset) do
-    Ecto.Changeset.traverse_errors(changeset, fn {message, opts} ->
+    Changeset.traverse_errors(changeset, fn {message, opts} ->
       Enum.reduce(opts, message, fn {key, value}, acc ->
         String.replace(acc, "%{#{key}}", to_string(value))
       end)

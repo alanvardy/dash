@@ -1,7 +1,5 @@
 defmodule DashWeb.Api.Time do
-  @moduledoc """
-  Does time stuff and things
-  """
+  @moduledoc "Does time stuff and things"
 
   @spec days_left() :: non_neg_integer()
   def days_left do

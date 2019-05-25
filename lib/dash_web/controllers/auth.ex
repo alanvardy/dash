@@ -1,10 +1,7 @@
 defmodule DashWeb.Auth do
-  @moduledoc """
-  Handles user authorization
-  """
-  import Plug.Conn
-
+  @moduledoc "Handles user authorization"
   alias Dash.Accounts
+  import Plug.Conn
 
   def init(opts), do: opts
 

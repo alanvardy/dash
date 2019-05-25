@@ -1,9 +1,9 @@
 defmodule DashWeb.Api.Harvest do
+
   alias Dash.FakeData
 
-  @moduledoc """
-    For interacting with the Harvest API
-  """
+  @moduledoc "For interacting with the Harvest API"
+
   @api_key Application.get_env(:dash, :harvest_api_key)
   @account_id Application.get_env(:dash, :harvest_account_id)
 

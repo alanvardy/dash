@@ -25,7 +25,7 @@ defmodule DashWeb.UserController do
         |> put_flash(:info, "User created successfully.")
         |> redirect(to: Routes.user_path(conn, :show, user))
 
-      {:error, %Ecto.Changeset{} = changeset} ->
+      {:error, :user, %Ecto.Changeset{} = changeset, %{}} ->
         render(conn, "new.html", changeset: changeset)
     end
   end

@@ -3,14 +3,21 @@ defmodule Dash.Accounts do
   The Accounts context.
   """
 
-  import Ecto.Query, warn: false
-  alias Dash.Repo
-
+  alias Dash.Accounts.Settings
   alias Dash.Accounts.User
+  alias Dash.Repo
+  alias Ecto.Multi
+  import Ecto.Query, warn: false
 
   def get_user_by_email(email) do
     User
     |> where([u], u.email == ^email)
+    |> Repo.one()
+  end
+
+  def get_settings_by_user(user) do
+    Settings
+    |> where([u], u.user_id == ^user.id)
     |> Repo.one()
   end
 
@@ -25,7 +32,7 @@ defmodule Dash.Accounts do
         {:error, :unauthorized}
 
       true ->
-        Comeonin.Pbkdf2.dummy_checkpw()
+        Pbkdf2.no_user_verify()
         {:error, :not_found}
     end
   end
@@ -57,8 +64,19 @@ defmodule Dash.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    User
+    |> preload(:settings)
+    |> Repo.get!(id)
+  end
+
   def get_user(id), do: Repo.get(User, id)
+
+  def get_settings!(id) do
+    Settings
+    |> preload(:user)
+    |> Repo.get!(id)
+  end
 
   @doc """
   Creates a user.
@@ -73,9 +91,12 @@ defmodule Dash.Accounts do
 
   """
   def create_user(attrs \\ %{}) do
-    %User{}
-    |> User.changeset(attrs)
-    |> Repo.insert()
+      Multi.new()
+      |> Multi.insert(:user, User.changeset(%User{}, attrs))
+      |> Multi.insert(:settings, fn %{user: user} ->
+        Ecto.build_assoc(user, :settings)
+      end)
+      |> Repo.transaction()
   end
 
   @doc """
@@ -93,6 +114,12 @@ defmodule Dash.Accounts do
   def update_user(%User{} = user, attrs) do
     user
     |> User.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def update_settings(%Settings{} = settings, attrs) do
+    settings
+    |> Settings.changeset(attrs)
     |> Repo.update()
   end
 
@@ -123,5 +150,9 @@ defmodule Dash.Accounts do
   """
   def change_user(%User{} = user) do
     User.changeset(user, %{})
+  end
+
+  def change_settings(%Settings{} = settings) do
+    Settings.changeset(settings, %{})
   end
 end

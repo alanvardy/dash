@@ -10,7 +10,10 @@ defmodule DashWeb.UserControllerTest do
     password: "some updated password_hash",
     password_confirmation: "some updated password_hash"
   }
+
   @invalid_attrs %{email: nil, name: nil, password: nil, password_confirmation: nil}
+
+##### INDEX ACTIONS #####
 
   describe "index" do
     test "doesnt list all users when not logged in", %{conn: conn} do
@@ -25,6 +28,8 @@ defmodule DashWeb.UserControllerTest do
       assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
   end
+
+  ##### SHOW ACTIONS #####
 
   describe "show user" do
     test "redirects from showing chosen user when not logged in", %{conn: conn} do
@@ -49,12 +54,16 @@ defmodule DashWeb.UserControllerTest do
     end
   end
 
+  ##### NEW ACTIONS #####
+
   describe "new user" do
     test "renders form", %{conn: conn} do
       conn = get(conn, Routes.user_path(conn, :new))
       assert html_response(conn, 200) =~ "Sign Up"
     end
   end
+
+  ##### CREATE ACTIONS #####
 
   describe "create user" do
     test "redirects to show when data is valid", %{conn: conn} do
@@ -67,6 +76,8 @@ defmodule DashWeb.UserControllerTest do
       assert html_response(conn, 200) =~ "Sign up"
     end
   end
+
+  ##### EDIT ACTIONS #####
 
   describe "edit user" do
     test "redirects from editing chosen user when not logged in", %{conn: conn} do
@@ -90,6 +101,8 @@ defmodule DashWeb.UserControllerTest do
       assert html_response(conn, 200) =~ "Edit User"
     end
   end
+
+  ##### UPDATE ACTIONS #####
 
   describe "update user" do
     test "redirects when user not logged in", %{conn: conn} do
@@ -117,6 +130,8 @@ defmodule DashWeb.UserControllerTest do
     end
   end
 
+  ##### DELETE ACTIONS #####
+
   describe "delete user" do
     test "doesn't delete chosen user when not logged in", %{conn: conn} do
       user = insert(:user)
@@ -134,10 +149,16 @@ defmodule DashWeb.UserControllerTest do
     end
   end
 
+  ##### HELPERS #####
+
   def log_in_(conn, user) do
     post(conn, Routes.session_path(conn, :create),
       session: %{email: user.email, password: user.password}
     )
+  end
+
+  def log_out(conn) do
+    delete(conn, Routes.session_path(conn, :delete, conn.assigns.current_user))
   end
 
   def strip_all(users) do

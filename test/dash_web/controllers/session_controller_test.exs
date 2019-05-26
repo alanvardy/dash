@@ -3,6 +3,8 @@ defmodule DashWeb.SessionControllerTest do
   import Dash.Factory
   use DashWeb.ConnCase, async: true
 
+  ##### LOGIN/OUT ACTIONS #####
+
   describe "login" do
     test "can get login page", %{conn: conn} do
       conn = get(conn, Routes.session_path(conn, :new))
@@ -42,11 +44,10 @@ defmodule DashWeb.SessionControllerTest do
       assert redirected_to(conn) == Routes.page_path(conn, :index)
       assert conn.assigns.current_user.id == user.id
 
-      conn =
-        delete(conn, Routes.session_path(conn, :delete, user))
+      conn = delete(conn, Routes.session_path(conn, :delete, user))
 
       assert redirected_to(conn) == Routes.page_path(conn, :index)
-      assert conn.assigns == nil
+      assert conn.assigns.current_user == nil
     end
   end
 end

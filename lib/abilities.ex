@@ -7,27 +7,24 @@ defmodule Dash.Abilities do
     # coveralls-ignore-start
 
     # User accounts
-    def can?(%User{}, action, User)
-        when action in [:index],
-        do: false
 
-    def can?(%User{}, action, %User{})
-        when action in [:create],
-        do: true
+    def can?(%User{}, :index, User), do: false
+
+    def can?(%User{}, :create, %User{}), do: true
 
     def can?(%User{id: user_id}, action, %User{id: user_id})
         when action in [:edit, :update, :read, :delete, :touch, :show],
         do: true
 
-    def can?(%User{}, action, %User{})
-        when action in [:edit, :update, :read, :delete, :touch, :show],
-        do: false
+    def can?(_, _, %User{}), do: false
 
     # Settings
 
     def can?(%User{id: user_id}, action, %Settings{user_id: user_id})
         when action in [:show, :edit, :update],
         do: true
+
+    def can?(_, _, %Settings{}), do: false
 
     def can?(subject, action, resource) do
       raise """

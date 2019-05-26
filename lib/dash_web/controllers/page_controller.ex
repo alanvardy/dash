@@ -4,7 +4,8 @@ defmodule DashWeb.PageController do
   alias DashWeb.Api
 
   def index(conn, _params) do
-    reports = Api.interpret_reports()
+    user = conn.assigns.current_user
+    reports = Api.interpret_reports(user)
     render(conn, "index.html", reports: reports)
   end
 end

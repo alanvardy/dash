@@ -9,7 +9,10 @@ defmodule Dash.Factory do
     %User{
       name: "User",
       email: "email@place.com",
-      password_hash: Pbkdf2.hash_pwd_salt("password")
+      password: "password",
+      password_confirmation: "password",
+      password_hash: Pbkdf2.hash_pwd_salt("password"),
+      settings: build(:settings)
     }
   end
 
@@ -18,50 +21,10 @@ defmodule Dash.Factory do
     %User{
       name: "User2",
       email: "email2@otherplace.com",
-      password_hash: Pbkdf2.hash_pwd_salt("password")
+      password: "password",
+      password_confirmation: "password",
+      password_hash: Pbkdf2.hash_pwd_salt("password"),
     }
-  end
-
-  @spec user_with_pw_factory() :: Dash.Accounts.User.t()
-  def user_with_pw_factory do
-    struct!(
-      user_factory(),
-      %{
-        password: "password",
-        password_confirmation: "password",
-    }
-      )
-  end
-
-  @spec user2_with_pw_factory() :: Dash.Accounts.User.t()
-  def user2_with_pw_factory do
-    struct!(
-      user2_factory(),
-      %{
-        password: "password",
-        password_confirmation: "password",
-    }
-      )
-  end
-
-  @spec user_with_nil_settings_factory() :: Dash.Accounts.User.t()
-  def user_with_nil_settings_factory do
-    struct!(
-      user_factory(),
-      %{
-        settings: nil
-    }
-      )
-  end
-
-  @spec user_with_settings_factory() :: Dash.Accounts.User.t()
-  def user_with_settings_factory do
-    struct!(
-      user_factory(),
-      %{
-        settings: build(:settings)
-    }
-      )
   end
 
   def settings_factory do

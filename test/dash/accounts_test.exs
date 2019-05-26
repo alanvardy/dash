@@ -1,26 +1,36 @@
 defmodule Dash.AccountsTest do
   @moduledoc false
   alias Dash.Accounts
+  alias Dash.Accounts.Settings
   alias Dash.Accounts.User
   import Dash.Factory
   use Dash.DataCase, async: true
 
   describe "users" do
-
-    @valid_attrs %{email: "some email", name: "some name", password: "some password", password_confirmation: "some password"}
-    @update_attrs %{email: "some updated email", name: "some updated name", password: "some updated password", password_confirmation: "some updated password"}
+    @valid_attrs %{
+      email: "some email",
+      name: "some name",
+      password: "some password",
+      password_confirmation: "some password"
+    }
+    @update_attrs %{
+      email: "some updated email",
+      name: "some updated name",
+      password: "some updated password",
+      password_confirmation: "some updated password"
+    }
     @invalid_attrs %{email: nil, name: nil, password: nil, password_confirmation: nil}
 
     test "list_users/0 returns all users" do
       user = insert(:user)
       users = Accounts.list_users()
 
-      assert users == [user]
+      assert strip_settings(users) == [strip_all(user)]
     end
 
     test "get_user!/1 returns the user with given id" do
-      user = insert(:user_with_nil_settings)
-      assert Accounts.get_user!(user.id) == user
+      user = insert(:user)
+      assert Accounts.get_user!(user.id) == strip_passwords(user)
     end
 
     test "create_user/1 with valid data creates a user" do
@@ -41,9 +51,9 @@ defmodule Dash.AccountsTest do
     end
 
     test "update_user/2 with invalid data returns error changeset" do
-      user = insert(:user_with_settings)
+      user = insert(:user)
       assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, @invalid_attrs)
-      assert user == Accounts.get_user!(user.id)
+      assert strip_all(user) == strip_settings(Accounts.get_user!(user.id))
     end
 
     test "delete_user/1 deletes the user" do
@@ -52,9 +62,53 @@ defmodule Dash.AccountsTest do
       assert_raise Ecto.NoResultsError, fn -> Accounts.get_user!(user.id) end
     end
 
+    test "get_settings_by_user/1 gets the users settings" do
+      user = insert(:user)
+      settings = Accounts.get_settings_by_user(user)
+      assert settings.user_id == user.id
+    end
+
+    test "get_settings!/1 gets settings" do
+      settings = insert(:settings)
+      settings2 = Accounts.get_settings!(settings.id)
+      assert strip_user(settings) == settings2
+      assert %Settings{} = settings
+    end
+
+    test "update_settings/1 updates settings" do
+      new_attribute = "XXXXX"
+      user = insert(:user)
+      settings = user.settings
+      Accounts.update_settings(settings, %{harvest_api_key: new_attribute})
+      settings = Accounts.get_settings!(settings.id)
+      assert %Settings{} = settings
+      assert settings.harvest_api_key == new_attribute
+    end
+
     test "change_user/1 returns a user changeset" do
       user = insert(:user)
       assert %Ecto.Changeset{} = Accounts.change_user(user)
+    end
+
+    test "change_settings/1 returns a settings changeset" do
+      settings = insert(:settings)
+      assert %Ecto.Changeset{} = Accounts.change_settings(settings)
+    end
+
+    defp strip_all(users) do
+      DashWeb.UserControllerTest.strip_all(users)
+    end
+
+    defp strip_passwords(users) do
+      DashWeb.UserControllerTest.strip_passwords(users)
+    end
+
+    defp strip_settings(users) do
+      DashWeb.UserControllerTest.strip_settings(users)
+    end
+
+    defp strip_user(settings) do
+      Map.put(settings, :user, nil)
     end
   end
 end

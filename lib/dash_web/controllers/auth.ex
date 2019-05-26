@@ -32,6 +32,8 @@ defmodule DashWeb.Auth do
   end
 
   def logout(conn) do
-    configure_session(conn, drop: true)
+    conn
+    |> configure_session(drop: true)
+    |> Map.put(:assigns, nil)
   end
 end

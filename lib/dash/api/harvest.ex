@@ -1,49 +1,39 @@
 defmodule DashWeb.Api.Harvest do
-
+  @moduledoc "For interacting with the Harvest API"
   alias Dash.FakeData
 
-  @moduledoc "For interacting with the Harvest API"
-
-  @api_key Application.get_env(:dash, :harvest_api_key)
-  @account_id Application.get_env(:dash, :harvest_account_id)
-
-  @headers [
-    Authorization: "Bearer #{@api_key}",
-    "Harvest-Account-ID": @account_id,
-    "User-Agent": "Alan Vardy"
-  ]
   @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 2000]
 
   # Pull in all projects as a map
-  @spec projects() :: [Map.t()]
-  def projects do
-    case Mix.env do
+  @spec projects(%Dash.Accounts.User{}) :: [any]
+  def projects(user) do
+    case Mix.env() do
       :test ->
         FakeData.projects()
 
       _ ->
-        get("/v2/projects")
+        get("/v2/projects", user)
         |> Map.get("projects")
-        |> report_keys()
+        |> report_keys(user)
     end
   end
 
   # Pull in all time entries as a map
-  @spec time_entries() :: [Map.t()]
-  def time_entries do
-    case Mix.env do
+  @spec time_entries(%Dash.Accounts.User{}) :: [Map.t()]
+  def time_entries(user) do
+    case Mix.env() do
       :test ->
         FakeData.time_entries()
 
       _ ->
-        get("/v2/time_entries")
+        get("/v2/time_entries", user)
         |> Map.get("time_entries")
         |> entry_keys()
     end
   end
 
   @doc "cherry pick the report attributes we want"
-  def report_keys(projects) do
+  def report_keys(projects, user) do
     projects
     |> Enum.filter(fn b -> Map.get(b, "budget") end)
     |> Enum.map(fn b ->
@@ -61,7 +51,7 @@ defmodule DashWeb.Api.Harvest do
           b
           |> Map.get("fee")
           |> trunc(),
-        hours: get_hours(b)
+        hours: get_hours(b, user)
       }
     end)
   end
@@ -83,8 +73,9 @@ defmodule DashWeb.Api.Harvest do
   end
 
   # get total hours spent on a project
-  defp get_hours(item) do
-    time_entries()
+  defp get_hours(item, user) do
+    user
+    |> time_entries
     |> Enum.filter(fn y -> y.project_id == Map.get(item, "id") end)
     |> Enum.map(fn y -> round_to_nearest_quarter(y.hours) end)
     |> Enum.reduce(0, fn y, acc -> y + acc end)
@@ -109,10 +100,19 @@ defmodule DashWeb.Api.Harvest do
   end
 
   # make a get request to the Harvest API
-  defp get(address) do
+  defp get(address, user) do
+    headers = get_headers(user)
+
     "https://api.harvestapp.com/api#{address}"
-    |> HTTPoison.get!(@headers, @options)
+    |> HTTPoison.get!(headers, @options)
     |> Map.get(:body)
     |> Poison.decode!()
+  end
+
+  defp get_headers(user) do
+    [
+      Authorization: "Bearer #{user.settings.harvest_api_key}",
+      "Harvest-Account-ID": user.settings.harvest_account_id
+    ]
   end
 end

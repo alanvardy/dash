@@ -3,15 +3,15 @@
 <ul>
 
   <li>
-    <strong>Email:</strong>
+    <strong>User Account:</strong>
     <%= link @settings.user.email, to: Routes.settings_path(@conn, :show, @settings.user) %>
-
   </li>
 
   <li>
     <strong>Harvest Account ID:</strong>
     <%= @settings.harvest_account_id %>
   </li>
+
   <li>
     <strong>Harvest API Key:</strong>
     <%= @settings.harvest_api_key %>

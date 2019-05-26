@@ -21,6 +21,7 @@ defmodule DashWeb.SessionController do
   def delete(conn, _) do
     conn
     |> DashWeb.Auth.logout()
+    |> put_flash(:info, "Goodbye!")
     |> redirect(to: Routes.page_path(conn, :index))
   end
 end

@@ -16,7 +16,6 @@ defmodule Dash.Accounts.Settings do
   @doc false
   def changeset(settings, attrs) do
     settings
-    |> cast(attrs, [:harvest_api_key, :harvest_account_id, :user_id])
-    |> validate_required(:user_id)
+    |> cast(attrs, [:harvest_api_key, :harvest_account_id])
   end
 end

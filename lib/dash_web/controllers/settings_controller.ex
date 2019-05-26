@@ -2,8 +2,10 @@ defmodule DashWeb.SettingsController do
   use DashWeb, :controller
 
   alias Dash.Accounts
+  alias Dash.Accounts.Settings
 
   plug :authenticate when action in [:show, :edit, :update]
+  plug :load_and_authorize_resource, model: Settings, only: [:show, :edit, :update]
 
   def show(conn, %{"id" => id}) do
     settings = Accounts.get_settings!(id)

@@ -20,7 +20,7 @@ defmodule DashWeb.UserController do
 
   def create(conn, %{"user" => user_params}) do
     case Accounts.create_user(user_params) do
-      {:ok, user} ->
+      {:ok, %{user: user}} ->
         conn
         |> Auth.login(user)
         |> put_flash(:info, "User created successfully.")

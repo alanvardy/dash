@@ -8,7 +8,11 @@
         </div>
         <div class="tile is-child">
           <p class="has-text-centered">
-            hours per workday needed to reach goal
+            <%= if report.days_left == 0 do %>
+            hours needed by end of day
+            <% else %>
+            hours per weekday needed to reach goal if you shut things down for the day
+            <% end %>
           </p>
         </div>
       </div>
@@ -40,6 +44,4 @@
         </div>
       </div>
     </div>
-
-
     <% end %>

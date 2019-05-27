@@ -20,3 +20,4 @@ before_script:
 script:
   - mix test
   - mix credo --strict
+  - mix coveralls

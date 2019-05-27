@@ -58,9 +58,11 @@ defmodule Dash.MixProject do
       # authentication
       {:comeonin, "~> 5.1"},
       {:pbkdf2_elixir, "~> 1.0"},
-      #authorization
+      # authorization
       {:canada, "~> 1.0.1"},
       {:canary, "~> 1.1.1"},
+      # documentation
+      {:ex_doc, "~> 0.19", only: :dev, runtime: false},
       # testing
       {:excoveralls, "~> 0.10", only: :test},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},

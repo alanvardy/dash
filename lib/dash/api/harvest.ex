@@ -31,6 +31,7 @@ defmodule DashWeb.Api.Harvest do
           b
           |> Map.get("budget")
           |> trunc(),
+        name: Map.get(b, "name"),
         client:
           b
           |> Map.get("client")

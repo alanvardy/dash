@@ -1,10 +1,11 @@
 defmodule DashWeb.SettingsControllerTest do
   @moduledoc false
   import Dash.Factory
+  import Dash.Helpers
   use DashWeb.ConnCase, async: true
 
   describe "settings" do
-    # Show actions
+    ##### SHOW ACTIONS #####
 
     test "cannot show settings if not logged in", %{conn: conn} do
       user = insert(:user)
@@ -19,9 +20,9 @@ defmodule DashWeb.SettingsControllerTest do
       user2 = insert(:user2)
       settings = user.settings
 
-      log_in_(conn, user2)
+      conn = log_in_(conn, user2)
       conn = get(conn, Routes.settings_path(conn, :show, settings))
-      assert redirected_to(conn) == Routes.session_path(conn, :new)
+      assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
 
     test "will show settings if for same user", %{conn: conn} do
@@ -33,7 +34,7 @@ defmodule DashWeb.SettingsControllerTest do
       assert html_response(conn, 200) =~ "Settings"
     end
 
-    # Edit actions
+    ##### EDIT ACTIONS #####
 
     test "cannot edit settings if not logged in", %{conn: conn} do
       user = insert(:user)
@@ -48,9 +49,9 @@ defmodule DashWeb.SettingsControllerTest do
       user2 = insert(:user2)
       settings = user.settings
 
-      log_in_(conn, user2)
+      conn = log_in_(conn, user2)
       conn = get(conn, Routes.settings_path(conn, :edit, settings))
-      assert redirected_to(conn) == Routes.session_path(conn, :new)
+      assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
 
     test "will edit settings if for same user", %{conn: conn} do
@@ -62,60 +63,48 @@ defmodule DashWeb.SettingsControllerTest do
       assert html_response(conn, 200) =~ "Settings"
     end
 
-    # update actions
+    #### UPDATE ACTIONS #####
 
-    # test "cannot update settings if not logged in", %{conn: conn} do
-    #   user = insert(:user)
-    #   settings = user.settings
-    #   new_attribute = "XXXXXX"
+    test "cannot update settings if not logged in", %{conn: conn} do
+      settings = insert(:settings)
+      new_attribute = "9999"
 
-    #   conn =
-    #     post(conn, Routes.settings_path(conn, :update, settings),
-    #       settings: %{harvest_account_id: new_attribute}
-    #     )
+      conn =
+        patch(conn, Routes.settings_path(conn, :update, settings),
+          settings: %{harvest_account_id: new_attribute}
+        )
 
-    #   assert redirected_to(conn) == Routes.session_path(conn, :new)
-    #   new_settings = Accounts.get_settings(settings)
-    #   refute new_settings.harvest_account_id == settings.harvest_account_id
-    # end
+      assert redirected_to(conn) == Routes.session_path(conn, :new)
+    end
 
-    # test "cannot update settings if for a different user", %{conn: conn} do
-    #   user = insert(:user)
-    #   user2 = insert(:user2)
-    #   settings = user.settings
-    #   new_attribute = "XXXXXX"
+    test "cannot update settings if logged in as different user", %{conn: conn} do
+      settings = insert(:settings)
+      user2 = insert(:user2)
+      new_attribute = "9999"
 
-    #   log_in_(conn, user2)
+      conn = log_in_(conn, user2)
 
-    #   conn =
-    #     post(conn, Routes.settings_path(conn, :update, settings),
-    #       settings: %{harvest_account_id: new_attribute}
-    #     )
+      conn =
+        patch(conn, Routes.settings_path(conn, :update, settings),
+          settings: %{harvest_account_id: new_attribute}
+        )
 
-    #   assert redirected_to(conn) == Routes.session_path(conn, :new)
-    #   new_settings = Accounts.get_settings(settings)
-    #   refute new_settings.harvest_account_id == settings.harvest_account_id
-    # end
+      assert redirected_to(conn) == Routes.page_path(conn, :index)
+    end
 
-    # test "will update settings if for same user", %{conn: conn} do
-    #   user = insert(:user)
-    #   settings = insert(:settings, user: user)
-    #   new_attribute = "XXXXXX"
+    test "can update settings if logged in same user", %{conn: conn} do
+      user = insert(:user)
+      settings = insert(:settings, user: user)
+      new_attribute = "9999"
 
-    #   conn = log_in_(conn, user)
+      conn = log_in_(conn, user)
 
-    #   conn =
-    #     post(conn, Routes.settings_path(conn, :update, settings),
-    #       settings: %{harvest_account_id: new_attribute}
-    #     )
+      conn =
+        patch(conn, Routes.settings_path(conn, :update, settings),
+          settings: %{harvest_account_id: new_attribute}
+        )
 
-    #   assert html_response(conn, 200) =~ "Settings"
-    #   new_settings = Accounts.get_settings(settings)
-    #   refute new_settings.harvest_account_id == settings.harvest_account_id
-    # end
-  end
-
-  def log_in_(conn, user) do
-    DashWeb.UserControllerTest.log_in_(conn, user)
+      assert redirected_to(conn) == Routes.settings_path(conn, :show, settings)
+    end
   end
 end

@@ -7,29 +7,17 @@ defmodule DashWeb.Api.Harvest do
   # Pull in all projects as a map
   @spec projects(%Dash.Accounts.User{}) :: [any]
   def projects(user) do
-    case Mix.env() do
-      :test ->
-        FakeData.projects()
-
-      _ ->
-        get("/v2/projects", user)
-        |> Map.get("projects")
-        |> report_keys(user)
-    end
+    get("/v2/projects", user)
+    |> Map.get("projects")
+    |> report_keys(user)
   end
 
   # Pull in all time entries as a map
   @spec time_entries(%Dash.Accounts.User{}) :: [Map.t()]
   def time_entries(user) do
-    case Mix.env() do
-      :test ->
-        FakeData.time_entries()
-
-      _ ->
-        get("/v2/time_entries", user)
-        |> Map.get("time_entries")
-        |> entry_keys()
-    end
+    get("/v2/time_entries", user)
+    |> Map.get("time_entries")
+    |> entry_keys()
   end
 
   @doc "cherry pick the report attributes we want"
@@ -100,13 +88,20 @@ defmodule DashWeb.Api.Harvest do
   end
 
   # make a get request to the Harvest API
-  defp get(address, user) do
-    headers = get_headers(user)
+  def get(address, user) do
+    case Mix.env() do
+      :test ->
+        FakeData.generate(address)
 
-    "https://api.harvestapp.com/api#{address}"
-    |> HTTPoison.get!(headers, @options)
-    |> Map.get(:body)
-    |> Poison.decode!()
+      # coveralls-ignore-start
+      _ ->
+        headers = get_headers(user)
+
+        "https://api.harvestapp.com/api#{address}"
+        |> HTTPoison.get!(headers, @options)
+        |> Map.get(:body)
+        |> Poison.decode!()
+    end
   end
 
   defp get_headers(user) do
@@ -115,4 +110,6 @@ defmodule DashWeb.Api.Harvest do
       "Harvest-Account-ID": user.settings.harvest_account_id
     ]
   end
+
+  # coveralls-ignore-stop
 end

@@ -10,9 +10,9 @@ defmodule DashWeb.Router do
     plug DashWeb.Auth
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
-  end
+  # pipeline :api do
+  #   plug :accepts, ["json"]
+  # end
 
   scope "/", DashWeb do
     pipe_through :browser

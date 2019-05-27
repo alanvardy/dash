@@ -11,6 +11,7 @@ defmodule Dash.DataCase do
   inside a transaction which is reset at the beginning
   of the test unless the test case is marked as async.
   """
+  # coveralls-ignore-start
 
   alias Dash.Repo
   alias Ecto.Adapters.SQL.Sandbox
@@ -54,4 +55,6 @@ defmodule Dash.DataCase do
       end)
     end)
   end
+
+  # coveralls-ignore-stop
 end

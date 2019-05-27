@@ -5,18 +5,6 @@ defmodule DashWeb.Api do
   alias DashWeb.Api.Harvest
   alias DashWeb.Api.Time
 
-  @doc "Gets all reports from Harvest API"
-  @spec get_harvest_reports(%User{}) :: [Map.t()]
-  def get_harvest_reports(user) do
-    Harvest.projects(user)
-  end
-
-  @doc "Gets all time entries from Harvest API"
-  @spec get_time_entries(%User{}) :: [Map.t()]
-  def get_time_entries(user) do
-    Harvest.time_entries(user)
-  end
-
   @doc "returns a view friendly list of maps"
   def interpret_reports(%User{settings: %Settings{harvest_api_key: nil, harvest_account_id: nil}}), do: []
   def interpret_reports(%User{settings: %Settings{harvest_api_key: _key, harvest_account_id: _id}} = user) do

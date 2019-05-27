@@ -1,7 +1,8 @@
 defmodule DashWeb.UserControllerTest do
   @moduledoc false
-  import Dash.Factory
   alias Dash.Accounts
+  import Dash.Factory
+  import Dash.Helpers
   use DashWeb.ConnCase, async: true
 
   @update_attrs %{
@@ -10,7 +11,10 @@ defmodule DashWeb.UserControllerTest do
     password: "some updated password_hash",
     password_confirmation: "some updated password_hash"
   }
+
   @invalid_attrs %{email: nil, name: nil, password: nil, password_confirmation: nil}
+
+  ##### INDEX ACTIONS #####
 
   describe "index" do
     test "doesnt list all users when not logged in", %{conn: conn} do
@@ -25,6 +29,8 @@ defmodule DashWeb.UserControllerTest do
       assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
   end
+
+  ##### SHOW ACTIONS #####
 
   describe "show user" do
     test "redirects from showing chosen user when not logged in", %{conn: conn} do
@@ -49,12 +55,16 @@ defmodule DashWeb.UserControllerTest do
     end
   end
 
+  ##### NEW ACTIONS #####
+
   describe "new user" do
     test "renders form", %{conn: conn} do
       conn = get(conn, Routes.user_path(conn, :new))
       assert html_response(conn, 200) =~ "Sign Up"
     end
   end
+
+  ##### CREATE ACTIONS #####
 
   describe "create user" do
     test "redirects to show when data is valid", %{conn: conn} do
@@ -67,6 +77,8 @@ defmodule DashWeb.UserControllerTest do
       assert html_response(conn, 200) =~ "Sign up"
     end
   end
+
+  ##### EDIT ACTIONS #####
 
   describe "edit user" do
     test "redirects from editing chosen user when not logged in", %{conn: conn} do
@@ -90,6 +102,8 @@ defmodule DashWeb.UserControllerTest do
       assert html_response(conn, 200) =~ "Edit User"
     end
   end
+
+  ##### UPDATE ACTIONS #####
 
   describe "update user" do
     test "redirects when user not logged in", %{conn: conn} do
@@ -117,6 +131,8 @@ defmodule DashWeb.UserControllerTest do
     end
   end
 
+  ##### DELETE ACTIONS #####
+
   describe "delete user" do
     test "doesn't delete chosen user when not logged in", %{conn: conn} do
       user = insert(:user)
@@ -131,39 +147,6 @@ defmodule DashWeb.UserControllerTest do
       conn = delete(conn, Routes.user_path(conn, :delete, user))
       assert redirected_to(conn) == Routes.page_path(conn, :index)
       assert strip_settings(Accounts.list_users()) == [strip_all(user), strip_all(user2)]
-    end
-  end
-
-  def log_in_(conn, user) do
-    post(conn, Routes.session_path(conn, :create),
-      session: %{email: user.email, password: user.password}
-    )
-  end
-
-  def strip_all(users) do
-    case users do
-      [_ | _] ->
-        users
-        |> Enum.map(fn x -> strip_passwords(x) end)
-        |> Enum.map(fn x -> strip_settings(x) end)
-
-      _ ->
-        users
-        |> strip_passwords()
-        |> strip_settings()
-    end
-  end
-
-  def strip_passwords(users) do
-    users
-    |> Map.put(:password, nil)
-    |> Map.put(:password_confirmation, nil)
-  end
-
-  def strip_settings(users) do
-    case users do
-      [_ | _] -> Enum.map(users, fn x -> Map.put(x, :settings, nil) end)
-      _ -> Map.put(users, :settings, nil)
     end
   end
 end

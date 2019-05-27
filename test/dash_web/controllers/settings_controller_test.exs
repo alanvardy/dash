@@ -1,6 +1,7 @@
 defmodule DashWeb.SettingsControllerTest do
   @moduledoc false
   import Dash.Factory
+  import Dash.Helpers
   use DashWeb.ConnCase, async: true
 
   describe "settings" do
@@ -19,9 +20,9 @@ defmodule DashWeb.SettingsControllerTest do
       user2 = insert(:user2)
       settings = user.settings
 
-      log_in_(conn, user2)
+      conn = log_in_(conn, user2)
       conn = get(conn, Routes.settings_path(conn, :show, settings))
-      assert redirected_to(conn) == Routes.session_path(conn, :new)
+      assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
 
     test "will show settings if for same user", %{conn: conn} do
@@ -48,9 +49,9 @@ defmodule DashWeb.SettingsControllerTest do
       user2 = insert(:user2)
       settings = user.settings
 
-      log_in_(conn, user2)
+      conn = log_in_(conn, user2)
       conn = get(conn, Routes.settings_path(conn, :edit, settings))
-      assert redirected_to(conn) == Routes.session_path(conn, :new)
+      assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
 
     test "will edit settings if for same user", %{conn: conn} do
@@ -105,11 +106,5 @@ defmodule DashWeb.SettingsControllerTest do
 
       assert redirected_to(conn) == Routes.settings_path(conn, :show, settings)
     end
-  end
-
-  ##### HELPERS #####
-
-  defp log_in_(conn, user) do
-    DashWeb.UserControllerTest.log_in_(conn, user)
   end
 end

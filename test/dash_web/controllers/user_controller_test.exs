@@ -1,7 +1,8 @@
 defmodule DashWeb.UserControllerTest do
   @moduledoc false
-  import Dash.Factory
   alias Dash.Accounts
+  import Dash.Factory
+  import Dash.Helpers
   use DashWeb.ConnCase, async: true
 
   @update_attrs %{
@@ -13,7 +14,7 @@ defmodule DashWeb.UserControllerTest do
 
   @invalid_attrs %{email: nil, name: nil, password: nil, password_confirmation: nil}
 
-##### INDEX ACTIONS #####
+  ##### INDEX ACTIONS #####
 
   describe "index" do
     test "doesnt list all users when not logged in", %{conn: conn} do
@@ -146,45 +147,6 @@ defmodule DashWeb.UserControllerTest do
       conn = delete(conn, Routes.user_path(conn, :delete, user))
       assert redirected_to(conn) == Routes.page_path(conn, :index)
       assert strip_settings(Accounts.list_users()) == [strip_all(user), strip_all(user2)]
-    end
-  end
-
-  ##### HELPERS #####
-
-  def log_in_(conn, user) do
-    post(conn, Routes.session_path(conn, :create),
-      session: %{email: user.email, password: user.password}
-    )
-  end
-
-  def log_out(conn) do
-    delete(conn, Routes.session_path(conn, :delete, conn.assigns.current_user))
-  end
-
-  def strip_all(users) do
-    case users do
-      [_ | _] ->
-        users
-        |> Enum.map(fn x -> strip_passwords(x) end)
-        |> Enum.map(fn x -> strip_settings(x) end)
-
-      _ ->
-        users
-        |> strip_passwords()
-        |> strip_settings()
-    end
-  end
-
-  def strip_passwords(users) do
-    users
-    |> Map.put(:password, nil)
-    |> Map.put(:password_confirmation, nil)
-  end
-
-  def strip_settings(users) do
-    case users do
-      [_ | _] -> Enum.map(users, fn x -> Map.put(x, :settings, nil) end)
-      _ -> Map.put(users, :settings, nil)
     end
   end
 end

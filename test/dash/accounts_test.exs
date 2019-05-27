@@ -3,6 +3,7 @@ defmodule Dash.AccountsTest do
   alias Dash.Accounts
   alias Dash.Accounts.Settings
   alias Dash.Accounts.User
+  import Dash.Helpers
   import Dash.Factory
   use Dash.DataCase, async: true
 
@@ -93,22 +94,6 @@ defmodule Dash.AccountsTest do
     test "change_settings/1 returns a settings changeset" do
       settings = insert(:settings)
       assert %Ecto.Changeset{} = Accounts.change_settings(settings)
-    end
-
-    defp strip_all(users) do
-      DashWeb.UserControllerTest.strip_all(users)
-    end
-
-    defp strip_passwords(users) do
-      DashWeb.UserControllerTest.strip_passwords(users)
-    end
-
-    defp strip_settings(users) do
-      DashWeb.UserControllerTest.strip_settings(users)
-    end
-
-    defp strip_user(settings) do
-      Map.put(settings, :user, nil)
     end
   end
 end

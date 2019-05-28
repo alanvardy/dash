@@ -1,4 +1,5 @@
 defmodule DashWeb.TimeTest do
+  @moduledoc false
   alias DashWeb.Api.Time
   use Dash.DataCase, async: true
 

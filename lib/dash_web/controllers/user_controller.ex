@@ -8,10 +8,10 @@ defmodule DashWeb.UserController do
   plug :authenticate when action in [:index, :show, :edit, :update, :delete]
   plug :load_and_authorize_resource, model: User, preload: :settings, except: [:new, :create]
 
-  def index(conn, _params) do
-    users = Accounts.list_users()
-    render(conn, "index.html", users: users)
-  end
+  # def index(conn, _params) do
+  #   users = Accounts.list_users()
+  #   render(conn, "index.html", users: users)
+  # end
 
   def new(conn, _params) do
     changeset = Accounts.change_user(%User{})
@@ -61,8 +61,8 @@ defmodule DashWeb.UserController do
     {:ok, _user} = Accounts.delete_user(user)
 
     conn
-    |> put_flash(:info, "User deleted successfully.")
-    |> redirect(to: Routes.user_path(conn, :index))
+    |> put_flash(:info, "Account deleted successfully.")
+    |> redirect(to: Routes.page_path(conn, :index))
   end
 
   defp authenticate(conn, _opts) do

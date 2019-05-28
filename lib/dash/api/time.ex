@@ -11,7 +11,7 @@ defmodule DashWeb.Api.Time do
   def weekdays_left(days_left) do
     today = Timex.today()
 
-    0..days_left
+    1..days_left
     |> Enum.map(fn x -> Timex.shift(today, days: x) end)
     |> Enum.map(fn x -> Timex.weekday(x) end)
     |> Enum.reject(fn x -> (x == 6) || (x == 7) end)
@@ -27,7 +27,6 @@ defmodule DashWeb.Api.Time do
   end
 
   @spec hours_per_day(Integer.t(), Integer.t(), Integer.t()) :: Float.t()
-  def hours_per_day(budget, hours, days_left) do
-    (budget - hours) / days_left
-  end
+  def hours_per_day(budget, hours, 0), do: budget - hours
+  def hours_per_day(budget, hours, days_left), do: (budget - hours) / days_left
 end

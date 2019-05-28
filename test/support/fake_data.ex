@@ -80,7 +80,7 @@ defmodule Dash.FakeData do
               "created_at" => "2019-05-24T15:50:29Z",
               "ended_time" => nil,
               "external_reference" => nil,
-              "hours" => 3.43,
+              "hours" => 3,
               "id" => 1_012_087_130,
               "invoice" => nil,
               "is_billed" => false,

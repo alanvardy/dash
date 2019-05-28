@@ -10,7 +10,7 @@
         </p>
     </div>
    <%= if @reports do %>
-      <%= render "dash.html", reports: @reports %>
+      <%= render "harvest_project.html", reports: @reports %>
       <% else %>
       Log in to use the dash
    <% end %>

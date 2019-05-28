@@ -31,6 +31,7 @@ defmodule DashWeb.Api.Harvest do
           b
           |> Map.get("budget")
           |> trunc(),
+        name: Map.get(b, "name"),
         client:
           b
           |> Map.get("client")
@@ -67,16 +68,15 @@ defmodule DashWeb.Api.Harvest do
     |> Enum.filter(fn y -> y.project_id == Map.get(item, "id") end)
     |> Enum.map(fn y -> round_to_nearest_quarter(y.hours) end)
     |> Enum.reduce(0, fn y, acc -> y + acc end)
-    |> Float.round(2)
   end
 
   # Round a float to the nearest .25
-  defp round_to_nearest_quarter(number) do
+  defp round_to_nearest_quarter(number) when is_float(number) do
     primary =
-      number
-      |> Float.round(2)
-      |> Kernel.*(100)
-      |> Kernel.trunc()
+    number
+    |> Float.round(2)
+    |> Kernel.*(100)
+    |> Kernel.trunc()
 
     remainder = if rem(primary, 25) > 12, do: 25, else: 0
 
@@ -86,6 +86,7 @@ defmodule DashWeb.Api.Harvest do
     |> Kernel.+(remainder)
     |> Kernel./(100)
   end
+  defp round_to_nearest_quarter(number) when is_integer(number), do: number
 
   # make a get request to the Harvest API
   def get(address, user) do

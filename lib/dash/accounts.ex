@@ -76,6 +76,7 @@ defmodule Dash.Accounts do
     |> Repo.get(id)
   end
 
+  @doc "get settings for user with settings id"
   def get_settings!(id) do
     Settings
     |> preload(:user)

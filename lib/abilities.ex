@@ -4,8 +4,6 @@ defmodule Dash.Abilities do
   alias Dash.Accounts.User
 
   defimpl Canada.Can, for: User do
-    # coveralls-ignore-start
-
     # User accounts
 
     def can?(%User{}, :index, User), do: false
@@ -41,7 +39,5 @@ defmodule Dash.Abilities do
       resource: #{inspect(resource)}
       """
     end
-
-    # coveralls-ignore-stop
   end
 end

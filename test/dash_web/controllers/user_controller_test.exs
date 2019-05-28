@@ -129,6 +129,14 @@ defmodule DashWeb.UserControllerTest do
       assert user.name == @update_attrs.name
       assert user.email == @update_attrs.email
     end
+
+    test "returns a changeset when given bad attributes", %{conn: conn} do
+      user = insert(:user)
+      conn = log_in_(conn, user)
+      put(conn, Routes.user_path(conn, :update, user), user: @invalid_attrs)
+      user = Accounts.get_user!(user.id)
+      refute user.name == @update_attrs.name
+  end
   end
 
   ##### DELETE ACTIONS #####
@@ -140,13 +148,22 @@ defmodule DashWeb.UserControllerTest do
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "doesn't delete chosen user when logged in", %{conn: conn} do
+    test "doesn't delete chosen user when logged in as different user", %{conn: conn} do
       user = insert(:user)
       user2 = insert(:user2)
       conn = log_in_(conn, user2)
       conn = delete(conn, Routes.user_path(conn, :delete, user))
       assert redirected_to(conn) == Routes.page_path(conn, :index)
       assert strip_settings(Accounts.list_users()) == [strip_all(user), strip_all(user2)]
+    end
+
+    test "can delete user when logged in as same user", %{conn: conn} do
+      user = insert(:user)
+      conn = log_in_(conn, user)
+      assert strip_settings(Accounts.list_users()) == [strip_all(user)]
+      conn = delete(conn, Routes.user_path(conn, :delete, user))
+      assert redirected_to(conn) == Routes.page_path(conn, :index)
+      assert Accounts.list_users() == []
     end
   end
 end

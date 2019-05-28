@@ -61,8 +61,8 @@ defmodule DashWeb.UserController do
     {:ok, _user} = Accounts.delete_user(user)
 
     conn
-    |> put_flash(:info, "User deleted successfully.")
-    |> redirect(to: Routes.user_path(conn, :index))
+    |> put_flash(:info, "Account deleted successfully.")
+    |> redirect(to: Routes.page_path(conn, :index))
   end
 
   defp authenticate(conn, _opts) do

@@ -1,5 +1,17 @@
 {
   "coverage_options": {
     "minimum_coverage": 90
-  }
+  },
+  "skip_files": [
+    "error_helpers.ex",
+    "channel_case.ex",
+    "conn_case.ex",
+    "lib/abilities.ex",
+    "endpoint.ex",
+    "application.ex",
+    "repo.ex",
+    "data_case.ex",
+    "dash.ex",
+    "dash_web.ex"
+  ]
 }

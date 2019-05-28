@@ -12,7 +12,6 @@ defmodule DashWeb.ChannelCase do
   inside a transaction which is reset at the beginning
   of the test unless the test case is marked as async.
   """
-  # coveralls-ignore-start
 
   alias Ecto.Adapters.SQL.Sandbox
 
@@ -37,5 +36,4 @@ defmodule DashWeb.ChannelCase do
 
     :ok
   end
-  # coveralls-ignore-stop
 end

@@ -3,9 +3,7 @@ update_configs:
   # required properties omitted ...
   - package_manager: "elixir:hex"
     directory: "/"
-    update_schedule: "live"
-    default_reviewers:
-    - "alanvardy"
+    update_schedule: "weekly"
     # automerged_updates:
     #   - match:
     #       dependency_type: "all"
@@ -26,9 +24,7 @@ update_configs:
     #       # - "all"
   - package_manager: "javascript"
     directory: "/assets"
-    update_schedule: "live"
-    default_reviewers:
-    - "alanvardy"
+    update_schedule: "weekly"
     # automerged_updates:
     #   - match:
     #       dependency_type: "all"

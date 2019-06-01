@@ -1,0 +1,14 @@
+{
+  "name": "Dash",
+  "description": "My awesome Phoenix app, running on Dokku!",
+  "keywords": [
+    "dokku",
+    "elixir",
+    "phoenix"
+  ],
+  "scripts": {
+    "dokku": {
+      "postdeploy": "mix ecto.migrate"
+    }
+  }
+}

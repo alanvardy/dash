@@ -1,6 +1,7 @@
 defmodule DashWeb.Api.Harvest do
   @moduledoc "For interacting with the Harvest API"
   alias Dash.FakeData
+  alias DashWeb.Api.Time
 
   @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 2000]
 
@@ -66,6 +67,7 @@ defmodule DashWeb.Api.Harvest do
     user
     |> time_entries
     |> Enum.filter(fn y -> y.project_id == Map.get(item, "id") end)
+    |> Enum.filter(fn y -> Time.current_month?(y.spent_date) end)
     |> Enum.map(fn y -> round_to_nearest_quarter(y.hours) end)
     |> Enum.reduce(0, fn y, acc -> y + acc end)
   end

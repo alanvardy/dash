@@ -26,6 +26,15 @@ defmodule DashWeb.Api.Time do
     month
   end
 
+  def current_month?(date) do
+    [year, month, _day] = String.split(date, "-")
+    current_date = Timex.today()
+    {:ok, current_month} = Timex.format(current_date, "%m", :strftime)
+    {:ok, current_year} = Timex.format(current_date, "%Y", :strftime)
+
+    current_month == month && current_year == year
+  end
+
   @spec hours_per_day(Integer.t(), Integer.t(), Integer.t()) :: Float.t()
   def hours_per_day(budget, hours, 0), do: budget - hours
   def hours_per_day(budget, hours, days_left), do: (budget - hours) / days_left

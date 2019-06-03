@@ -6,8 +6,12 @@ defmodule DashWeb.Api do
   alias DashWeb.Api.Time
 
   @doc "returns a view friendly list of maps"
-  def interpret_reports(%User{settings: %Settings{harvest_api_key: nil, harvest_account_id: nil}}), do: []
-  def interpret_reports(%User{settings: %Settings{harvest_api_key: _key, harvest_account_id: _id}} = user) do
+  def interpret_reports(%User{settings: %Settings{harvest_api_key: nil, harvest_account_id: nil}}),
+    do: []
+
+  def interpret_reports(
+        %User{settings: %Settings{harvest_api_key: _key, harvest_account_id: _id}} = user
+      ) do
     first_step =
       Enum.map(Harvest.projects(user), fn x ->
         x
@@ -26,6 +30,7 @@ defmodule DashWeb.Api do
       |> Map.put(:hours_per_day, hours_per_day(x))
     end)
   end
+
   def interpret_reports(_), do: []
 
   defp hours_per_day(map) do

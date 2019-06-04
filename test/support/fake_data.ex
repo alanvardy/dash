@@ -2,6 +2,14 @@ defmodule Dash.FakeData do
   @moduledoc """
   Fake API data for development testing and Travis CI
   """
+  def time do
+    Timex.format!(Timex.to_datetime(Timex.now(), "America/Chicago"), "{ISO:Extended:Z}")
+  end
+
+  def today do
+    {:ok, date} = Timex.format(Timex.today(), "%Y-%m-%d", :strftime)
+    date
+  end
 
   def generate(url) do
     case url do
@@ -77,7 +85,7 @@ defmodule Dash.FakeData do
                 "name" => "AlanCorp"
               },
               "cost_rate" => 0.0,
-              "created_at" => "2019-05-24T15:50:29Z",
+              "created_at" => time(),
               "ended_time" => nil,
               "external_reference" => nil,
               "hours" => 3,
@@ -90,7 +98,7 @@ defmodule Dash.FakeData do
               "locked_reason" => nil,
               "notes" => "dksjfghsdg",
               "project" => %{"code" => "12443", "id" => 75_747_372, "name" => "Retainer"},
-              "spent_date" => "2019-05-24",
+              "spent_date" => today(),
               "started_time" => nil,
               "task" => %{"id" => 12_180_683, "name" => "QHER"},
               "task_assignment" => %{
@@ -102,7 +110,7 @@ defmodule Dash.FakeData do
                 "is_active" => true,
                 "updated_at" => "2019-05-03T23:33:58Z"
               },
-              "timer_started_at" => nil,
+              "timer_started_at" => time(),
               "updated_at" => "2019-05-24T20:49:07Z",
               "user" => %{"id" => 9_999_999, "name" => "That Guy"},
               "user_assignment" => %{
@@ -139,7 +147,7 @@ defmodule Dash.FakeData do
               "locked_reason" => nil,
               "notes" => "fjbsdkfjgb",
               "project" => %{"code" => "12443", "id" => 75_747_372, "name" => "Retainer"},
-              "spent_date" => "2019-05-24",
+              "spent_date" => today(),
               "started_time" => nil,
               "task" => %{"id" => 12_180_684, "name" => "POYB"},
               "task_assignment" => %{
@@ -156,7 +164,7 @@ defmodule Dash.FakeData do
               "user" => %{"id" => 9_999_999, "name" => "That Guy"},
               "user_assignment" => %{
                 "budget" => nil,
-                "created_at" => "2019-05-01T19:06:31Z",
+                "created_at" => time(),
                 "hourly_rate" => 80.0,
                 "id" => 198_011_405,
                 "is_active" => true,

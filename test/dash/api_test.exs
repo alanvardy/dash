@@ -1,6 +1,6 @@
 defmodule Dash.ApiTest do
   @moduledoc false
-  alias DashWeb.Api
+  alias Dash.Api
   import Dash.Factory
   use Dash.DataCase, async: true
 

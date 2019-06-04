@@ -1,7 +1,6 @@
-defmodule DashWeb.Api.Unsplash do
+defmodule Dash.Api.Unsplash do
   @moduledoc "For interacting with the Harvest API"
   alias Dash.FakeData
-  alias DashWeb.Api.Time
 
   @options [
     ssl: [{:versions, [:"tlsv1.2"]}],
@@ -35,12 +34,13 @@ defmodule DashWeb.Api.Unsplash do
         pic
         |> Map.get("user")
         |> Map.get("profile_image")
-        |> Map.get("small")
+        |> Map.get("small"),
+      date: Timex.today()
     }
   end
 
   # Pull in all projects as a map
-  def random_picture() do
+  def random_picture do
     get("/photos/random")
   end
 

@@ -1,9 +1,13 @@
-defmodule DashWeb.Api do
+defmodule Dash.Api do
   @moduledoc "Logic around APIs"
   alias Dash.Accounts.Settings
   alias Dash.Accounts.User
-  alias DashWeb.Api.Harvest
-  alias DashWeb.Api.Time
+  alias Dash.Api.Background
+  alias Dash.Api.Harvest
+  alias Dash.Api.Time
+  alias Dash.Api.Unsplash
+  alias Dash.Repo
+  import Ecto.Query, warn: false
 
   @doc "returns a view friendly list of maps"
   def interpret_reports(%User{settings: %Settings{harvest_api_key: nil, harvest_account_id: nil}}),
@@ -27,16 +31,35 @@ defmodule DashWeb.Api do
 
     Enum.map(second_step, fn x ->
       x
-      |> Map.put(:hours_per_day, hours_per_day(x))
+      |> Map.put(:hours_per_day, Time.hours_per_day(x))
     end)
   end
 
   def interpret_reports(_), do: []
 
-  defp hours_per_day(map) do
-    map
-    |> Map.get(:budget)
-    |> Time.hours_per_day(map.hours, map.weekdays_left)
-    |> Float.round(2)
+  def get_background do
+    today = Timex.today()
+
+    background =
+      Background
+      |> where([b], b.date == ^today)
+      |> order_by([b], :inserted_at)
+      |> Repo.all()
+
+    case background do
+      [head | _] -> head
+      _ -> create_background()
+    end
+  end
+
+  def create_background do
+    attrs = Unsplash.random_picture_filtered()
+
+    {:ok, bg} =
+      %Background{}
+      |> Background.changeset(attrs)
+      |> Repo.insert()
+
+    bg
   end
 end

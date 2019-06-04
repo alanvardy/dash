@@ -4,5 +4,4 @@ defmodule Dash.UnsplashTest do
   import Dash.Factory
   use Dash.DataCase, async: true
 
-
 end

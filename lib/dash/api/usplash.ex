@@ -12,10 +12,10 @@ defmodule Dash.Api.Unsplash do
     pic = random_picture()
 
     %{
-      # link:
-        # pic
-        # |> Map.get("links")
-        # |> Map.get("html"),
+      link:
+        pic
+        |> Map.get("links")
+        |> Map.get("html"),
       url:
         pic
         |> Map.get("urls")

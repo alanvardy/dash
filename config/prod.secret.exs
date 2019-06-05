@@ -34,7 +34,7 @@ unsplash_api_key =
     """
 
 config :dash,
-  unsplash_api_key: unsplash_api_keh
+  unsplash_api_key: unsplash_api_key
 
 config :dash, DashWeb.Endpoint,
   http: [:inet6, port: String.to_integer(System.get_env("PORT") || "4000")],

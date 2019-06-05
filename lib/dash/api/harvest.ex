@@ -1,7 +1,7 @@
-defmodule DashWeb.Api.Harvest do
+defmodule Dash.Api.Harvest do
   @moduledoc "For interacting with the Harvest API"
+  alias Dash.Api.Time
   alias Dash.FakeData
-  alias DashWeb.Api.Time
 
   @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 2000]
 
@@ -75,10 +75,10 @@ defmodule DashWeb.Api.Harvest do
   # Round a float to the nearest .25
   defp round_to_nearest_quarter(number) when is_float(number) do
     primary =
-    number
-    |> Float.round(2)
-    |> Kernel.*(100)
-    |> Kernel.trunc()
+      number
+      |> Float.round(2)
+      |> Kernel.*(100)
+      |> Kernel.trunc()
 
     remainder = if rem(primary, 25) > 12, do: 25, else: 0
 
@@ -88,6 +88,7 @@ defmodule DashWeb.Api.Harvest do
     |> Kernel.+(remainder)
     |> Kernel./(100)
   end
+
   defp round_to_nearest_quarter(number) when is_integer(number), do: number
 
   # make a get request to the Harvest API

@@ -1,6 +1,6 @@
 defmodule DashWeb.TimeTest do
   @moduledoc false
-  alias DashWeb.Api.Time
+  alias Dash.Api.Time
   use Dash.DataCase, async: true
 
   describe "hours_per_day/3" do

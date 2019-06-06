@@ -8,13 +8,13 @@
   </li>
 
   <li>
-    <strong>Harvest Account ID:</strong>
-    <%= @settings.harvest_account_id %>
+    <strong>Harvest API Key:</strong>
+    <%= @settings.harvest_api_key %>
   </li>
 
   <li>
-    <strong>Harvest API Key:</strong>
-    <%= @settings.harvest_api_key %>
+    <strong>Harvest Account ID:</strong>
+    <%= @settings.harvest_account_id %>
   </li>
 
 </ul>

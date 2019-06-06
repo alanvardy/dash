@@ -33,6 +33,9 @@ unsplash_api_key =
     You can generate one by calling: mix phx.gen.secret
     """
 
+config :dash,
+  unsplash_api_key: unsplash_api_key
+
 config :dash, DashWeb.Endpoint,
   http: [:inet6, port: String.to_integer(System.get_env("PORT") || "4000")],
   secret_key_base: secret_key_base

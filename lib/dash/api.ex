@@ -37,29 +37,37 @@ defmodule Dash.Api do
 
   def interpret_reports(_), do: []
 
-  def get_background do
+  def get_background(nil), do: nil
+  def get_background(user) do
     today = Timex.today()
 
     background =
       Background
       |> where([b], b.date == ^today)
+      |> where([b], b.user_id == ^user.id)
       |> order_by([b], :inserted_at)
       |> Repo.all()
 
     case background do
       [head | _] -> head
-      _ -> create_background()
+      _ -> create_background(user)
     end
   end
 
-  def create_background do
-    attrs = Unsplash.random_picture_filtered()
+  def create_background(user) do
+    attrs =
+      Unsplash.random_picture_filtered()
+      |> Map.put(:user_id, user.id)
 
-    {:ok, bg} =
+    background =
       %Background{}
       |> Background.changeset(attrs)
       |> Repo.insert()
 
-    bg
+      # Retry if bad result
+    case background do
+      {:ok, bg} -> bg
+      {:error, _} -> create_background(user)
+    end
   end
 end

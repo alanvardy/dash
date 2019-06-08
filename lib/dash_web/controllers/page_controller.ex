@@ -5,7 +5,7 @@ defmodule DashWeb.PageController do
 
   def index(conn, _params) do
     user = conn.assigns.current_user
-    reports = Api.interpret_reports(user)
+    reports = Api.get_harvest(user)
     background = Backgrounds.get_for(user)
     render(conn, "index.html", reports: reports, background: background)
   end

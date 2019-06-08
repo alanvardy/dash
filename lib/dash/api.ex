@@ -1,18 +1,13 @@
 defmodule Dash.Api do
   @moduledoc "Logic around APIs"
-  alias Dash.Accounts.Settings
-  alias Dash.Accounts.User
   alias Dash.Api.Harvest
   alias Dash.Api.Time
-  import Ecto.Query, warn: false
 
   @doc "returns a view friendly list of maps"
-  def interpret_reports(%User{settings: %Settings{harvest_api_key: nil, harvest_account_id: nil}}),
+  def get_harvest(%{settings: %{harvest_api_key: nil, harvest_account_id: nil}}),
     do: []
 
-  def interpret_reports(
-        %User{settings: %Settings{harvest_api_key: _key, harvest_account_id: _id}} = user
-      ) do
+  def get_harvest(%{settings: %{harvest_api_key: _key, harvest_account_id: _id}} = user) do
     first_step =
       Enum.map(Harvest.projects(user), fn x ->
         x
@@ -32,5 +27,5 @@ defmodule Dash.Api do
     end)
   end
 
-  def interpret_reports(_), do: []
+  def get_harvest(_), do: []
 end

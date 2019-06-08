@@ -1,5 +1,6 @@
 defmodule Dash.Backgrounds.Unsplash do
-  @moduledoc "For interacting with the Harvest API"
+  @moduledoc "Pulls background data from Unsplash API"
+
   alias Dash.FakeData
 
   @options [
@@ -8,40 +9,45 @@ defmodule Dash.Backgrounds.Unsplash do
     params: %{orientation: "landscape"}
   ]
 
-  def random_picture_filtered do
-    pic = random_picture()
+  def filter(%{background: %{}} = data), do: data
 
-    %{
+  def filter(%{response: response} = data) do
+    background = %{
       link:
-        pic
+        response
         |> Map.get("links")
         |> Map.get("html"),
       url:
-        pic
+        response
         |> Map.get("urls")
         |> Map.get("full"),
-      alt: Map.get(pic, "alt_description"),
-      description: Map.get(pic, "description"),
+      alt: Map.get(response, "alt_description"),
+      description: Map.get(response, "description"),
       first_name:
-        pic
+        response
         |> Map.get("user")
         |> Map.get("first_name"),
       last_name:
-        pic
+        response
         |> Map.get("user")
         |> Map.get("last_name"),
       profile_image:
-        pic
+        response
         |> Map.get("user")
         |> Map.get("profile_image")
         |> Map.get("small"),
       date: Timex.today()
     }
+
+    Map.put(data, :background, background)
   end
 
   # Pull in all projects as a map
-  def random_picture do
-    get("/photos/random")
+  def get_random(%{background: %{}} = data), do: data
+
+  def get_random(data) do
+    response = get("/photos/random")
+    Map.put(data, :response, response)
   end
 
   # make a get request to the Unsplash API

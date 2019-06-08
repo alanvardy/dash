@@ -2,11 +2,8 @@ defmodule Dash.Api do
   @moduledoc "Logic around APIs"
   alias Dash.Accounts.Settings
   alias Dash.Accounts.User
-  alias Dash.Backgrounds.Background
   alias Dash.Api.Harvest
   alias Dash.Api.Time
-  alias Dash.Api.Unsplash
-  alias Dash.Repo
   import Ecto.Query, warn: false
 
   @doc "returns a view friendly list of maps"

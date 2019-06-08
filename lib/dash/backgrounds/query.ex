@@ -1,14 +1,14 @@
 defmodule Dash.Backgrounds.Query do
-  alias Dash.Backgrounds.{Background, Unsplash}
+  @moduledoc "For interacting with backgrounds table"
+
+  alias Dash.Backgrounds.Background
   alias Dash.Repo
   import Ecto.Query, warn: false
 
-  def create_for([head | _], _user), do: head
+  def create(%{background: %Background{}} = data), do: data
 
-  def create_for(_, user) do
-    attrs =
-      Unsplash.random_picture_filtered()
-      |> Map.put(:user_id, user.id)
+  def create(%{background: background, user_id: user_id} = data) do
+    attrs = Map.put(background, :user_id, user_id)
 
     background =
       %Background{}
@@ -18,17 +18,23 @@ defmodule Dash.Backgrounds.Query do
     # Retry if bad result
     case background do
       {:ok, bg} -> bg
-      {:error, _} -> create_for(:error, user)
+      {:error, _} -> create(data)
     end
   end
 
-  def find_for(user) do
+  def find(%{user_id: user_id} = data) do
     today = Timex.today()
 
-    Background
-    |> where([b], b.date == ^today)
-    |> where([b], b.user_id == ^user.id)
-    |> order_by([b], :inserted_at)
-    |> Repo.all()
+    result =
+      Background
+      |> where([b], b.date == ^today)
+      |> where([b], b.user_id == ^user_id)
+      |> order_by([b], :inserted_at)
+      |> Repo.all()
+
+    case result do
+      [head | _] -> Map.put(data, :background, head)
+      _ -> data
+    end
   end
 end

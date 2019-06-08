@@ -2,7 +2,7 @@ defmodule Dash.Api do
   @moduledoc "Logic around APIs"
   alias Dash.Accounts.Settings
   alias Dash.Accounts.User
-  alias Dash.Api.Background
+  alias Dash.Backgrounds.Background
   alias Dash.Api.Harvest
   alias Dash.Api.Time
   alias Dash.Api.Unsplash
@@ -36,38 +36,4 @@ defmodule Dash.Api do
   end
 
   def interpret_reports(_), do: []
-
-  def get_background(nil), do: nil
-  def get_background(user) do
-    today = Timex.today()
-
-    background =
-      Background
-      |> where([b], b.date == ^today)
-      |> where([b], b.user_id == ^user.id)
-      |> order_by([b], :inserted_at)
-      |> Repo.all()
-
-    case background do
-      [head | _] -> head
-      _ -> create_background(user)
-    end
-  end
-
-  def create_background(user) do
-    attrs =
-      Unsplash.random_picture_filtered()
-      |> Map.put(:user_id, user.id)
-
-    background =
-      %Background{}
-      |> Background.changeset(attrs)
-      |> Repo.insert()
-
-      # Retry if bad result
-    case background do
-      {:ok, bg} -> bg
-      {:error, _} -> create_background(user)
-    end
-  end
 end

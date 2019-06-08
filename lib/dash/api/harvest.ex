@@ -1,7 +1,6 @@
 defmodule Dash.Api.Harvest do
   @moduledoc "For interacting with the Harvest API"
   alias Dash.Api.Time
-  alias Dash.FakeData
   use Retry
 
   @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 2000]
@@ -96,19 +95,21 @@ defmodule Dash.Api.Harvest do
   def get(address, user) do
     case Mix.env() do
       :test ->
-        FakeData.generate(address)
+        Dash.FakeData.generate(address)
 
       # coveralls-ignore-start
       _ ->
         headers = get_headers(user)
 
-        response = retry with: exponential_backoff() |> cap(1_000) |> expiry(10_000), rescue_only: [HTTPoison.Error] do
-          HTTPoison.get!("https://api.harvestapp.com/api#{address}", headers, @options)
-            after
-              result -> result
-            else
-              error -> error
-            end
+        response =
+          retry with: exponential_backoff() |> cap(1_000) |> expiry(10_000),
+                rescue_only: [HTTPoison.Error] do
+            HTTPoison.get!("https://api.harvestapp.com/api#{address}", headers, @options)
+          after
+            result -> result
+          else
+            error -> error
+          end
 
         response
         |> Map.get(:body)

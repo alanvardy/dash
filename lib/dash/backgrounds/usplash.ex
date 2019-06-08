@@ -1,4 +1,4 @@
-defmodule Dash.Api.Unsplash do
+defmodule Dash.Backgrounds.Unsplash do
   @moduledoc "For interacting with the Harvest API"
   alias Dash.FakeData
 

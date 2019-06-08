@@ -96,12 +96,12 @@ defmodule Dash.Accounts do
 
   """
   def create_user(attrs \\ %{}) do
-      Multi.new()
-      |> Multi.insert(:user, User.changeset(%User{}, attrs))
-      |> Multi.insert(:settings, fn %{user: user} ->
-        Ecto.build_assoc(user, :settings)
-      end)
-      |> Repo.transaction()
+    Multi.new()
+    |> Multi.insert(:user, User.changeset(%User{}, attrs))
+    |> Multi.insert(:settings, fn %{user: user} ->
+      Ecto.build_assoc(user, :settings)
+    end)
+    |> Repo.transaction()
   end
 
   @doc """

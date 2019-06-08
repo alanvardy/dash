@@ -1,4 +1,4 @@
-defmodule Dash.Api.Background do
+defmodule Dash.Backgrounds.Background do
   @moduledoc "Stored info for wallpaper pulled from Unsplash"
   alias Dash.Accounts.User
   use Ecto.Schema
@@ -21,7 +21,26 @@ defmodule Dash.Api.Background do
   @doc false
   def changeset(background, attrs) do
     background
-    |> cast(attrs, [:link, :url, :alt, :description, :first_name, :last_name, :profile_image, :date, :user_id])
-    |> validate_required([:link, :url, :alt, :first_name, :last_name, :profile_image, :date, :user_id])
+    |> cast(attrs, [
+      :link,
+      :url,
+      :alt,
+      :description,
+      :first_name,
+      :last_name,
+      :profile_image,
+      :date,
+      :user_id
+    ])
+    |> validate_required([
+      :link,
+      :url,
+      :alt,
+      :first_name,
+      :last_name,
+      :profile_image,
+      :date,
+      :user_id
+    ])
   end
 end

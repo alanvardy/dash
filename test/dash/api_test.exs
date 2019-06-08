@@ -17,7 +17,7 @@ defmodule Dash.ApiTest do
 
     test "returns a map when passed a valid user" do
       user = insert(:user)
-      assert [%{}|_] = Api.interpret_reports(user)
+      assert [%{} | _] = Api.interpret_reports(user)
     end
   end
 end

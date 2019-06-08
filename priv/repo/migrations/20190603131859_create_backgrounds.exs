@@ -14,6 +14,5 @@ defmodule Dash.Repo.Migrations.CreateBackgrounds do
 
       timestamps()
     end
-
   end
 end

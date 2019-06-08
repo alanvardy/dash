@@ -75,6 +75,7 @@ defmodule DashWeb.UserController do
       |> halt()
     end
   end
+
   def handle_unauthorized(conn) do
     conn
     |> put_flash(:warning, "You are not authorized to access this page")

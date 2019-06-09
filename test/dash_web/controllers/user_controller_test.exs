@@ -136,7 +136,7 @@ defmodule DashWeb.UserControllerTest do
       put(conn, Routes.user_path(conn, :update, user), user: @invalid_attrs)
       user = Accounts.get_user!(user.id)
       refute user.name == @update_attrs.name
-  end
+    end
   end
 
   ##### DELETE ACTIONS #####

@@ -67,7 +67,7 @@ defmodule Dash.MixProject do
       # testing
       {:excoveralls, "~> 0.10", only: :test},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
-      {:ex_machina, "~> 2.3", only: :test},
+      {:ex_machina, "~> 2.3", only: :test}
     ]
   end
 
@@ -84,7 +84,7 @@ defmodule Dash.MixProject do
       # for when you get a timeout on `mix deps.get`, just type mix deps
       deps: [&no_parallel/1, &long_timeout/1, "deps.get"],
       alldeps: [&no_parallel/1, &long_timeout/1, "deps.update --all"],
-      test: ["ecto.create --quiet", "ecto.migrate", "test"],
+      test: ["ecto.create --quiet", "ecto.migrate", "format", "test"],
       credo: ["credo --strict"]
     ]
   end

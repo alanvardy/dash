@@ -54,5 +54,4 @@ defmodule Dash.DataCase do
       end)
     end)
   end
-
 end

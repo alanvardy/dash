@@ -5,7 +5,7 @@
     <div class="section">
     </div>
     <%= if assigns[:current_user] do %>
-    <%= render "harvest_project.html", reports: @reports %>
+    <%= render "harvest_project.html", projects: @harvest.projects, time: @harvest.time %>
     <% else %>
     <div class="box">
       <h1>Welcome to Dash</h1>

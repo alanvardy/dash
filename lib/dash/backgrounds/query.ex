@@ -37,4 +37,12 @@ defmodule Dash.Backgrounds.Query do
       _ -> data
     end
   end
+
+  def latest_background do
+    Background
+    |> order_by([b], :inserted_at)
+    |> Repo.all()
+    |> Enum.reverse()
+    |> List.first()
+  end
 end

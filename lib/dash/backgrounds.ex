@@ -3,7 +3,7 @@ defmodule Dash.Backgrounds do
 
   alias Dash.Backgrounds.{Query, Unsplash}
 
-  def get_for(nil), do: nil
+  def get_for(nil), do: Query.latest_background()
 
   def get_for(user) do
     user

@@ -1,0 +1,8 @@
+<div class="tile is-child">
+  <div class="box is-pulled-right">
+    <span class="panel-icon">
+      <i class="fas fa-calendar-alt"></i>
+    </span>
+    <%= @weekdays_left %> weekdays left for <%= @month %>
+  </div>
+</div>

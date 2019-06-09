@@ -9,3 +9,25 @@ h1 {
 .box {
   margin-bottom: 1 rem;
 }
+
+.panel {
+  border-radius: 30px 30px 0px 0px !important;
+}
+
+.flex-between {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  flex-direction: row;
+
+  div:first-child {
+    padding-right: 50px;
+  }
+}
+
+.fas {
+  vertical-align: middle;
+  color: $primary;
+  padding-bottom: 4px;
+  padding-right: 5px;
+}

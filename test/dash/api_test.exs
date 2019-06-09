@@ -17,7 +17,12 @@ defmodule Dash.ApiTest do
 
     test "returns a map when passed a valid user" do
       user = insert(:user)
-      assert [%{} | _] = Api.get_harvest(user)
+
+      assert %{
+               harvest: %{},
+               projects: [%{} | _],
+               time: %{}
+             } = Api.get_harvest(user)
     end
   end
 end

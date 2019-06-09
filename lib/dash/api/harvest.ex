@@ -5,11 +5,23 @@ defmodule Dash.Api.Harvest do
 
   @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 2000]
 
+  def add_credentials(%{
+        settings: %{
+          harvest_api_key: api_key,
+          harvest_account_id: account_id
+        }
+      }) do
+    %{harvest: %{api_key: api_key, account_id: account_id}}
+  end
+
   # Pull in all projects as a map
   def projects(data) do
-    get("/v2/projects", data)
-    |> Map.get("projects")
-    |> report_keys(data)
+    projects =
+      get("/v2/projects", data)
+      |> Map.get("projects")
+      |> report_keys(data)
+
+    Map.put(data, :projects, projects)
   end
 
   # Pull in all time entries as a map

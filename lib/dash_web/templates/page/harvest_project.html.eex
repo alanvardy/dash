@@ -1,13 +1,13 @@
 <div class="is-ancestor">
   <div class="tile is-vertical">
-    <%= for report <- @reports do %>
+    <%= for project <- @projects do %>
     <div class="tile box">
       <div class="tile is-vertical is-parent">
         <p class="is-size-1 has-text-centered has-text-primary is-child">
-          <%= report.hours_per_day %>
+          <%= project.hours_per_day %>
         </p>
         <p class="has-text-centered is-child">
-          <%= if report.days_left == 0 do %>
+          <%= if @time.days_left == 0 do %>
           hours needed by end of day
           <% else %>
           hours per remaining weekday
@@ -16,25 +16,25 @@
       </div>
       <div class="panel is-child">
         <div class="panel-heading has-background-primary has-text-white has-text-weight-bold">
-          <%= report.client %>: <%= report.name %>
+          <%= project.client %>: <%= project.name %>
         </div>
         <div class="panel-block">
           <span class="panel-icon">
             <i class="fas fa-dollar-sign"></i>
           </span>
-          <%= report.fee %>
+          <%= project.fee %>
         </div>
         <div class="panel-block">
           <span class="panel-icon">
             <i class="fas fa-hourglass"></i>
           </span>
-          <%= report.hours %>/<%= report.budget %> hours for <%= report.month %>
+          <%= project.hours %>/<%= project.budget %> hours for <%= @time.month %>
         </div>
         <div class="panel-block">
           <span class="panel-icon">
             <i class="fas fa-calendar-alt"></i>
           </span>
-        <%= report.weekdays_left %> weekdays left
+        <%= @time.weekdays_left %> weekdays left
         </div>
       </div>
     </div>

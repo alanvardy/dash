@@ -1,43 +1,38 @@
-<div class="is-ancestor">
-  <div class="tile is-vertical">
     <%= for project <- @projects do %>
-    <div class="tile box">
-      <div class="tile is-vertical is-parent">
-        <p class="is-size-1 has-text-centered has-text-primary is-child">
-          <%= project.hours_per_day %>
-        </p>
-        <p class="has-text-centered is-child">
-          <%= if @time.days_left == 0 do %>
-          hours needed by end of day
-          <% else %>
-          hours per remaining weekday
-          <% end %>
-        </p>
-      </div>
-      <div class="panel is-child">
-        <div class="panel-heading has-background-primary has-text-white has-text-weight-bold">
-          <%= project.client %>: <%= project.name %>
+    <div class="tile is-child">
+      <div class="panel has-background-white is-child">
+        <div class="panel-heading has-background-primary has-text-white has-text-weight-bold flex-between">
+          <div>
+            <%= project.name %>
+          </div>
+          <div>
+            <%= project.client %>
+          </div>
         </div>
         <div class="panel-block">
-          <span class="panel-icon">
-            <i class="fas fa-dollar-sign"></i>
-          </span>
-          <%= project.fee %>
+          <div class="tile is-vertical is-parent">
+            <p class="is-size-1 has-text-centered has-text-primary is-child">
+              <%= project.hours_per_day %>
+            </p>
+            <p class="has-text-centered is-child">
+              <%= if @time.days_left == 0 do %>
+              hours needed by end of day
+              <% else %>
+              hours per remaining weekday
+              <% end %>
+            </p>
+          </div>
         </div>
-        <div class="panel-block">
-          <span class="panel-icon">
+        <div class="panel-block flex-between">
+          <div>
             <i class="fas fa-hourglass"></i>
-          </span>
-          <%= project.hours %>/<%= project.budget %> hours for <%= @time.month %>
-        </div>
-        <div class="panel-block">
-          <span class="panel-icon">
-            <i class="fas fa-calendar-alt"></i>
-          </span>
-        <%= @time.weekdays_left %> weekdays left
+            <%= project.hours %>/<%= project.budget %> hours
+          </div>
+          <div class="has-text-right">
+            <i class="fas fa-dollar-sign"></i>
+            <%= project.fee %>
+          </div>
         </div>
       </div>
     </div>
     <% end %>
-  </div>
-</div>

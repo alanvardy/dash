@@ -9,9 +9,9 @@ defmodule Dash.Backgrounds.Unsplash do
     params: %{orientation: "landscape"}
   ]
 
-  def filter(%{background: %{}} = data), do: data
+  def filter_picture_attrs(%{background: %{}} = data), do: data
 
-  def filter(%{response: response} = data) do
+  def filter_picture_attrs(%{response: response} = data) do
     background = %{
       link:
         response
@@ -43,9 +43,9 @@ defmodule Dash.Backgrounds.Unsplash do
   end
 
   # Pull in all projects as a map
-  def get_random(%{background: %{}} = data), do: data
+  def get_random_picture(%{background: %{}} = data), do: data
 
-  def get_random(data) do
+  def get_random_picture(data) do
     response = get("/photos/random")
     Map.put(data, :response, response)
   end

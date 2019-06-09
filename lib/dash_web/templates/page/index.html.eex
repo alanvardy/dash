@@ -1,24 +1,20 @@
 <div class="columns">
   <div class="column">
   </div>
-  <div class="column is-6">
-    <div class="section">
+  <%= if assigns[:current_user] do %>
+  <div class="column is-narrow">
+    <div class="tile is-ancestor">
+      <div class="tile is-vertical is-parent">
+        <%= if assigns[:harvest] do %>
+        <%= render "weekdays_left.html", weekdays_left: @harvest.time.weekdays_left, month: @harvest.time.month %>
+        <% end %>
+        <%= render "harvest_project.html", projects: @harvest.projects, time: @harvest.time %>
+      </div>
     </div>
-    <%= if assigns[:current_user] do %>
-    <%= render "harvest_project.html", reports: @reports %>
-    <% else %>
-    <div class="box">
-      <h1>Welcome to Dash</h1>
-      <p>
-        An app of minor convenience, currently featuring a summary of your Harvest
-        projects and convenience calculations around it.
-      </p>
-      <p>
-        Create an account and have a great day!
-      </p>
-    </div>
-    <% end %>
   </div>
+  <% else %>
+  <%= render "intro.html", conn: @conn %>
+  <% end %>
   <div class="column">
   </div>
 </div>

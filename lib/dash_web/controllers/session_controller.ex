@@ -11,13 +11,14 @@ defmodule DashWeb.SessionController do
         conn
         |> put_flash(:info, "Welcome back!")
         |> redirect(to: Routes.page_path(conn, :index))
+
       {:error, _reason, conn} ->
         conn
         |> put_flash(:error, "Invalid email/password combination")
         |> render("new.html")
     end
-
   end
+
   def delete(conn, _) do
     conn
     |> DashWeb.Auth.logout()

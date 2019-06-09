@@ -2,7 +2,7 @@ defmodule Dash.Accounts.User do
   use Ecto.Schema
   @moduledoc "Site user"
   alias Dash.Accounts.Settings
-  alias Dash.Api.Background
+  alias Dash.Backgrounds.Background
   import Ecto.Changeset
 
   schema "users" do

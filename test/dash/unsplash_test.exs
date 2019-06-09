@@ -3,5 +3,4 @@ defmodule Dash.UnsplashTest do
   # alias Dash.Api
   # import Dash.Factory
   use Dash.DataCase, async: true
-
 end

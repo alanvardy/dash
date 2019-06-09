@@ -1,0 +1,9 @@
+<div class="column is-half">
+  <div class="box">
+    <h1>Welcome to Dash</h1>
+    An app of minor convenience, currently featuring a summary of your Harvest
+    projects and convenience calculations around it.
+    <br><br>
+    <%= link "Create an account", to: Routes.user_path(@conn, :new) %> and have a great day!
+  </div>
+</div>

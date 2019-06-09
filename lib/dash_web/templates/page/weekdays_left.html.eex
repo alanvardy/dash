@@ -1,5 +1,5 @@
 <div class="tile is-child">
-  <div class="box is-pulled-right">
+  <div class="box">
     <span class="panel-icon">
       <i class="fas fa-calendar-alt"></i>
     </span>

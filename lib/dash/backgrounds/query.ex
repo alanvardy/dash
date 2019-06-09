@@ -5,9 +5,9 @@ defmodule Dash.Backgrounds.Query do
   alias Dash.Repo
   import Ecto.Query, warn: false
 
-  def create(%{background: %Background{}} = data), do: data.background
+  def create_background(%{background: %Background{}} = data), do: data.background
 
-  def create(%{background: background, user_id: user_id} = data) do
+  def create_background(%{background: background, user_id: user_id} = data) do
     attrs = Map.put(background, :user_id, user_id)
 
     background =
@@ -18,11 +18,11 @@ defmodule Dash.Backgrounds.Query do
     # Retry if bad result
     case background do
       {:ok, bg} -> bg
-      {:error, _} -> create(data)
+      {:error, _} -> create_background(data)
     end
   end
 
-  def find(%{user_id: user_id} = data) do
+  def find_background(%{user_id: user_id} = data) do
     today = Timex.today()
 
     result =

@@ -6,15 +6,15 @@ defmodule Dash.Backgrounds do
   def get_for(nil), do: nil
 
   def get_for(user) do
-    %{}
-    |> Map.put(:user_id, user.id)
-    # Check for current background
-    |> Query.find()
-    # Get from API if not found
-    |> Unsplash.get_random()
-    # Make the response useful
-    |> Unsplash.filter()
-    # Create if not pulled from DB
-    |> Query.create()
+    user
+    |> add_user_id()
+    |> Query.find_background()
+    |> Unsplash.get_random_picture()
+    |> Unsplash.filter_picture_attrs()
+    |> Query.create_background()
+  end
+
+  defp add_user_id(user) do
+    %{user_id: user.id}
   end
 end

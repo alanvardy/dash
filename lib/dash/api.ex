@@ -13,21 +13,7 @@ defmodule Dash.Api do
     |> Harvest.projects()
     |> Time.add_countdown()
     |> IO.inspect(label: "!!!!INSPECT!!!!")
-    # |> Enum.map(fn x ->
-    #   x
-    #   |> Map.put(:days_left, Time.days_left())
-    #   |> Map.put(:month, Time.month())
-    # end)
-    # |> Enum.map(fn x ->
-    #   x
-    #   |> Map.put(:weekdays_left, Time.weekdays_left(x.days_left))
-    # end)
     |> Time.add_hours_per_day()
-
-    # |> Enum.map(fn x ->
-    #   x
-    #   |> Map.put(:hours_per_day, Time.hours_per_day(x))
-    # end)
   end
 
   def get_harvest(_), do: []

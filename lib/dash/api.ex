@@ -7,21 +7,19 @@ defmodule Dash.Api do
   def get_harvest(%{settings: %{harvest_api_key: nil, harvest_account_id: nil}}),
     do: []
 
-  def get_harvest(%{settings: %{harvest_api_key: _key, harvest_account_id: _id}} = user) do
-    first_step =
-      Enum.map(Harvest.projects(user), fn x ->
-        x
-        |> Map.put(:days_left, Time.days_left())
-        |> Map.put(:month, Time.month())
-      end)
-
-    second_step =
-      Enum.map(first_step, fn x ->
-        x
-        |> Map.put(:weekdays_left, Time.weekdays_left(x.days_left))
-      end)
-
-    Enum.map(second_step, fn x ->
+  def get_harvest(%{settings: %{harvest_api_key: api_key, harvest_account_id: account_id}}) do
+    %{harvest: %{api_key: api_key, account_id: account_id}}
+    |> Harvest.projects()
+    |> Enum.map(fn x ->
+      x
+      |> Map.put(:days_left, Time.days_left())
+      |> Map.put(:month, Time.month())
+    end)
+    |> Enum.map(fn x ->
+      x
+      |> Map.put(:weekdays_left, Time.weekdays_left(x.days_left))
+    end)
+    |> Enum.map(fn x ->
       x
       |> Map.put(:hours_per_day, Time.hours_per_day(x))
     end)

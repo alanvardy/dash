@@ -6,23 +6,21 @@ defmodule Dash.Api.Harvest do
   @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 2000]
 
   # Pull in all projects as a map
-  @spec projects(%Dash.Accounts.User{}) :: [any]
-  def projects(user) do
-    get("/v2/projects", user)
+  def projects(data) do
+    get("/v2/projects", data)
     |> Map.get("projects")
-    |> report_keys(user)
+    |> report_keys(data)
   end
 
   # Pull in all time entries as a map
-  @spec time_entries(%Dash.Accounts.User{}) :: [Map.t()]
-  def time_entries(user) do
-    get("/v2/time_entries", user)
+  def time_entries(data) do
+    get("/v2/time_entries", data)
     |> Map.get("time_entries")
     |> entry_keys()
   end
 
   @doc "cherry pick the report attributes we want"
-  def report_keys(projects, user) do
+  def report_keys(projects, data) do
     projects
     |> Enum.filter(fn b -> Map.get(b, "budget") end)
     |> Enum.map(fn b ->
@@ -41,7 +39,7 @@ defmodule Dash.Api.Harvest do
           b
           |> Map.get("fee")
           |> trunc(),
-        hours: get_hours(b, user)
+        hours: get_hours(b, data)
       }
     end)
   end
@@ -63,8 +61,8 @@ defmodule Dash.Api.Harvest do
   end
 
   # get total hours spent on a project
-  defp get_hours(item, user) do
-    user
+  defp get_hours(item, data) do
+    data
     |> time_entries
     |> Enum.filter(fn y -> y.project_id == Map.get(item, "id") end)
     |> Enum.filter(fn y -> Time.current_month?(y.spent_date) end)
@@ -92,14 +90,14 @@ defmodule Dash.Api.Harvest do
   defp round_to_nearest_quarter(number) when is_integer(number), do: number
 
   # make a get request to the Harvest API
-  def get(address, user) do
+  def get(address, data) do
     case Mix.env() do
       :test ->
         Dash.FakeData.generate(address)
 
       # coveralls-ignore-start
       _ ->
-        headers = get_headers(user)
+        headers = get_headers(data.harvest)
 
         response =
           retry with: exponential_backoff() |> cap(1_000) |> expiry(10_000),
@@ -117,10 +115,10 @@ defmodule Dash.Api.Harvest do
     end
   end
 
-  defp get_headers(user) do
+  defp get_headers(harvest) do
     [
-      Authorization: "Bearer #{user.settings.harvest_api_key}",
-      "Harvest-Account-ID": user.settings.harvest_account_id
+      Authorization: "Bearer #{harvest.api_key}",
+      "Harvest-Account-ID": harvest.account_id
     ]
   end
 

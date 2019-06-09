@@ -1,29 +1,41 @@
 defmodule Dash.Api.Harvest do
   @moduledoc "For interacting with the Harvest API"
   alias Dash.Api.Time
-  alias Dash.FakeData
   use Retry
 
   @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 2000]
 
+  def add_credentials(%{
+        settings: %{
+          harvest_api_key: api_key,
+          harvest_account_id: account_id
+        }
+      }) do
+    %{harvest: %{api_key: api_key, account_id: account_id}}
+  end
+
   # Pull in all projects as a map
-  @spec projects(%Dash.Accounts.User{}) :: [any]
-  def projects(user) do
-    get("/v2/projects", user)
-    |> Map.get("projects")
-    |> report_keys(user)
+  def add_projects(data) do
+    projects =
+      get("/v2/projects", data)
+      |> Map.get("projects")
+      |> report_keys(data)
+
+    Map.put(data, :projects, projects)
   end
 
   # Pull in all time entries as a map
-  @spec time_entries(%Dash.Accounts.User{}) :: [Map.t()]
-  def time_entries(user) do
-    get("/v2/time_entries", user)
-    |> Map.get("time_entries")
-    |> entry_keys()
+  def add_time_entries(data) do
+    time_entries =
+      get("/v2/time_entries", data)
+      |> Map.get("time_entries")
+      |> entry_keys()
+
+    Map.put(data, :time_entries, time_entries)
   end
 
   @doc "cherry pick the report attributes we want"
-  def report_keys(projects, user) do
+  def report_keys(projects, data) do
     projects
     |> Enum.filter(fn b -> Map.get(b, "budget") end)
     |> Enum.map(fn b ->
@@ -42,7 +54,7 @@ defmodule Dash.Api.Harvest do
           b
           |> Map.get("fee")
           |> trunc(),
-        hours: get_hours(b, user)
+        hours: get_hours(b, data)
       }
     end)
   end
@@ -64,9 +76,8 @@ defmodule Dash.Api.Harvest do
   end
 
   # get total hours spent on a project
-  defp get_hours(item, user) do
-    user
-    |> time_entries
+  defp get_hours(item, data) do
+    data.time_entries
     |> Enum.filter(fn y -> y.project_id == Map.get(item, "id") end)
     |> Enum.filter(fn y -> Time.current_month?(y.spent_date) end)
     |> Enum.map(fn y -> round_to_nearest_quarter(y.hours) end)
@@ -93,22 +104,24 @@ defmodule Dash.Api.Harvest do
   defp round_to_nearest_quarter(number) when is_integer(number), do: number
 
   # make a get request to the Harvest API
-  def get(address, user) do
+  def get(address, data) do
     case Mix.env() do
       :test ->
-        FakeData.generate(address)
+        Dash.FakeData.generate(address)
 
       # coveralls-ignore-start
       _ ->
-        headers = get_headers(user)
+        headers = get_headers(data.harvest)
 
-        response = retry with: exponential_backoff() |> cap(1_000) |> expiry(10_000), rescue_only: [HTTPoison.Error] do
-          HTTPoison.get!("https://api.harvestapp.com/api#{address}", headers, @options)
-            after
-              result -> result
-            else
-              error -> error
-            end
+        response =
+          retry with: exponential_backoff() |> cap(1_000) |> expiry(10_000),
+                rescue_only: [HTTPoison.Error] do
+            HTTPoison.get!("https://api.harvestapp.com/api#{address}", headers, @options)
+          after
+            result -> result
+          else
+            error -> error
+          end
 
         response
         |> Map.get(:body)
@@ -116,10 +129,10 @@ defmodule Dash.Api.Harvest do
     end
   end
 
-  defp get_headers(user) do
+  defp get_headers(harvest) do
     [
-      Authorization: "Bearer #{user.settings.harvest_api_key}",
-      "Harvest-Account-ID": user.settings.harvest_account_id
+      Authorization: "Bearer #{harvest.api_key}",
+      "Harvest-Account-ID": harvest.account_id
     ]
   end
 

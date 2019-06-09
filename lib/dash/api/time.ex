@@ -1,6 +1,16 @@
 defmodule Dash.Api.Time do
   @moduledoc "Does time stuff and things"
 
+  def add_countdown(data) do
+    days_left = days_left()
+
+    Map.put(data, :time, %{
+      days_left: days_left,
+      weekdays_left: weekdays_left(days_left),
+      month: month()
+    })
+  end
+
   @spec days_left() :: non_neg_integer()
   def days_left do
     today = Timex.today()
@@ -36,14 +46,25 @@ defmodule Dash.Api.Time do
     current_month == month && current_year == year
   end
 
+  def add_hours_per_day(data) do
+    weekdays_left = data.time.weekdays_left
+
+    projects =
+      Enum.map(data.projects, fn x ->
+        Map.put(x, :hours_per_day, hours_per_day(x, weekdays_left))
+      end)
+
+    %{data | projects: projects}
+  end
+
   @spec hours_per_day(Integer.t(), Integer.t(), Integer.t()) :: Float.t()
   def hours_per_day(budget, hours, 0), do: budget - hours
   def hours_per_day(budget, hours, days_left), do: (budget - hours) / days_left
 
-  def hours_per_day(map) do
+  def hours_per_day(map, weekdays_left) do
     map
     |> Map.get(:budget)
-    |> hours_per_day(map.hours, map.weekdays_left)
+    |> hours_per_day(map.hours, weekdays_left)
     |> Float.round(2)
   end
 end

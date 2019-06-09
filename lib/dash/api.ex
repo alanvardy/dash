@@ -10,9 +10,9 @@ defmodule Dash.Api do
   def get_harvest(%{settings: %{harvest_api_key: _x, harvest_account_id: _y}} = user) do
     user
     |> Harvest.add_credentials()
-    |> Harvest.projects()
+    |> Harvest.add_time_entries()
+    |> Harvest.add_projects()
     |> Time.add_countdown()
-    |> IO.inspect(label: "!!!!INSPECT!!!!")
     |> Time.add_hours_per_day()
   end
 

@@ -5,7 +5,7 @@ defmodule Dash.Backgrounds.Query do
   alias Dash.Repo
   import Ecto.Query, warn: false
 
-  def create(%{background: %Background{}} = data), do: data
+  def create(%{background: %Background{}} = data), do: data.background
 
   def create(%{background: background, user_id: user_id} = data) do
     attrs = Map.put(background, :user_id, user_id)

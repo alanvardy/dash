@@ -15,7 +15,7 @@ defmodule Dash.Api.Harvest do
   end
 
   # Pull in all projects as a map
-  def projects(data) do
+  def add_projects(data) do
     projects =
       get("/v2/projects", data)
       |> Map.get("projects")
@@ -25,10 +25,13 @@ defmodule Dash.Api.Harvest do
   end
 
   # Pull in all time entries as a map
-  def time_entries(data) do
-    get("/v2/time_entries", data)
-    |> Map.get("time_entries")
-    |> entry_keys()
+  def add_time_entries(data) do
+    time_entries =
+      get("/v2/time_entries", data)
+      |> Map.get("time_entries")
+      |> entry_keys()
+
+    Map.put(data, :time_entries, time_entries)
   end
 
   @doc "cherry pick the report attributes we want"
@@ -74,8 +77,7 @@ defmodule Dash.Api.Harvest do
 
   # get total hours spent on a project
   defp get_hours(item, data) do
-    data
-    |> time_entries
+    data.time_entries
     |> Enum.filter(fn y -> y.project_id == Map.get(item, "id") end)
     |> Enum.filter(fn y -> Time.current_month?(y.spent_date) end)
     |> Enum.map(fn y -> round_to_nearest_quarter(y.hours) end)

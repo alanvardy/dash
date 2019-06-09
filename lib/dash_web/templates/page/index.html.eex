@@ -1,20 +1,20 @@
 <div class="columns">
   <div class="column">
   </div>
+  <%= if assigns[:current_user] do %>
   <div class="column is-narrow">
     <div class="tile is-ancestor">
       <div class="tile is-vertical is-parent">
         <%= if assigns[:harvest] do %>
         <%= render "weekdays_left.html", weekdays_left: @harvest.time.weekdays_left, month: @harvest.time.month %>
         <% end %>
-        <%= if assigns[:current_user] do %>
         <%= render "harvest_project.html", projects: @harvest.projects, time: @harvest.time %>
-        <% else %>
-        <%= render "intro.html" %>
-        <% end %>
       </div>
     </div>
   </div>
+  <% else %>
+  <%= render "intro.html", conn: @conn %>
+  <% end %>
   <div class="column">
   </div>
 </div>

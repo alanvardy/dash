@@ -5,10 +5,12 @@
   <div class="column is-narrow">
     <div class="tile is-ancestor">
       <div class="tile is-vertical is-parent">
-        <%= if assigns[:harvest] do %>
+<%= if @harvest == [] do %>
+  <div class="box">Have you considered adding your <%= link "Harvest Api Keys?", to: Routes.settings_path(@conn, :edit, @current_user.settings) %></div>
+<% else %>
         <%= render "weekdays_left.html", weekdays_left: @harvest.time.weekdays_left, month: @harvest.time.month %>
-        <% end %>
         <%= render "harvest_project.html", projects: @harvest.projects, time: @harvest.time %>
+<% end %>
       </div>
     </div>
   </div>

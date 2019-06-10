@@ -74,7 +74,7 @@ defmodule DashWeb.UserControllerTest do
       user = insert(:user)
       conn = log_in_(conn, user)
       conn = get(conn, Routes.user_path(conn, :edit, user))
-      assert html_response(conn, 200) =~ "Edit User"
+      assert html_response(conn, 200) =~ "User Settings"
     end
   end
 

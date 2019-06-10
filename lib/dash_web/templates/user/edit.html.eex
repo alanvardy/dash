@@ -1,10 +1,15 @@
-<div class="tabs">
-  <ul>
-    <li class="is-active"><%= link "User", to: Routes.user_path(@conn, :edit, @user) %></li>
-    <li><%= link "API", to: Routes.settings_path(@conn, :edit, @user.settings) %></li>
-  </ul>
+<div class="box">
+  <div class="tabs">
+    <ul>
+      <li class="is-active"><%= link "User", to: Routes.user_path(@conn, :edit, @user) %></li>
+      <li><%= link "API", to: Routes.settings_path(@conn, :edit, @user.settings) %></li>
+    </ul>
+  </div>
+
+  <h1>User Settings</h1>
+  <div class="columns is-centered">
+    <div class="column is-narrow">
+      <%= render "form.html", Map.put(assigns, :action, Routes.user_path(@conn, :update, @user)) %>
+    </div>
+  </div>
 </div>
-
-<h1>Edit User</h1>
-
-<%= render "form.html", Map.put(assigns, :action, Routes.user_path(@conn, :update, @user)) %>

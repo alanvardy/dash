@@ -1,7 +1,7 @@
 defmodule DashWeb.UserController do
   use DashWeb, :controller
 
-  alias Dash.Accounts
+  alias Dash.{Accounts, Backgrounds}
   alias Dash.Accounts.User
   alias DashWeb.Auth
 
@@ -33,8 +33,10 @@ defmodule DashWeb.UserController do
 
   def edit(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
+    background_user = conn.assigns.current_user
+    background = Backgrounds.get_for(background_user)
     changeset = Accounts.change_user(user)
-    render(conn, "edit.html", user: user, changeset: changeset)
+    render(conn, "edit.html", user: user, changeset: changeset, background: background)
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do

@@ -14,6 +14,7 @@ defmodule Dash.Api do
     |> Harvest.add_projects()
     |> Time.add_countdown()
     |> Time.add_hours_per_day()
+    |> Time.add_nice_hours()
   end
 
   def get_harvest(_), do: []

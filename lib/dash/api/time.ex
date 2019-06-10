@@ -67,4 +67,23 @@ defmodule Dash.Api.Time do
     |> hours_per_day(map.hours, weekdays_left)
     |> Float.round(2)
   end
+
+  def add_nice_hours(data) do
+    projects =
+      Enum.map(data.projects, fn x ->
+        Map.put(x, :nice_hours, nice_hours(x.hours_per_day))
+      end)
+
+    %{data | projects: projects}
+  end
+
+  def nice_hours(hours) do
+    minutes = trunc(hours * 60)
+
+    if minutes >= 60 do
+      "#{div(minutes, 60)}h:#{rem(minutes, 60)}m"
+    else
+      "#{minutes}m"
+    end
+  end
 end

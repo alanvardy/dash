@@ -1,11 +1,11 @@
 defmodule DashWeb.UserController do
   use DashWeb, :controller
 
-  alias Dash.Accounts
+  alias Dash.{Accounts, Backgrounds}
   alias Dash.Accounts.User
   alias DashWeb.Auth
 
-  plug :authenticate when action in [:index, :show, :edit, :update, :delete]
+  plug :authenticate when action in [:index, :edit, :update, :delete]
   plug :load_and_authorize_resource, model: User, preload: :settings, except: [:new, :create]
 
   # def index(conn, _params) do
@@ -24,22 +24,19 @@ defmodule DashWeb.UserController do
         conn
         |> Auth.login(user)
         |> put_flash(:info, "User created successfully.")
-        |> redirect(to: Routes.user_path(conn, :show, user))
+        |> redirect(to: Routes.user_path(conn, :edit, user))
 
       {:error, :user, %Ecto.Changeset{} = changeset, %{}} ->
         render(conn, "new.html", changeset: changeset)
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    user = Accounts.get_user!(id)
-    render(conn, "show.html", user: user)
-  end
-
   def edit(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
+    background_user = conn.assigns.current_user
+    background = Backgrounds.get_for(background_user)
     changeset = Accounts.change_user(user)
-    render(conn, "edit.html", user: user, changeset: changeset)
+    render(conn, "edit.html", user: user, changeset: changeset, background: background)
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
@@ -49,7 +46,7 @@ defmodule DashWeb.UserController do
       {:ok, user} ->
         conn
         |> put_flash(:info, "User updated successfully.")
-        |> redirect(to: Routes.user_path(conn, :show, user))
+        |> redirect(to: Routes.user_path(conn, :edit, user))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", user: user, changeset: changeset)

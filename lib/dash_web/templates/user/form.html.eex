@@ -29,7 +29,6 @@
 </div>
 
   <div>
-    <%= link "Back", to: Routes.user_path(@conn, :index), class: "button is-secondary" %>
     <%= submit "Save", class: "button is-outlined is-primary" %>
   </div>
 <% end %>

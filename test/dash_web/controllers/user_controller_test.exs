@@ -16,44 +16,19 @@ defmodule DashWeb.UserControllerTest do
 
   ##### INDEX ACTIONS #####
 
-  describe "index" do
-    test "doesnt list all users when not logged in", %{conn: conn} do
-      conn = get(conn, Routes.user_path(conn, :index))
-      assert redirected_to(conn) == Routes.session_path(conn, :new)
-    end
+  # describe "index" do
+  #   test "doesnt list all users when not logged in", %{conn: conn} do
+  #     conn = get(conn, Routes.user_path(conn, :index))
+  #     assert redirected_to(conn) == Routes.session_path(conn, :new)
+  #   end
 
-    test "doesnt list all users when logged in", %{conn: conn} do
-      user = insert(:user)
-      conn = log_in_(conn, user)
-      conn = get(conn, Routes.user_path(conn, :index))
-      assert redirected_to(conn) == Routes.page_path(conn, :index)
-    end
-  end
-
-  ##### SHOW ACTIONS #####
-
-  describe "show user" do
-    test "redirects from showing chosen user when not logged in", %{conn: conn} do
-      user = insert(:user)
-      conn = get(conn, Routes.user_path(conn, :show, user))
-      assert redirected_to(conn) == Routes.session_path(conn, :new)
-    end
-
-    test "redirects when different user", %{conn: conn} do
-      user = insert(:user)
-      user2 = insert(:user2)
-      conn = log_in_(conn, user2)
-      conn = get(conn, Routes.user_path(conn, :show, user))
-      assert redirected_to(conn) == Routes.page_path(conn, :index)
-    end
-
-    test "shows user when user", %{conn: conn} do
-      user = insert(:user)
-      conn = log_in_(conn, user)
-      conn = get(conn, Routes.user_path(conn, :show, user))
-      assert html_response(conn, 200) =~ "Show User"
-    end
-  end
+  #   test "doesnt list all users when logged in", %{conn: conn} do
+  #     user = insert(:user)
+  #     conn = log_in_(conn, user)
+  #     conn = get(conn, Routes.user_path(conn, :index))
+  #     assert redirected_to(conn) == Routes.page_path(conn, :index)
+  #   end
+  # end
 
   ##### NEW ACTIONS #####
 
@@ -67,9 +42,9 @@ defmodule DashWeb.UserControllerTest do
   ##### CREATE ACTIONS #####
 
   describe "create user" do
-    test "redirects to show when data is valid", %{conn: conn} do
+    test "redirects to edit when data is valid", %{conn: conn} do
       conn = post(conn, Routes.user_path(conn, :create), user: @update_attrs)
-      assert redirected_to(conn) == Routes.user_path(conn, :show, conn.assigns.current_user)
+      assert redirected_to(conn) == Routes.user_path(conn, :edit, conn.assigns.current_user)
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -99,7 +74,7 @@ defmodule DashWeb.UserControllerTest do
       user = insert(:user)
       conn = log_in_(conn, user)
       conn = get(conn, Routes.user_path(conn, :edit, user))
-      assert html_response(conn, 200) =~ "Edit User"
+      assert html_response(conn, 200) =~ "User Settings"
     end
   end
 
@@ -124,7 +99,7 @@ defmodule DashWeb.UserControllerTest do
       user = insert(:user)
       conn = log_in_(conn, user)
       conn = put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
-      assert redirected_to(conn) == Routes.user_path(conn, :show, user)
+      assert redirected_to(conn) == Routes.user_path(conn, :edit, user)
       user = Accounts.get_user!(user.id)
       assert user.name == @update_attrs.name
       assert user.email == @update_attrs.email

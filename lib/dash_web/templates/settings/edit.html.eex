@@ -1,5 +1,23 @@
-Edit Settings<h1>Edit User</h1>
-
-<%= render "form.html", Map.put(assigns, :action, Routes.settings_path(@conn, :update, @settings)) %>
-
-<span><%= link "Back", to: Routes.user_path(@conn, :index) %></span>
+<div class="box">
+  <div class="tabs">
+    <ul>
+      <li><%= link "User", to: Routes.user_path(@conn, :edit, @settings.user) %></li>
+      <li class="is-active"><%= link "API", to: Routes.settings_path(@conn, :edit, @settings) %></li>
+    </ul>
+  </div>
+    <h1>Harvest Credentials</h1>
+  <div class="columns is-centered">
+    <div class="column is-one-third">
+      <%= render "form.html", Map.put(assigns, :action, Routes.settings_path(@conn, :update, @settings)) %>
+    </div>
+    <div class="column is-one-third">
+      <h2>Getting a Personal Access Token</h2>
+      <p>
+        You can generate a personal access token through:
+      </p>
+      <p>
+        <%= link "Harvest Developer Tools", to: "https://id.getharvest.com/developers" %>
+      </p>
+    </div>
+  </div>
+</div>

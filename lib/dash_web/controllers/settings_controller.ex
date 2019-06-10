@@ -1,21 +1,18 @@
 defmodule DashWeb.SettingsController do
   use DashWeb, :controller
 
-  alias Dash.Accounts
+  alias Dash.{Accounts, Backgrounds}
   alias Dash.Accounts.Settings
 
-  plug :authenticate when action in [:show, :edit, :update]
-  plug :load_and_authorize_resource, model: Settings, only: [:show, :edit, :update]
-
-  def show(conn, %{"id" => id}) do
-    settings = Accounts.get_settings!(id)
-    render(conn, "show.html", settings: settings)
-  end
+  plug :authenticate when action in [:edit, :update]
+  plug :load_and_authorize_resource, model: Settings, only: [:edit, :update]
 
   def edit(conn, %{"id" => id}) do
     settings = Accounts.get_settings!(id)
     changeset = Accounts.change_settings(settings)
-    render(conn, "edit.html", settings: settings, changeset: changeset)
+    user = conn.assigns.current_user
+    background = Backgrounds.get_for(user)
+    render(conn, "edit.html", settings: settings, changeset: changeset, background: background)
   end
 
   def update(conn, %{"id" => id, "settings" => settings_params}) do
@@ -25,7 +22,7 @@ defmodule DashWeb.SettingsController do
       {:ok, settings} ->
         conn
         |> put_flash(:info, "Settings updated successfully.")
-        |> redirect(to: Routes.settings_path(conn, :show, settings))
+        |> redirect(to: Routes.settings_path(conn, :edit, settings))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", settings: settings, changeset: changeset)

@@ -1,7 +1,7 @@
 defmodule DashWeb.SettingsController do
   use DashWeb, :controller
 
-  alias Dash.Accounts
+  alias Dash.{Accounts, Backgrounds}
   alias Dash.Accounts.Settings
 
   plug :authenticate when action in [:edit, :update]
@@ -10,7 +10,9 @@ defmodule DashWeb.SettingsController do
   def edit(conn, %{"id" => id}) do
     settings = Accounts.get_settings!(id)
     changeset = Accounts.change_settings(settings)
-    render(conn, "edit.html", settings: settings, changeset: changeset)
+    user = conn.assigns.current_user
+    background = Backgrounds.get_for(user)
+    render(conn, "edit.html", settings: settings, changeset: changeset, background: background)
   end
 
   def update(conn, %{"id" => id, "settings" => settings_params}) do

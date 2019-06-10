@@ -6,35 +6,6 @@ defmodule DashWeb.SettingsControllerTest do
   use DashWeb.ConnCase, async: true
 
   describe "settings" do
-    ##### SHOW ACTIONS #####
-
-    test "cannot show settings if not logged in", %{conn: conn} do
-      user = insert(:user)
-      settings = user.settings
-
-      conn = get(conn, Routes.settings_path(conn, :show, settings))
-      assert redirected_to(conn) == Routes.session_path(conn, :new)
-    end
-
-    test "cannot show settings if for a different user", %{conn: conn} do
-      user = insert(:user)
-      user2 = insert(:user2)
-      settings = user.settings
-
-      conn = log_in_(conn, user2)
-      conn = get(conn, Routes.settings_path(conn, :show, settings))
-      assert redirected_to(conn) == Routes.page_path(conn, :index)
-    end
-
-    test "will show settings if for same user", %{conn: conn} do
-      user = insert(:user)
-      settings = insert(:settings, user: user)
-
-      conn = log_in_(conn, user)
-      conn = get(conn, Routes.settings_path(conn, :show, settings))
-      assert html_response(conn, 200) =~ "Settings"
-    end
-
     ##### EDIT ACTIONS #####
 
     test "cannot edit settings if not logged in", %{conn: conn} do
@@ -61,7 +32,7 @@ defmodule DashWeb.SettingsControllerTest do
 
       conn = log_in_(conn, user)
       conn = get(conn, Routes.settings_path(conn, :edit, settings))
-      assert html_response(conn, 200) =~ "Settings"
+      assert html_response(conn, 200) =~ "Harvest Credentials"
     end
 
     #### UPDATE ACTIONS #####
@@ -113,7 +84,7 @@ defmodule DashWeb.SettingsControllerTest do
           settings: %{harvest_account_id: new_attribute, harvest_api_key: new_attribute2}
         )
 
-      assert redirected_to(conn) == Routes.settings_path(conn, :show, settings)
+      assert redirected_to(conn) == Routes.settings_path(conn, :edit, settings)
       settings = Accounts.get_settings!(settings.id)
       assert settings.harvest_account_id == new_attribute
       assert settings.harvest_api_key == new_attribute2

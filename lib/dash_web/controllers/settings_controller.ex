@@ -4,13 +4,8 @@ defmodule DashWeb.SettingsController do
   alias Dash.Accounts
   alias Dash.Accounts.Settings
 
-  plug :authenticate when action in [:show, :edit, :update]
-  plug :load_and_authorize_resource, model: Settings, only: [:show, :edit, :update]
-
-  def show(conn, %{"id" => id}) do
-    settings = Accounts.get_settings!(id)
-    render(conn, "show.html", settings: settings)
-  end
+  plug :authenticate when action in [:edit, :update]
+  plug :load_and_authorize_resource, model: Settings, only: [:edit, :update]
 
   def edit(conn, %{"id" => id}) do
     settings = Accounts.get_settings!(id)
@@ -25,7 +20,7 @@ defmodule DashWeb.SettingsController do
       {:ok, settings} ->
         conn
         |> put_flash(:info, "Settings updated successfully.")
-        |> redirect(to: Routes.settings_path(conn, :show, settings))
+        |> redirect(to: Routes.settings_path(conn, :edit, settings))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", settings: settings, changeset: changeset)

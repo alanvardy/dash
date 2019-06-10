@@ -11,7 +11,7 @@ defmodule Dash.Abilities do
     def can?(%User{}, :create, %User{}), do: true
 
     def can?(%User{id: user_id}, action, %User{id: user_id})
-        when action in [:edit, :update, :read, :delete, :touch, :show],
+        when action in [:edit, :update, :read, :delete, :touch],
         do: true
 
     def can?(_, _, %User{}), do: false
@@ -19,7 +19,7 @@ defmodule Dash.Abilities do
     # Settings
 
     def can?(%User{id: user_id}, action, %Settings{user_id: user_id})
-        when action in [:show, :edit, :update],
+        when action in [:edit, :update],
         do: true
 
     def can?(_, _, %Settings{}), do: false

@@ -6,7 +6,6 @@ defmodule DashWeb.PageControllerTest do
 
   describe "Index" do
     test "is accessible without logging in", %{conn: conn} do
-      insert(:background)
       conn = get(conn, "/")
       assert html_response(conn, 200) =~ "Welcome to Dash"
     end

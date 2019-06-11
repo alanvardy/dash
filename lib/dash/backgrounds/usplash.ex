@@ -9,9 +9,7 @@ defmodule Dash.Backgrounds.Unsplash do
     params: %{orientation: "landscape"}
   ]
 
-  def filter_picture_attrs(%{background: %{}} = data), do: data
-
-  def filter_picture_attrs(%{response: response} = data) do
+  def filter_picture_attrs(%{background: nil, response: response} = data) do
     background = %{
       link:
         response
@@ -42,13 +40,15 @@ defmodule Dash.Backgrounds.Unsplash do
     Map.put(data, :background, background)
   end
 
-  # Pull in all projects as a map
-  def get_random_picture(%{background: %{}} = data), do: data
+  def filter_picture_attrs(data), do: data
 
-  def get_random_picture(data) do
+  # Pull in all projects as a map
+
+  def get_random_picture(%{background: nil} = data) do
     response = get("/photos/random")
     Map.put(data, :response, response)
   end
+  def get_random_picture(data), do: data
 
   # make a get request to the Unsplash API
   def get(address) do
@@ -65,7 +65,8 @@ defmodule Dash.Backgrounds.Unsplash do
         |> Map.get(:body)
         |> Poison.decode!()
     end
+
+    # coveralls-ignore-stop
   end
 
-  # coveralls-ignore-stop
 end

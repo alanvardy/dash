@@ -11,9 +11,10 @@ defmodule Dash.Application do
       # Start the Ecto repository
       Dash.Repo,
       # Start the endpoint when the application starts
-      DashWeb.Endpoint
+      DashWeb.Endpoint,
       # Starts a worker by calling: Dash.Worker.start_link(arg)
       # {Dash.Worker, arg},
+      {Dash.Backgrounds.Store, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

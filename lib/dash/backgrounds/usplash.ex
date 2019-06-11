@@ -48,6 +48,7 @@ defmodule Dash.Backgrounds.Unsplash do
     response = get("/photos/random")
     Map.put(data, :response, response)
   end
+
   def get_random_picture(data), do: data
 
   # make a get request to the Unsplash API
@@ -68,5 +69,4 @@ defmodule Dash.Backgrounds.Unsplash do
 
     # coveralls-ignore-stop
   end
-
 end

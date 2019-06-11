@@ -22,7 +22,7 @@ defmodule Dash.Backgrounds.Query do
     needs_update = background == nil
 
     data
-    |> Map.put(:background, nil)
+    |> Map.put(:background, background)
     |> Map.put(:needs_update, needs_update)
   end
 end

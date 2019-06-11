@@ -1,48 +1,28 @@
 defmodule Dash.Backgrounds.Query do
   @moduledoc "For interacting with backgrounds table"
 
-  alias Dash.Backgrounds.Background
-  alias Dash.Repo
-  import Ecto.Query, warn: false
+  alias Dash.Backgrounds.Store
 
-  def create_background(%{background: %Background{}} = data), do: data.background
+  def update_background(%{background: background, needs_update: false}), do: background
 
-  def create_background(%{background: background, user_id: user_id} = data) do
-    attrs = Map.put(background, :user_id, user_id)
+  def update_background(%{background: background, user_id: user_id, needs_update: true}) do
+    Store.update(user_id, background)
+    background
+  end
 
-    background =
-      %Background{}
-      |> Background.changeset(attrs)
-      |> Repo.insert()
-
-    # Retry if bad result
-    case background do
-      {:ok, bg} -> bg
-      {:error, _} -> create_background(data)
-    end
+  def find_background(%{user_id: nil} = data) do
+    data
+    |> Map.put(:background, nil)
+    |> Map.put(:needs_update, false)
   end
 
   def find_background(%{user_id: user_id} = data) do
-    today = Timex.today()
+    # today = Timex.today()
+    background = Store.value(user_id)
+    needs_update = background == nil
 
-    result =
-      Background
-      |> where([b], b.date == ^today)
-      |> where([b], b.user_id == ^user_id)
-      |> order_by([b], :inserted_at)
-      |> Repo.all()
-
-    case result do
-      [head | _] -> Map.put(data, :background, head)
-      _ -> data
-    end
-  end
-
-  def latest_background do
-    Background
-    |> order_by([b], :inserted_at)
-    |> Repo.all()
-    |> Enum.reverse()
-    |> List.first()
+    data
+    |> Map.put(:background, nil)
+    |> Map.put(:needs_update, needs_update)
   end
 end

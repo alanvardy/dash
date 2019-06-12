@@ -1,24 +1,50 @@
 defmodule Dash.Api.Time do
   @moduledoc "Does time stuff and things"
 
-  def add_countdown(data) do
+  alias Dash.Api.Report
+
+  @spec add_countdown(Dash.Api.Report.t()) :: Dash.Api.Report.t()
+  def add_countdown(%Report{} = data) do
     days_left = days_left()
 
-    Map.put(data, :time, %{
-      days_left: days_left,
-      weekdays_left: weekdays_left(days_left),
-      month: month()
-    })
+    %Report{
+      data
+      | time: %{
+          days_left: days_left,
+          weekdays_left: weekdays_left(days_left),
+          month: month()
+        }
+    }
+  end
+
+  @spec add_hours_per_day(Dash.Api.Report.t()) :: Dash.Api.Report.t()
+  def add_hours_per_day(%Report{time: %{weekdays_left: weekdays_left}} = data) do
+    projects =
+      Enum.map(data.projects, fn x ->
+        Map.put(x, :hours_per_day, hours_per_day(x, weekdays_left))
+      end)
+
+    %Report{data | projects: projects}
+  end
+
+  @spec add_nice_hours(Dash.Api.Report.t()) :: Dash.Api.Report.t()
+  def add_nice_hours(%Report{projects: projects} = data) do
+    projects =
+      Enum.map(projects, fn x ->
+        Map.put(x, :nice_hours, nice_hours(x.hours_per_day))
+      end)
+
+    %Report{data | projects: projects}
   end
 
   @spec days_left() :: non_neg_integer()
-  def days_left do
+  defp days_left do
     today = Timex.today()
     Timex.diff(Timex.end_of_month(today), today, :days)
   end
 
   @spec weekdays_left(integer()) :: non_neg_integer()
-  def weekdays_left(days_left) do
+  defp weekdays_left(days_left) do
     today = Timex.today()
 
     1..days_left
@@ -29,7 +55,7 @@ defmodule Dash.Api.Time do
   end
 
   @spec month() :: String.t()
-  def month do
+  defp month do
     {:ok, month} =
       Timex.today()
       |> Timex.format("%B", :strftime)
@@ -37,6 +63,7 @@ defmodule Dash.Api.Time do
     month
   end
 
+  @spec current_month?(binary) :: boolean
   def current_month?(date) do
     [year, month, _day] = String.split(date, "-")
     current_date = Timex.today()
@@ -46,38 +73,18 @@ defmodule Dash.Api.Time do
     current_month == month && current_year == year
   end
 
-  def add_hours_per_day(data) do
-    weekdays_left = data.time.weekdays_left
-
-    projects =
-      Enum.map(data.projects, fn x ->
-        Map.put(x, :hours_per_day, hours_per_day(x, weekdays_left))
-      end)
-
-    %{data | projects: projects}
-  end
-
   @spec hours_per_day(Integer.t(), Integer.t(), Integer.t()) :: Float.t()
   def hours_per_day(budget, hours, 0), do: budget - hours
   def hours_per_day(budget, hours, days_left), do: (budget - hours) / days_left
 
-  def hours_per_day(map, weekdays_left) do
-    map
-    |> Map.get(:budget)
-    |> hours_per_day(map.hours, weekdays_left)
+  @spec hours_per_day(%{budget: number, hours: number}, number) :: float
+  def hours_per_day(%{budget: budget, hours: hours}, weekdays_left) do
+    budget
+    |> hours_per_day(hours, weekdays_left)
     |> Float.round(2)
   end
 
-  def add_nice_hours(data) do
-    projects =
-      Enum.map(data.projects, fn x ->
-        Map.put(x, :nice_hours, nice_hours(x.hours_per_day))
-      end)
-
-    %{data | projects: projects}
-  end
-
-  def nice_hours(hours) do
+  defp nice_hours(hours) do
     minutes = trunc(hours * 60)
 
     if minutes >= 60 do

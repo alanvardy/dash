@@ -1,41 +1,45 @@
 defmodule Dash.Api.Harvest do
   @moduledoc "For interacting with the Harvest API"
-  alias Dash.Api.Time
+  alias Dash.Accounts.User
+  alias Dash.Api.{Report, Time}
   use Retry
 
   @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 2000]
 
-  def add_credentials(%{
+  @spec add_credentials(Dash.Api.Report.t(), Dash.Accounts.User.t()) :: Dash.Api.Report.t()
+  def add_credentials(%Report{}, %User{
         settings: %{
           harvest_api_key: api_key,
           harvest_account_id: account_id
         }
       }) do
-    %{harvest: %{api_key: api_key, account_id: account_id}}
+    %Report{keys: %{api_key: api_key, account_id: account_id}}
   end
 
   # Pull in all projects as a map
-  def add_projects(data) do
+  @spec add_projects(Dash.Api.Report.t()) :: Dash.Api.Report.t()
+  def add_projects(%Report{} = data) do
     projects =
       get("/v2/projects", data)
       |> Map.get("projects")
       |> report_keys(data)
 
-    Map.put(data, :projects, projects)
+    %Report{data | projects: projects}
   end
 
   # Pull in all time entries as a map
-  def add_time_entries(data) do
+  @spec add_time_entries(Dash.Api.Report.t()) :: Dash.Api.Report.t()
+  def add_time_entries(%Report{} = data) do
     time_entries =
       get("/v2/time_entries", data)
       |> Map.get("time_entries")
       |> entry_keys()
 
-    Map.put(data, :time_entries, time_entries)
+    %Report{data | time_entries: time_entries}
   end
 
-  @doc "cherry pick the report attributes we want"
-  def report_keys(projects, data) do
+  # cherry pick the report attributes we want
+  defp report_keys(projects, data) do
     projects
     |> Enum.filter(fn b -> Map.get(b, "budget") end)
     |> Enum.map(fn b ->
@@ -59,8 +63,7 @@ defmodule Dash.Api.Harvest do
     end)
   end
 
-  @doc "cherry pick the time attributes we want"
-  def entry_keys(time_entries) do
+  defp entry_keys(time_entries) do
     time_entries
     |> Enum.filter(fn x -> Map.get(x, "project") end)
     |> Enum.map(fn x ->
@@ -104,16 +107,16 @@ defmodule Dash.Api.Harvest do
   defp round_to_nearest_quarter(number) when is_integer(number), do: number
 
   # make a get request to the Harvest API
-  def get(address, data) do
+  defp get(address, %Report{keys: keys}) do
     case Mix.env() do
       :test ->
         Dash.FakeData.generate(address)
 
       # coveralls-ignore-start
       _ ->
-        headers = get_headers(data.harvest)
+        headers = get_headers(keys)
 
-        response =
+        %{body: body} =
           retry with: exponential_backoff() |> cap(1_000) |> expiry(10_000),
                 rescue_only: [HTTPoison.Error] do
             HTTPoison.get!("https://api.harvestapp.com/api#{address}", headers, @options)
@@ -123,16 +126,14 @@ defmodule Dash.Api.Harvest do
             error -> error
           end
 
-        response
-        |> Map.get(:body)
-        |> Poison.decode!()
+        Poison.decode!(body)
     end
   end
 
-  defp get_headers(harvest) do
+  defp get_headers(%{api_key: api_key, account_id: account_id}) do
     [
-      Authorization: "Bearer #{harvest.api_key}",
-      "Harvest-Account-ID": harvest.account_id
+      Authorization: "Bearer #{api_key}",
+      "Harvest-Account-ID": account_id
     ]
   end
 

@@ -1,28 +1,26 @@
 defmodule Dash.Backgrounds.Query do
   @moduledoc "For interacting with backgrounds table"
 
-  alias Dash.Backgrounds.Store
+  alias Dash.Backgrounds.{Background, Store}
 
-  def update_background(%{background: background, needs_update: false}), do: background
+  @spec update_background(Dash.Backgrounds.Background.t()) :: Map.t()
+  def update_background(%Background{background: background, needs_update: false}), do: background
 
-  def update_background(%{background: background, user_id: user_id, needs_update: true}) do
+  def update_background(%Background{background: background, user_id: user_id, needs_update: true}) do
     Store.update(user_id, background)
     background
   end
 
-  def find_background(%{user_id: nil} = data) do
-    data
-    |> Map.put(:background, nil)
-    |> Map.put(:needs_update, false)
+  @spec find_background(Dash.Backgrounds.Background.t()) :: Dash.Backgrounds.Background.t()
+  def find_background(%Background{user_id: nil} = data) do
+    %Background{data | background: nil, needs_update: false}
   end
 
-  def find_background(%{user_id: user_id} = data) do
+  def find_background(%Background{user_id: user_id} = data) do
     # today = Timex.today()
     background = Store.value(user_id)
     needs_update = background == nil
 
-    data
-    |> Map.put(:background, nil)
-    |> Map.put(:needs_update, needs_update)
+    %Background{data | background: background, needs_update: needs_update}
   end
 end

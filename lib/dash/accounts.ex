@@ -9,15 +9,17 @@ defmodule Dash.Accounts do
   alias Ecto.Multi
   import Ecto.Query, warn: false
 
+  @spec get_user_by_email(String.t()) :: %User{}
   def get_user_by_email(email) do
     User
     |> where([u], u.email == ^email)
     |> Repo.one()
   end
 
-  def get_settings_by_user(user) do
+  @spec get_settings_by_user(%User{}) :: %Settings{}
+  def get_settings_by_user(%User{id: id}) do
     Settings
-    |> where([u], u.user_id == ^user.id)
+    |> where([u], u.user_id == ^id)
     |> Repo.one()
   end
 

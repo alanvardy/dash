@@ -1,6 +1,7 @@
 defmodule Dash.Backgrounds.Unsplash do
   @moduledoc "Pulls background data from Unsplash API"
 
+  alias Dash.Backgrounds.Background
   alias Dash.FakeData
 
   @options [
@@ -9,7 +10,8 @@ defmodule Dash.Backgrounds.Unsplash do
     params: %{orientation: "landscape"}
   ]
 
-  def filter_picture_attrs(%{background: nil, response: response} = data) do
+  @spec filter_picture_attrs(%Background{}) :: %Background{}
+  def filter_picture_attrs(%Background{background: nil, response: response} = data) do
     background = %{
       link:
         response
@@ -37,20 +39,22 @@ defmodule Dash.Backgrounds.Unsplash do
       date: Timex.today()
     }
 
-    Map.put(data, :background, background)
+    %Background{data | background: background}
   end
 
   def filter_picture_attrs(data), do: data
 
   # Pull in all projects as a map
-
-  def get_random_picture(%{background: nil} = data) do
+  @spec get_random_picture(%Background{}) :: %Background{}
+  def get_random_picture(%Background{background: nil} = data) do
     response = get("/photos/random")
-    Map.put(data, :response, response)
+    %Background{data | response: response}
   end
+
   def get_random_picture(data), do: data
 
   # make a get request to the Unsplash API
+  @spec get(String.t()) :: Map.t()
   def get(address) do
     case Mix.env() do
       :test ->
@@ -68,5 +72,4 @@ defmodule Dash.Backgrounds.Unsplash do
 
     # coveralls-ignore-stop
   end
-
 end

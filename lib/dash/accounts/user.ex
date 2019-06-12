@@ -2,7 +2,6 @@ defmodule Dash.Accounts.User do
   use Ecto.Schema
   @moduledoc "Site user"
   alias Dash.Accounts.Settings
-  alias Dash.Backgrounds.Background
   import Ecto.Changeset
 
   schema "users" do
@@ -12,7 +11,6 @@ defmodule Dash.Accounts.User do
     field :password_confirmation, :string, virtual: true
     field :password_hash, :string
     has_one :settings, Settings, on_delete: :delete_all
-    has_many :backgrounds, Background, on_delete: :delete_all
 
     timestamps()
   end

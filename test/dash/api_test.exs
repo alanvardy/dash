@@ -1,6 +1,7 @@
 defmodule Dash.ApiTest do
   @moduledoc false
   alias Dash.Api
+  alias Dash.Api.Report
   import Dash.Factory
   use Dash.DataCase, async: true
 
@@ -18,11 +19,7 @@ defmodule Dash.ApiTest do
     test "returns a map when passed a valid user" do
       user = insert(:user)
 
-      assert %{
-               harvest: %{},
-               projects: [%{} | _],
-               time: %{}
-             } = Api.get_harvest(user)
+      assert %Report{} = Api.get_harvest(user)
     end
   end
 end

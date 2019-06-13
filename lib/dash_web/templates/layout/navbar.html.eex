@@ -18,15 +18,16 @@
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
-        <%= if @current_user do %>
-        <%= link @current_user.name, to: Routes.user_path(@conn, :edit, @current_user), class: "button is-secondary" %>
-            <%= link "Log out", to: Routes.session_path(@conn, :delete, @current_user), method: :delete, class: "button is-primary" %>
-        <% else %>
-        <%= link to: Routes.user_path(@conn, :new), class: "button is-primary" do %>
-            <strong>Sign up</strong>
-        <% end %>
+          <%= if @current_user do %>
+          <%= link "New background", to: Routes.page_path(@conn, :new), class: "button is-secondary" %>
+          <%= link @current_user.name, to: Routes.user_path(@conn, :edit, @current_user), class: "button is-secondary" %>
+          <%= link "Log out", to: Routes.session_path(@conn, :delete, @current_user), method: :delete, class: "button is-primary" %>
+          <% else %>
+          <%= link to: Routes.user_path(@conn, :new), class: "button is-primary" do %>
+          <strong>Sign up</strong>
+          <% end %>
           <%= link "Log in", to: Routes.session_path(@conn, :new), class: "button is-light" %>
-        <% end %>
+          <% end %>
           </a>
         </div>
       </div>

@@ -12,6 +12,15 @@ defmodule Dash.Backgrounds do
     |> Query.update_background()
   end
 
+  def new_for(user) do
+    %Background{}
+    |> add_user_id(user)
+    |> Map.put(:needs_update, true)
+    |> Unsplash.get_random_picture()
+    |> Unsplash.filter_picture_attrs()
+    |> Query.update_background()
+  end
+
   defp add_user_id(data, nil), do: data
   defp add_user_id(data, user), do: %Background{data | user_id: user.id}
 end

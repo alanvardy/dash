@@ -17,7 +17,6 @@ defmodule Dash.Backgrounds.Query do
   end
 
   def find_background(%Background{user_id: user_id} = data) do
-    # today = Timex.today()
     background = Store.value(user_id)
 
     needs_update =

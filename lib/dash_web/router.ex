@@ -18,6 +18,7 @@ defmodule DashWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/new", PageController, :new
     resources "/users", UserController, except: [:show, :index]
     resources "/sessions", SessionController, only: [:new, :create, :delete]
     resources "/settings", SettingsController, only: [:edit, :update]

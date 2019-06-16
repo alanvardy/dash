@@ -16,30 +16,32 @@ defmodule Dash.Api.Harvest do
     %Report{keys: %{api_key: api_key, account_id: account_id}}
   end
 
-  # Pull in all projects as a map
-  @spec add_projects(Dash.Api.Report.t()) :: Dash.Api.Report.t()
-  def add_projects(%Report{} = data) do
-    projects =
-      get("/v2/projects", data)
-      |> Map.get("projects")
-      |> report_keys(data)
+  @spec api_calls(Dash.Api.Report.t()) :: Dash.Api.Report.t()
+  def api_calls(%Report{} = data) do
+    projects = Task.async(fn -> get_projects(data) end)
+    time_entries = Task.async(fn -> get_time_entries(data) end)
 
-    %Report{data | projects: projects}
+    time_entries = entry_keys(Task.await(time_entries))
+    projects = report_keys(Task.await(projects), time_entries)
+    %Report{data | projects: projects, time_entries: time_entries}
+  end
+
+  # Pull in all projects as a map
+  @spec get_projects(Dash.Api.Report.t()) :: map()
+  def get_projects(%Report{} = data) do
+    get("/v2/projects", data)
+    |> Map.get("projects")
   end
 
   # Pull in all time entries as a map
-  @spec add_time_entries(Dash.Api.Report.t()) :: Dash.Api.Report.t()
-  def add_time_entries(%Report{} = data) do
-    time_entries =
-      get("/v2/time_entries", data)
-      |> Map.get("time_entries")
-      |> entry_keys()
-
-    %Report{data | time_entries: time_entries}
+  @spec get_time_entries(Dash.Api.Report.t()) :: map()
+  def get_time_entries(%Report{} = data) do
+    get("/v2/time_entries", data)
+    |> Map.get("time_entries")
   end
 
   # cherry pick the report attributes we want
-  defp report_keys(projects, data) do
+  defp report_keys(projects, time_entries) do
     projects
     |> Enum.filter(fn b -> Map.get(b, "budget") end)
     |> Enum.map(fn b ->
@@ -58,7 +60,7 @@ defmodule Dash.Api.Harvest do
           b
           |> Map.get("fee")
           |> trunc(),
-        hours: get_hours(b, data)
+        hours: get_hours(b, time_entries)
       }
     end)
   end
@@ -79,8 +81,8 @@ defmodule Dash.Api.Harvest do
   end
 
   # get total hours spent on a project
-  defp get_hours(item, data) do
-    data.time_entries
+  defp get_hours(item, time_entries) do
+    time_entries
     |> Enum.filter(fn y -> y.project_id == Map.get(item, "id") end)
     |> Enum.filter(fn y -> Time.current_month?(y.spent_date) end)
     |> Enum.map(fn y -> round_to_nearest_quarter(y.hours) end)

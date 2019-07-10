@@ -65,7 +65,7 @@ jobs:  # basic units of work in a run
       steps:
         - checkout
         - run:
-            name: Deploy Master to Dokku
+            name: Deploy Master to Dokku  on Digital Ocean
             command: |
               ssh-keyscan $SITE >> ~/.ssh/known_hosts
               git push dokku@$SITE:dash master

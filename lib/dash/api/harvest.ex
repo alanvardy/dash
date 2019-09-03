@@ -43,14 +43,14 @@ defmodule Dash.Api.Harvest do
   # cherry pick the report attributes we want
   defp report_keys(projects, time_entries) do
     projects
-    |> Enum.filter(fn b -> Map.get(b, "budget") end)
+    |> Enum.filter(fn b -> has_budget?(b) && is_active?(b) end)
     |> Enum.map(fn b ->
       %{
         id: Map.get(b, "id"),
         budget:
           b
           |> Map.get("budget")
-          |> trunc(),
+          |> truncate(),
         name: Map.get(b, "name"),
         client:
           b
@@ -59,10 +59,18 @@ defmodule Dash.Api.Harvest do
         fee:
           b
           |> Map.get("fee")
-          |> trunc(),
+          |> truncate(),
         hours: get_hours(b, time_entries)
       }
     end)
+  end
+
+  defp has_budget?(project) do
+    Map.get(project, "budget")
+  end
+
+  defp is_active?(project) do
+    Map.get(project, "is_active")
   end
 
   defp entry_keys(time_entries) do
@@ -89,13 +97,16 @@ defmodule Dash.Api.Harvest do
     |> Enum.reduce(0, fn y, acc -> y + acc end)
   end
 
+  defp truncate(nil), do: nil
+  defp truncate(number), do: trunc(number)
+  
   # Round a float to the nearest .25
   defp round_to_nearest_quarter(number) when is_float(number) do
     primary =
       number
       |> Float.round(2)
       |> Kernel.*(100)
-      |> Kernel.trunc()
+      |> truncate()
 
     remainder = if rem(primary, 25) > 12, do: 25, else: 0
 
@@ -105,6 +116,7 @@ defmodule Dash.Api.Harvest do
     |> Kernel.+(remainder)
     |> Kernel./(100)
   end
+
 
   defp round_to_nearest_quarter(number) when is_integer(number), do: number
 

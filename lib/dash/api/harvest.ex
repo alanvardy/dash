@@ -1,11 +1,26 @@
 defmodule Dash.Api.Harvest do
   @moduledoc "For interacting with the Harvest API"
   alias Dash.Accounts.User
-  alias Dash.Api.{Report, Time}
+  alias Dash.Api.Harvest.{FakeData, Report, Time}
   use Retry
 
   @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 2000]
 
+  def get(%{settings: %{harvest_api_key: nil, harvest_account_id: nil}}),
+    do: []
+
+  def get(%{settings: %{harvest_api_key: _x, harvest_account_id: _y}} = user) do
+    %Report{}
+    |> add_credentials(user)
+    |> api_calls()
+    |> Time.add_countdown()
+    |> Time.add_hours_per_day()
+    |> Time.add_nice_hours()
+  end
+
+  def get(_), do: []
+
+  @spec add_credentials(Report.t(), User.t()) :: Report.t()
   def add_credentials(%Report{}, %User{
         settings: %{
           harvest_api_key: api_key,
@@ -15,6 +30,7 @@ defmodule Dash.Api.Harvest do
     %Report{keys: %{api_key: api_key, account_id: account_id}}
   end
 
+  @spec api_calls(Report.t()) :: Report.t()
   def api_calls(%Report{} = data) do
     projects = Task.async(fn -> get_projects(data) end)
     time_entries = Task.async(fn -> get_time_entries(data) end)
@@ -25,14 +41,14 @@ defmodule Dash.Api.Harvest do
   end
 
   # Pull in all projects as a map
-  @spec get_projects(Dash.Api.Report.t()) :: map()
+  @spec get_projects(Report.t()) :: map()
   def get_projects(%Report{} = data) do
     get("/v2/projects", data)
     |> Map.get("projects")
   end
 
   # Pull in all time entries as a map
-  @spec get_time_entries(Dash.Api.Report.t()) :: map()
+  @spec get_time_entries(Report.t()) :: map()
   def get_time_entries(%Report{} = data) do
     get("/v2/time_entries", data)
     |> Map.get("time_entries")
@@ -121,7 +137,7 @@ defmodule Dash.Api.Harvest do
   defp get(address, %Report{keys: keys}) do
     case Application.get_env(:dash, :env) do
       :test ->
-        Dash.FakeData.generate(address)
+        FakeData.generate(address)
 
       # coveralls-ignore-start
       _ ->

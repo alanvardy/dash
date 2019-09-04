@@ -1,7 +1,7 @@
 defmodule Dash.ApiTest do
   @moduledoc false
   alias Dash.Api
-  alias Dash.Api.Report
+  alias Dash.Api.Harvest.Report
   import Dash.Factory
   use Dash.DataCase, async: true
 

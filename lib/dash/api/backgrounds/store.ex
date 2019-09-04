@@ -1,4 +1,4 @@
-defmodule Dash.Backgrounds.Store do
+defmodule Dash.Api.Backgrounds.Store do
   @moduledoc "Stores user backgrounds ephemerally"
   use Agent
 

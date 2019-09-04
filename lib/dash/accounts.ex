@@ -9,7 +9,7 @@ defmodule Dash.Accounts do
   alias Ecto.Multi
   import Ecto.Query, warn: false
 
-  @spec get_user_by_email(String.t()) :: %User{}
+  @spec get_user_by_email(String.t()) :: %User{} | nil
   def get_user_by_email(email) do
     User
     |> where([u], u.email == ^email)

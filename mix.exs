@@ -62,12 +62,14 @@ defmodule Dash.MixProject do
       # authorization
       {:canada, "~> 1.0.1"},
       {:canary, "~> 1.1.1"},
-      # documentation
-      {:ex_doc, "~> 0.19", only: :dev, runtime: false},
-      # testing
-      {:excoveralls, "~> 0.10", only: :test},
+      {:ex_machina, "~> 2.3", only: :test},
+      # ex_check stack
+      {:ex_check, ">= 0.0.0", only: :dev, runtime: false},
       {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false},
-      {:ex_machina, "~> 2.3", only: :test}
+      {:dialyxir, ">= 0.0.0", only: [:dev, :test], runtime: false},
+      {:sobelow, "~> 0.8", only: [:dev, :test], runtime: false},
+      {:excoveralls, "~> 0.10", only: :test, runtime: false},
+      {:ex_doc, "~> 0.21", only: :dev, runtime: false}
     ]
   end
 

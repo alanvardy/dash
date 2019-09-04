@@ -129,7 +129,16 @@ defmodule DashWeb.UserControllerTest do
       conn = log_in_(conn, user2)
       conn = delete(conn, Routes.user_path(conn, :delete, user))
       assert redirected_to(conn) == Routes.page_path(conn, :index)
-      assert strip_settings(Accounts.list_users()) == [strip_all(user), strip_all(user2)]
+
+      inserted =
+        [user, user2]
+        |> Enum.map(&strip_all/1)
+
+      in_database =
+        Accounts.list_users()
+        |> Enum.map(&strip_all/1)
+
+      assert inserted == in_database
     end
 
     test "can delete user when logged in as same user", %{conn: conn} do

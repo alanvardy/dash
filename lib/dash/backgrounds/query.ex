@@ -3,7 +3,7 @@ defmodule Dash.Backgrounds.Query do
 
   alias Dash.Backgrounds.{Background, Store}
 
-  @spec update_background(Dash.Backgrounds.Background.t()) :: Map.t()
+  @spec update_background(Dash.Backgrounds.Background.t()) :: map()
   def update_background(%Background{background: background, needs_update: false}), do: background
 
   def update_background(%Background{background: background, user_id: user_id, needs_update: true}) do

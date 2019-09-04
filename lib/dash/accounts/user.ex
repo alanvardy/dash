@@ -4,6 +4,15 @@ defmodule Dash.Accounts.User do
   alias Dash.Accounts.Settings
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          id: integer,
+          email: String.t(),
+          name: String.t(),
+          # password: String.t(),
+          password_hash: String.t(),
+          settings: map()
+        }
+
   schema "users" do
     field :email, :string
     field :name, :string

@@ -1,5 +1,7 @@
 use Mix.Config
 
+config :dash, env: :test
+
 # Configure your database
 config :dash, Dash.Repo,
   username: "postgres",

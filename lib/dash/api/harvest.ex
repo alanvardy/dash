@@ -6,7 +6,6 @@ defmodule Dash.Api.Harvest do
 
   @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 2000]
 
-  @spec add_credentials(Dash.Api.Report.t(), Dash.Accounts.User.t()) :: Dash.Api.Report.t()
   def add_credentials(%Report{}, %User{
         settings: %{
           harvest_api_key: api_key,
@@ -16,7 +15,6 @@ defmodule Dash.Api.Harvest do
     %Report{keys: %{api_key: api_key, account_id: account_id}}
   end
 
-  @spec api_calls(Dash.Api.Report.t()) :: Dash.Api.Report.t()
   def api_calls(%Report{} = data) do
     projects = Task.async(fn -> get_projects(data) end)
     time_entries = Task.async(fn -> get_time_entries(data) end)
@@ -99,7 +97,7 @@ defmodule Dash.Api.Harvest do
 
   defp truncate(nil), do: nil
   defp truncate(number), do: trunc(number)
-  
+
   # Round a float to the nearest .25
   defp round_to_nearest_quarter(number) when is_float(number) do
     primary =
@@ -117,12 +115,11 @@ defmodule Dash.Api.Harvest do
     |> Kernel./(100)
   end
 
-
   defp round_to_nearest_quarter(number) when is_integer(number), do: number
 
   # make a get request to the Harvest API
   defp get(address, %Report{keys: keys}) do
-    case Mix.env() do
+    case Application.get_env(:dash, :env) do
       :test ->
         Dash.FakeData.generate(address)
 

@@ -54,9 +54,9 @@ defmodule Dash.Backgrounds.Unsplash do
   def get_random_picture(data), do: data
 
   # make a get request to the Unsplash API
-  @spec get(String.t()) :: Map.t()
+  @spec get(String.t()) :: map()
   def get(address) do
-    case Mix.env() do
+    case Application.get_env(:dash, :env) do
       :test ->
         FakeData.generate(address)
 

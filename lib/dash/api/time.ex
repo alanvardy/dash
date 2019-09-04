@@ -17,7 +17,6 @@ defmodule Dash.Api.Time do
     }
   end
 
-  @spec add_hours_per_day(Dash.Api.Report.t()) :: Dash.Api.Report.t()
   def add_hours_per_day(%Report{time: %{weekdays_left: weekdays_left}} = data) do
     projects =
       Enum.map(data.projects, fn x ->
@@ -27,7 +26,6 @@ defmodule Dash.Api.Time do
     %Report{data | projects: projects}
   end
 
-  @spec add_nice_hours(Dash.Api.Report.t()) :: Dash.Api.Report.t()
   def add_nice_hours(%Report{projects: projects} = data) do
     projects =
       Enum.map(projects, fn x ->
@@ -73,7 +71,7 @@ defmodule Dash.Api.Time do
     current_month == month && current_year == year
   end
 
-  @spec hours_per_day(Integer.t(), Integer.t(), Integer.t()) :: Float.t()
+  @spec hours_per_day(integer(), integer(), integer()) :: float()
   def hours_per_day(budget, hours, 0), do: budget - hours
   def hours_per_day(budget, hours, days_left), do: (budget - hours) / days_left
 

@@ -1,20 +1,22 @@
 defmodule DashWeb.SettingsController do
   use DashWeb, :controller
 
-  alias Dash.{Accounts, Backgrounds}
+  alias Dash.{Accounts, Api}
   alias Dash.Accounts.Settings
 
   plug :authenticate when action in [:edit, :update]
   plug :load_and_authorize_resource, model: Settings, only: [:edit, :update]
 
+  @spec edit(Plug.Conn.t(), map) :: Plug.Conn.t()
   def edit(conn, %{"id" => id}) do
     settings = Accounts.get_settings!(id)
     changeset = Accounts.change_settings(settings)
     user = conn.assigns.current_user
-    background = Backgrounds.get_for(user)
+    background = Api.get_background(user)
     render(conn, "edit.html", settings: settings, changeset: changeset, background: background)
   end
 
+  @spec update(Plug.Conn.t(), map) :: Plug.Conn.t()
   def update(conn, %{"id" => id, "settings" => settings_params}) do
     settings = Accounts.get_settings!(id)
 

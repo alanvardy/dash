@@ -1,7 +1,7 @@
 defmodule DashWeb.UserController do
   use DashWeb, :controller
 
-  alias Dash.{Accounts, Backgrounds}
+  alias Dash.{Accounts, Api}
   alias Dash.Accounts.User
   alias DashWeb.Auth
 
@@ -13,11 +13,13 @@ defmodule DashWeb.UserController do
   #   render(conn, "index.html", users: users)
   # end
 
+  @spec new(Plug.Conn.t(), any) :: Plug.Conn.t()
   def new(conn, _params) do
     changeset = Accounts.change_user(%User{})
     render(conn, "new.html", changeset: changeset)
   end
 
+  @spec create(Plug.Conn.t(), map) :: Plug.Conn.t()
   def create(conn, %{"user" => user_params}) do
     case Accounts.create_user(user_params) do
       {:ok, %{user: user}} ->
@@ -31,14 +33,16 @@ defmodule DashWeb.UserController do
     end
   end
 
+  @spec edit(Plug.Conn.t(), map) :: Plug.Conn.t()
   def edit(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
     background_user = conn.assigns.current_user
-    background = Backgrounds.get_for(background_user)
+    background = Api.get_background(background_user)
     changeset = Accounts.change_user(user)
     render(conn, "edit.html", user: user, changeset: changeset, background: background)
   end
 
+  @spec update(Plug.Conn.t(), map) :: Plug.Conn.t()
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Accounts.get_user!(id)
 

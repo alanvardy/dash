@@ -1,9 +1,9 @@
-defmodule Dash.Backgrounds do
+defmodule Dash.Api.Backgrounds do
   @moduledoc "Nice pretty backgrounds for users"
 
-  alias Dash.Backgrounds.{Background, Query, Unsplash}
+  alias Dash.Api.Backgrounds.{Background, Query, Unsplash}
 
-  def get_for(user) do
+  def get(user) do
     %Background{}
     |> add_user_id(user)
     |> Query.find_background()
@@ -12,7 +12,7 @@ defmodule Dash.Backgrounds do
     |> Query.update_background()
   end
 
-  def new_for(user) do
+  def new(user) do
     %Background{}
     |> add_user_id(user)
     |> Map.put(:needs_update, true)

@@ -1,4 +1,4 @@
-defmodule Dash.Backgrounds.Background do
+defmodule Dash.Api.Backgrounds.Background do
   @moduledoc "Struct for building Unsplash background image"
   @type t :: %__MODULE__{
           background: map() | nil,

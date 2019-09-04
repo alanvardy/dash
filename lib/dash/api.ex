@@ -1,19 +1,13 @@
 defmodule Dash.Api do
   @moduledoc "Logic around APIs"
-  alias Dash.Api.{Harvest, Report, Time}
+  alias Dash.Api.{Backgrounds, Harvest}
 
   @doc "returns a view friendly list of maps"
-  def get_harvest(%{settings: %{harvest_api_key: nil, harvest_account_id: nil}}),
-    do: []
+  def get_harvest(user), do: Harvest.get(user)
 
-  def get_harvest(%{settings: %{harvest_api_key: _x, harvest_account_id: _y}} = user) do
-    %Report{}
-    |> Harvest.add_credentials(user)
-    |> Harvest.api_calls()
-    |> Time.add_countdown()
-    |> Time.add_hours_per_day()
-    |> Time.add_nice_hours()
-  end
+  @spec get_background(atom | %{id: any}) :: map
+  def get_background(user), do: Backgrounds.get(user)
 
-  def get_harvest(_), do: []
+  @spec new_background(atom | %{id: any}) :: map
+  def new_background(user), do: Backgrounds.new(user)
 end

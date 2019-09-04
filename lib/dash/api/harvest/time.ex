@@ -1,9 +1,9 @@
-defmodule Dash.Api.Time do
+defmodule Dash.Api.Harvest.Time do
   @moduledoc "Does time stuff and things"
 
-  alias Dash.Api.Report
+  alias Dash.Api.Harvest.Report
 
-  @spec add_countdown(Dash.Api.Report.t()) :: Dash.Api.Report.t()
+  @spec add_countdown(Report.t()) :: Report.t()
   def add_countdown(%Report{} = data) do
     days_left = days_left()
 

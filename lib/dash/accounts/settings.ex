@@ -8,6 +8,8 @@ defmodule Dash.Accounts.Settings do
   schema "settings" do
     field :harvest_account_id, :integer
     field :harvest_api_key, :string
+    field :github_username, :string
+    field :github_api_token, :string
     belongs_to :user, User
 
     timestamps()
@@ -16,8 +18,9 @@ defmodule Dash.Accounts.Settings do
   @doc false
   def changeset(settings, attrs) do
     settings
-    |> cast(attrs, [:harvest_api_key, :harvest_account_id])
+    |> cast(attrs, [:harvest_api_key, :harvest_account_id, :github_username, :github_api_token])
     |> validate_both_or_none(:harvest_api_key, :harvest_account_id)
+    |> validate_both_or_none(:github_username, :github_api_token)
   end
 
   defp validate_both_or_none(changeset, field1, field2) do

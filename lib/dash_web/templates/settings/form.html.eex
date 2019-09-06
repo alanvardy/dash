@@ -16,6 +16,18 @@
   <%= error_tag f, :harvest_account_id %>
 </div>
 
+<div class="field">
+  <%= label f, "Github Username", class: "label" %>
+  <%= text_input f, :github_username, class: "input" %>
+  <%= error_tag f, :github_username %>
+</div>
+
+<div class="field">
+  <%= label f, "Github API Token", class: "label" %>
+  <%= text_input f, :github_api_token, class: "input" %>
+  <%= error_tag f, :github_api_token %>
+</div>
+
 <div>
   <%= submit "Save", class: "button is-outlined is-primary" %>
 </div>

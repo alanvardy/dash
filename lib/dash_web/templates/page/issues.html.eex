@@ -1,0 +1,38 @@
+    <%= for issue <- @issues do %>
+    <div class="tile is-child">
+      <div class="panel has-background-white">
+        <div class="panel-heading has-background-primary has-text-white has-text-weight-bold flex-between">
+          <div>
+            <%= issue.number %>
+
+          </div>
+          <div class="is-size-6 has-text-white">
+            <%= for label <- issue.labels do %>
+            <span class="tag has-border-white" style="background-color: #<%= label.color %>;">
+              <%= String.capitalize(label.name) %>
+            </span>
+            <% end %>
+          </div>
+        </div>
+        <div class="panel-block is-parent">
+          <div class="tile is-child has-text-primary flex-between">
+            <div class="has-text-weight-bold">
+              <%= link issue.title, to: issue.url, target: "_blank" %>
+            </div>
+            <div>
+              <%= link String.capitalize(issue.repository), to: issue.repository_url, target: "_blank" %>
+            </div>
+          </div>
+        </div>
+        <div class="panel-block flex-between">
+          <div>
+            <i class="fas fa-hourglass"></i>
+            asdfsdf
+          </div>
+          <div class="has-text-right">
+            <%= issue.age %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% end %>

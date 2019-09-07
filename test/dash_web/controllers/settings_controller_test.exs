@@ -32,7 +32,7 @@ defmodule DashWeb.SettingsControllerTest do
 
       conn = log_in_(conn, user)
       conn = get(conn, Routes.settings_path(conn, :edit, settings))
-      assert html_response(conn, 200) =~ "Harvest Credentials"
+      assert html_response(conn, 200) =~ "Access Credentials"
     end
 
     #### UPDATE ACTIONS #####

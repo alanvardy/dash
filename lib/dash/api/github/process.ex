@@ -2,14 +2,15 @@ defmodule Dash.Api.Github.Process do
   @moduledoc """
   Processes Github API response to only extract the keys/data that we want
   """
-  alias Dash.Api.Github.Issues
+  alias Dash.Accounts.User
+  alias Dash.Api.Github.{Issues, Request}
 
-  @spec issues(Issues.t()) :: [any]
-  def issues(%Issues{response: response}) do
-    Enum.map(response, &process_issue/1)
+  @spec issues(Issues.t(), User.t()) :: [any]
+  def issues(%Issues{response: response}, user) do
+    Enum.map(response, fn issue -> process_issue(issue, user) end)
   end
 
-  defp process_issue(issue) do
+  defp process_issue(issue, user) do
     %{}
     |> Map.put(:title, title_for(issue))
     |> Map.put(:content, content_for(issue))
@@ -19,6 +20,8 @@ defmodule Dash.Api.Github.Process do
     |> Map.put(:repository, repository_for(issue))
     |> Map.put(:repository_url, repository_url_for(issue))
     |> Map.put(:labels, labels_for(issue))
+    |> Map.put(:pull_request, pull_request_for(issue))
+    |> add_pull_request_data(user)
   end
 
   defp title_for(issue), do: Map.get(issue, "title")
@@ -41,6 +44,33 @@ defmodule Dash.Api.Github.Process do
     |> convert_label()
   end
 
+  defp pull_request_for(issue) do
+    case Map.get(issue, "pull_request") do
+      nil -> nil
+      map -> Map.get(map, "url")
+    end
+  end
+
+  defp add_pull_request_data(%{pull_request: nil} = issue, _user), do: issue
+
+  defp add_pull_request_data(%{pull_request: pull_request} = issue, user) do
+    %User{settings: %{github_username: username, github_api_token: token}} = user
+
+    pull_request =
+      ~r/https:\/\/api.github.com\/(.+)/
+      |> Regex.run(pull_request)
+      |> Enum.at(1)
+      |> Request.get(username, token)
+      |> elem(1)
+
+    state = Map.get(pull_request, "mergeable_state")
+    comments = Map.get(pull_request, "comments")
+
+    issue
+    |> Map.put(:comments, comments)
+    |> Map.put(:state, state)
+  end
+
   defp convert_label(labels, result \\ [])
   defp convert_label([], result), do: Enum.reverse(result)
 
@@ -56,14 +86,19 @@ defmodule Dash.Api.Github.Process do
 
     case Timex.diff(Timex.now(), past, :seconds) do
       result when result < 60 ->
-        "Less than a minute ago"
-      1 -> "1 minute ago"
+        "< 1 min"
+
+      1 ->
+        "1 min"
+
       result when result < 3600 ->
-        "#{div(result, 60)} minutes ago"
+        "#{div(result, 60)} min"
+
       result when result < 86_400 ->
-        "#{div(result, 3600)} hours ago"
+        "#{div(result, 3600)} hours"
+
       result ->
-        "#{div(result, 86_400)} days ago"
+        "#{div(result, 86_400)} days"
     end
   end
 end

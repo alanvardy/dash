@@ -8,10 +8,10 @@ defmodule Dash.Api.Github do
       when is_binary(username) and is_binary(token) do
     %Issues{}
     |> Map.put(:response, Request.add_issues(user))
-    |> Process.issues()
+    |> Process.issues(user)
   end
 
-  def issues(%User{}), do: %Issues{response: [], processed: []}
+  def issues(_), do: %Issues{response: [], processed: []}
 
   @spec has_github?(User.t()) :: boolean
   def has_github?(%User{settings: %{github_username: username, github_api_token: token}})

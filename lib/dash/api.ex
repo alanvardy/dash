@@ -14,6 +14,6 @@ defmodule Dash.Api do
   @spec new_background(User.t()) :: map
   def new_background(user), do: Backgrounds.new(user)
 
-  @spec get_issues(User.t()) :: [any]
+  @spec get_issues(User.t()) :: map
   def get_issues(user), do: Github.issues(user)
 end

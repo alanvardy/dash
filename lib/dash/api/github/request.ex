@@ -1,4 +1,5 @@
 defmodule Dash.Api.Github.Request do
+  @moduledoc "For calling GitHub API"
   alias Dash.Accounts.User
   alias Dash.Api.Github.FakeData
   use Retry
@@ -48,7 +49,7 @@ defmodule Dash.Api.Github.Request do
   def get(address, username, token) do
     case Application.get_env(:dash, :env) do
       :test ->
-        FakeData.generate(address)
+        {FakeData.headers(), FakeData.generate(address)}
 
       # coveralls-ignore-start
       _ ->

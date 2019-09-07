@@ -33,7 +33,7 @@
             <%= issue.age |> nice_age() %>
           </div>
           <div class="has-text-right">
-            <%= issue |> Map.get(:state) |> capitalize %>
+            <%= nice_status(issue) %>
           </div>
         </div>
       </div>

@@ -24,6 +24,7 @@ defmodule Dash.Api.Github.Process do
     |> Map.put(:labels, labels_for(issue))
     |> Map.put(:pull_request, pull_request_for(issue))
     |> add_pull_request_data(user)
+    |> add_status(user)
   end
 
   defp title_for(issue), do: Map.get(issue, "title")
@@ -42,7 +43,7 @@ defmodule Dash.Api.Github.Process do
 
   defp labels_for(issue) do
     issue
-    |> Map.get("labels")
+    |> Map.get("labels", [])
     |> convert_label()
   end
 
@@ -69,16 +70,50 @@ defmodule Dash.Api.Github.Process do
       case Map.get(pull_request, "mergeable_state") do
         "blocked" -> "Merge blocked"
         "clean" -> "Ready to merge"
-        "unstable" -> "Tests running"
+        "unstable" -> "Tests running/failed"
         other -> other
       end
 
     comments = Map.get(pull_request, "comments")
+    statuses_url = Map.get(pull_request, "statuses_url")
 
     issue
     |> Map.put(:comments, comments)
     |> Map.put(:state, state)
+    |> Map.put(:statuses_url, statuses_url)
   end
+
+  defp add_status(%{statuses_url: nil} = issue, _user), do: Map.put(issue, :status, nil)
+
+  defp add_status(%{statuses_url: statuses_url} = issue, user) do
+    %User{settings: %{github_username: username, github_api_token: token}} = user
+
+    statuses =
+      ~r/https:\/\/api.github.com\/(.+)/
+      |> Regex.run(statuses_url)
+      |> Enum.at(1)
+      |> Request.get(username, token)
+      |> elem(1)
+
+    status =
+      case statuses do
+        [] ->
+          nil
+
+        [_] ->
+          statuses
+          |> List.first()
+          |> Map.get("state")
+
+        %{} ->
+          statuses
+          |> Map.get("state")
+      end
+
+    Map.put(issue, :status, status)
+  end
+
+  defp add_status(issue, _user), do: Map.put(issue, :status, nil)
 
   defp convert_label(labels, result \\ [])
   defp convert_label([], result), do: Enum.reverse(result)

@@ -22,8 +22,11 @@ defmodule DashWeb.PageView do
       result when result < 172_800 ->
         "#{div(result, 86_400)} day"
 
-      result  ->
+      result ->
         "#{div(result, 86_400)} days"
     end
   end
+
+  def nice_status(%{status: nil, state: state}), do: capitalize(state)
+  def nice_status(%{status: status}), do: capitalize(status)
 end

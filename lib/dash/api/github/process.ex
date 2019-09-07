@@ -56,7 +56,7 @@ defmodule Dash.Api.Github.Process do
 
   defp add_pull_request_data(%{pull_request: nil} = issue, _user), do: issue
 
-  defp add_pull_request_data(%{pull_request: pull_request} = issue, user) do
+  defp add_pull_request_data(%{pull_request: pull_request, age: age} = issue, user) do
     %User{settings: %{github_username: username, github_api_token: token}} = user
 
     pull_request =
@@ -70,7 +70,8 @@ defmodule Dash.Api.Github.Process do
       case Map.get(pull_request, "mergeable_state") do
         "blocked" -> "Merge blocked"
         "clean" -> "Ready to merge"
-        "unstable" -> "Tests running/failed"
+        "unstable" when age > 1200 -> "Failure"
+        "unstable" -> "Tests running"
         other -> other
       end
 

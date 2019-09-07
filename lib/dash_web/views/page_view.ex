@@ -27,6 +27,8 @@ defmodule DashWeb.PageView do
     end
   end
 
+  @spec nice_status(map) :: binary | nil
+  def nice_status(%{status: nil, state: nil}), do: nil
   def nice_status(%{status: nil, state: state}), do: capitalize(state)
   def nice_status(%{status: status}), do: capitalize(status)
 end

@@ -71,7 +71,7 @@ defmodule Dash.Api.Github.Process do
         "blocked" -> "Merge blocked"
         "clean" -> "Ready to merge"
         "unstable" when age > 1200 -> "Failure"
-        "unstable" -> "Tests running"
+        "unstable" -> "Tests running or failed"
         other -> other
       end
 
@@ -101,14 +101,11 @@ defmodule Dash.Api.Github.Process do
         [] ->
           nil
 
-        [_] ->
-          statuses
-          |> List.first()
-          |> Map.get("state")
+        %{"state" => state} ->
+          state
 
-        %{} ->
-          statuses
-          |> Map.get("state")
+        [%{"state" => state} | _tail] ->
+          state
       end
 
     Map.put(issue, :status, status)

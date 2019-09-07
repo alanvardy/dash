@@ -7,7 +7,9 @@ defmodule Dash.Api.Github.Process do
 
   @spec issues(Issues.t(), User.t()) :: [any]
   def issues(%Issues{response: response}, user) do
-    Enum.map(response, fn issue -> process_issue(issue, user) end)
+    response
+    |> Enum.map(fn issue -> process_issue(issue, user) end)
+    |> Enum.sort(fn x, y -> x.age <= y.age end)
   end
 
   defp process_issue(issue, user) do
@@ -63,7 +65,14 @@ defmodule Dash.Api.Github.Process do
       |> Request.get(username, token)
       |> elem(1)
 
-    state = Map.get(pull_request, "mergeable_state")
+    state =
+      case Map.get(pull_request, "mergeable_state") do
+        "blocked" -> "Merge blocked"
+        "clean" -> "Ready to merge"
+        "unstable" -> "Tests running"
+        other -> other
+      end
+
     comments = Map.get(pull_request, "comments")
 
     issue
@@ -84,21 +93,6 @@ defmodule Dash.Api.Github.Process do
       |> Timex.parse("{RFC3339z}")
       |> elem(1)
 
-    case Timex.diff(Timex.now(), past, :seconds) do
-      result when result < 60 ->
-        "< 1 min"
-
-      1 ->
-        "1 min"
-
-      result when result < 3600 ->
-        "#{div(result, 60)} min"
-
-      result when result < 86_400 ->
-        "#{div(result, 3600)} hours"
-
-      result ->
-        "#{div(result, 86_400)} days"
-    end
+    Timex.diff(Timex.now(), past, :seconds)
   end
 end

@@ -30,7 +30,7 @@
         <div class="panel-block flex-between">
           <div>
             <i class="fas fa-hourglass"></i>
-            <%= issue.age %>
+            <%= issue.age |> nice_age() %>
           </div>
           <div class="has-text-right">
             <%= issue |> Map.get(:state) |> capitalize %>

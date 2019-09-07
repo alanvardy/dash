@@ -5,18 +5,18 @@
       <li class="is-active"><%= link "API", to: Routes.settings_path(@conn, :edit, @settings) %></li>
     </ul>
   </div>
-    <h1>Harvest Credentials</h1>
+    <h1>Access Credentials</h1>
   <div class="columns is-centered">
     <div class="column is-one-third">
       <%= render "form.html", Map.put(assigns, :action, Routes.settings_path(@conn, :update, @settings)) %>
     </div>
     <div class="column is-one-third">
-      <h2>Getting a Personal Access Token</h2>
+      <h2>Obtaining your credentials</h2>
       <p>
-        You can generate a personal access token through:
+        <%= link "Harvest Developer Tools", to: "https://id.getharvest.com/developers", target: "_blank" %>
       </p>
       <p>
-        <%= link "Harvest Developer Tools", to: "https://id.getharvest.com/developers" %>
+        <%= link "GitHub Settings", to: "https://github.com/settings/tokens", target: "_blank" %> (Only read access is needed)
       </p>
     </div>
   </div>

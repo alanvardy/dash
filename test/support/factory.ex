@@ -29,14 +29,18 @@ defmodule Dash.Factory do
   def settings_factory do
     %Settings{
       harvest_api_key: "123jkh12k123",
-      harvest_account_id: "5678"
+      harvest_account_id: "56781",
+      github_username: "asdfasdfasdf",
+      github_api_token: "s8ad7f9s"
     }
   end
 
   def nil_settings_factory do
     %Settings{
       harvest_api_key: nil,
-      harvest_account_id: nil
+      harvest_account_id: nil,
+      github_username: nil,
+      github_api_token: nil
     }
   end
 end

@@ -1,0 +1,41 @@
+    <%= for issue <- @issues do %>
+    <div class="tile is-child">
+      <div class="panel has-background-white">
+        <div class="panel-heading has-background-primary has-text-white has-text-weight-bold flex-between">
+          <div class="is-size-6">
+            <%= if issue.pull_request do %>
+            Pull Request
+            <% else %>
+            Issue
+            <% end %>
+          </div>
+          <div class="is-size-6 has-text-white">
+            <%= for label <- issue.labels do %>
+            <span class="tag has-border-white" style="background-color: #<%= label.color %>;">
+              <%= capitalize(label.name) %>
+            </span>
+            <% end %>
+          </div>
+        </div>
+        <div class="panel-block is-parent">
+          <div class="tile is-child has-text-primary flex-between">
+            <div class="has-text-weight-bold">
+              <%= link issue.title, to: issue.url, target: "_blank" %>
+            </div>
+            <div>
+              <%= link capitalize(issue.repository), to: issue.repository_url, target: "_blank" %>
+            </div>
+          </div>
+        </div>
+        <div class="panel-block flex-between">
+          <div>
+            <i class="fas fa-hourglass"></i>
+            <%= issue.age |> nice_age() %>
+          </div>
+          <div class="has-text-right">
+            <%= nice_status(issue) %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% end %>

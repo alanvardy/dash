@@ -5,13 +5,17 @@ defmodule DashWeb.PageController do
 
   plug :authenticate when action in [:new]
 
+  @spec index(Plug.Conn.t(), any) :: Plug.Conn.t()
   def index(conn, _params) do
     user = conn.assigns.current_user
     harvest = Api.get_harvest(user)
     background = Api.get_background(user)
-    render(conn, "index.html", harvest: harvest, background: background)
+    issues = Api.get_issues(user)
+
+    render(conn, "index.html", harvest: harvest, background: background, issues: issues)
   end
 
+  @spec new(Plug.Conn.t(), any) :: Plug.Conn.t()
   def new(conn, _params) do
     user = conn.assigns.current_user
     Api.new_background(user)

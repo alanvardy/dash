@@ -18,7 +18,7 @@ defmodule Dash.Api.Github.Request do
   end
 
   @spec add_issues(User.t(), any) :: []
-  def add_issues(user, address \\ "user/issues")
+  def add_issues(user, address \\ "issues")
 
   def add_issues(user, address) do
     %User{settings: %{github_username: username, github_api_token: token}} = user

@@ -19,7 +19,10 @@ defmodule DashWeb.PageView do
       result when result < 86_400 ->
         "#{div(result, 3600)} hours"
 
-      result ->
+      result when result < 172_800 ->
+        "#{div(result, 86_400)} day"
+
+      result  ->
         "#{div(result, 86_400)} days"
     end
   end

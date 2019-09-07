@@ -4,9 +4,9 @@
         <div class="panel-heading has-background-primary has-text-white has-text-weight-bold flex-between">
           <div class="is-size-6">
             <%= if issue.pull_request do %>
-            <%= issue.number %> Pull Request
+            Pull Request
             <% else %>
-            <%= issue.number %> Issue
+            Issue
             <% end %>
           </div>
           <div class="is-size-6 has-text-white">

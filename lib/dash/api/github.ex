@@ -11,7 +11,7 @@ defmodule Dash.Api.Github do
     |> Process.issues(user)
   end
 
-  def issues(_), do: %Issues{response: [], processed: []}
+  def issues(_), do: []
 
   @spec has_github?(User.t()) :: boolean
   def has_github?(%User{settings: %{github_username: username, github_api_token: token}})

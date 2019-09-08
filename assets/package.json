@@ -23,7 +23,7 @@
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "4.39.3",
     "tar": ">=4.4.10",
-    "webpack-cli": "^3.3.7",
+    "webpack-cli": "^3.3.8",
     "lodash": ">=4.17.15",
     "set-value": ">=2.0.1"
   }

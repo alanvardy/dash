@@ -3,7 +3,7 @@ defmodule Dash.Api.Github do
   alias Dash.Accounts.User
   alias Dash.Api.Github.{Issues, Process, Request}
 
-  @spec issues(User.t()) :: Issues.t()
+  @spec issues(User.t()) :: [map]
   def issues(%User{settings: %{github_username: username, github_api_token: token}} = user)
       when is_binary(username) and is_binary(token) do
     %Issues{}
@@ -11,7 +11,7 @@ defmodule Dash.Api.Github do
     |> Process.issues(user)
   end
 
-  def issues(_), do: %Issues{response: [], processed: []}
+  def issues(_), do: []
 
   @spec has_github?(User.t()) :: boolean
   def has_github?(%User{settings: %{github_username: username, github_api_token: token}})

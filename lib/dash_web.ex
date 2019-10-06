@@ -24,6 +24,7 @@ defmodule DashWeb do
       import Plug.Conn
       import DashWeb.Gettext
       alias DashWeb.Router.Helpers, as: Routes
+      import Phoenix.LiveView.Controller
     end
   end
 
@@ -42,6 +43,9 @@ defmodule DashWeb do
       import DashWeb.ErrorHelpers
       import DashWeb.Gettext
       alias DashWeb.Router.Helpers, as: Routes
+
+      import Phoenix.LiveView,
+        only: [live_render: 2, live_render: 3, live_link: 1, live_link: 2]
     end
   end
 
@@ -50,6 +54,7 @@ defmodule DashWeb do
       use Phoenix.Router
       import Plug.Conn
       import Phoenix.Controller
+      import Phoenix.LiveView.Router
     end
   end
 

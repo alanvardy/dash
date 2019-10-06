@@ -1,8 +1,9 @@
 version: 1
 update_configs:
-  # required properties omitted ...
   - package_manager: "elixir:hex"
     directory: "/"
+    default_assignees:
+    - "alanvardy"
     update_schedule: "live"
     automerged_updates:
     - match: {dependency_type: "all", update_type: "all"}

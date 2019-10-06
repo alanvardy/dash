@@ -14,6 +14,9 @@ config :dash,
 config :dash, DashWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "Ug+pTncBGNfr5h2//4kMEN3NmNX95sSenT7+LmmaU5Bf5r49UueFmawUbnmbJi/E",
+  live_view: [
+    signing_salt: "`mix phx.gen.secret 32`"
+  ],
   render_errors: [view: DashWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Dash.PubSub, adapter: Phoenix.PubSub.PG2]
 

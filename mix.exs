@@ -1,4 +1,5 @@
 defmodule Dash.MixProject do
+  @moduledoc false
   use Mix.Project
 
   def project do
@@ -59,6 +60,8 @@ defmodule Dash.MixProject do
       # authentication
       {:comeonin, "~> 5.1"},
       {:pbkdf2_elixir, "~> 1.0"},
+      {:phoenix_live_view, "~> 0.3.0"},
+      {:floki, ">= 0.0.0", only: :test},
       # authorization
       {:canada, "~> 1.0.1"},
       {:canary, "~> 1.1.1"},

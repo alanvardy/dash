@@ -8,8 +8,35 @@ defmodule Dash.Api.Github.Process do
   @spec issues(Issues.t(), User.t()) :: [any]
   def issues(%Issues{response: response}, user) do
     response
+    |> Enum.filter(fn issue -> filter_issues(issue, user) end)
     |> Enum.map(fn issue -> process_issue(issue, user) end)
-    |> Enum.sort(fn x, y -> x.age <= y.age end)
+    |> Enum.filter(fn issue -> filter_pull_requests(issue, user) end)
+    |> Enum.sort(fn x, y -> x.age >= y.age end)
+  end
+
+  # Keeps the issue if assigned or is a pull request
+  defp filter_issues(issue, %User{settings: %{github_username: username}}) do
+    assignees =
+      issue
+      |> Map.get("assignees", [])
+      |> Enum.map(fn assignee -> Map.get(assignee, "login") end)
+
+    Enum.member?(assignees, username) || Map.get(issue, "pull_request") != nil
+  end
+
+  # We have already filtered non pull requests
+  defp filter_pull_requests(%{pull_request: nil}, _user), do: true
+
+  # Select the ones where our review is requested and no review comments yet
+  defp filter_pull_requests(issue, %User{settings: %{github_username: username}}) do
+    %{
+      review_comments: review_comments,
+      assignees: assignees,
+      requested_reviewers: requested_reviewers
+    } = issue
+
+    (Enum.member?(requested_reviewers, username) && review_comments == 0) ||
+      Enum.member?(assignees, username)
   end
 
   defp process_issue(issue, user) do
@@ -75,6 +102,17 @@ defmodule Dash.Api.Github.Process do
         other -> other
       end
 
+    requested_reviewers =
+      pull_request
+      |> Map.get("requested_reviewers")
+      |> Enum.map(fn reviewer -> Map.get(reviewer, "login") end)
+
+    assignees =
+      pull_request
+      |> Map.get("assignees", [])
+      |> Enum.map(fn reviewer -> Map.get(reviewer, "login") end)
+
+    review_comments = Map.get(pull_request, "review_comments")
     comments = Map.get(pull_request, "comments")
     statuses_url = Map.get(pull_request, "statuses_url")
 
@@ -82,6 +120,9 @@ defmodule Dash.Api.Github.Process do
     |> Map.put(:comments, comments)
     |> Map.put(:state, state)
     |> Map.put(:statuses_url, statuses_url)
+    |> Map.put(:review_comments, review_comments)
+    |> Map.put(:assignees, assignees)
+    |> Map.put(:requested_reviewers, requested_reviewers)
   end
 
   defp add_status(%{statuses_url: nil} = issue, _user), do: Map.put(issue, :status, nil)

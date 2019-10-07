@@ -57,13 +57,13 @@ defmodule Dash.Api.Github.Request do
 
       # coveralls-ignore-start
       _ ->
-        :timer.sleep(250)
+        :timer.sleep(500)
         headers = []
         address = "https://#{username}:#{token}@api.github.com/#{address}"
-        options = [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 2000]
+        options = [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 10_000]
 
         %{headers: headers, body: body} =
-          retry with: exponential_backoff() |> cap(1_000) |> expiry(10_000),
+          retry with: exponential_backoff() |> cap(20_000) |> expiry(120_000),
                 rescue_only: [HTTPoison.Error] do
             HTTPoison.get!(address, headers, options)
           after

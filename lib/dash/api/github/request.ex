@@ -27,7 +27,9 @@ defmodule Dash.Api.Github.Request do
     {headers, body} = get(address, username, token)
 
     case next_page(headers) do
-      nil -> body
+      nil ->
+        body
+
       next_address ->
         body ++ add_issues(user, Enum.at(next_address, 1))
     end

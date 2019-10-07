@@ -1,4 +1,4 @@
-name: Elixir ex_check
+name: Elixir Dialyxir
 
 on: push
 
@@ -24,4 +24,4 @@ jobs:
           otp-version: 22.x
           elixir-version: 1.9.x
       - run: mix deps.get
-      - run: MIX_ENV=dev mix check --except ex_unit --except cypress --except dialyzer
+      - run: MIX_ENV=dev mix check --only dialyzer

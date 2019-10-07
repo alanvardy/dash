@@ -57,7 +57,6 @@ defmodule Dash.Api.Github.Request do
 
       # coveralls-ignore-start
       _ ->
-        :timer.sleep(500)
         headers = []
         address = "https://#{username}:#{token}@api.github.com/#{address}"
         options = [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 10_000]

@@ -4,29 +4,34 @@ defmodule Dash.Api.Github.Request do
   alias Dash.Api.Github.FakeData
   use Retry
 
-  @spec all_repos(User.t(), any) :: []
-  def all_repos(user, address \\ "user/repos")
+  # @doc "Recursively grabs all repositories,"
+  # @spec all_repos(User.t(), any) :: []
+  # def all_repos(user, address \\ "user/repos")
 
-  def all_repos(user, address) do
-    %User{settings: %{github_username: username, github_api_token: token}} = user
-    {headers, body} = get(address, username, token)
+  # def all_repos(user, address) do
+  #   %User{settings: %{github_username: username, github_api_token: token}} = user
+  #   {headers, body} = get(address, username, token)
 
-    case next_page(headers) do
-      nil -> body
-      next_address -> body ++ all_repos(user, next_address)
-    end
-  end
+  #   case next_page(headers) do
+  #     nil -> body
+  #     next_address -> body ++ all_repos(user, next_address)
+  #   end
+  # end
 
+  @doc "Recursively grabs all issues"
   @spec add_issues(User.t(), any) :: []
-  def add_issues(user, address \\ "issues")
+  def add_issues(user, address \\ "issues?per_page=1000&filter=all&page=1")
 
   def add_issues(user, address) do
     %User{settings: %{github_username: username, github_api_token: token}} = user
     {headers, body} = get(address, username, token)
 
     case next_page(headers) do
-      nil -> body
-      next_address -> body ++ add_issues(user, next_address)
+      nil ->
+        body
+
+      next_address ->
+        body ++ add_issues(user, Enum.at(next_address, 1))
     end
   end
 
@@ -38,9 +43,8 @@ defmodule Dash.Api.Github.Request do
         nil
 
       links ->
-        ~r/<(.+)>; rel="next",/
+        ~r/<https:\/\/api.github.com\/(.+)>; rel="next",/
         |> Regex.run(links)
-        |> Enum.at(1)
     end
   end
 
@@ -53,12 +57,13 @@ defmodule Dash.Api.Github.Request do
 
       # coveralls-ignore-start
       _ ->
+        :timer.sleep(500)
         headers = []
         address = "https://#{username}:#{token}@api.github.com/#{address}"
-        options = [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 2000]
+        options = [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 10_000]
 
         %{headers: headers, body: body} =
-          retry with: exponential_backoff() |> cap(1_000) |> expiry(10_000),
+          retry with: exponential_backoff() |> cap(20_000) |> expiry(120_000),
                 rescue_only: [HTTPoison.Error] do
             HTTPoison.get!(address, headers, options)
           after

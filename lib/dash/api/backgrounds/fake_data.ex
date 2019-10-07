@@ -1,6 +1,6 @@
 defmodule Dash.Api.Backgrounds.FakeData do
   @moduledoc """
-  Fake API data for development testing and Travis CI
+  Fake API data for development testing and CI
   """
   def time do
     Timex.format!(Timex.to_datetime(Timex.now(), "America/Chicago"), "{ISO:Extended:Z}")

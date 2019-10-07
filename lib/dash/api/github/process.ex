@@ -34,11 +34,18 @@ defmodule Dash.Api.Github.Process do
       |> Map.get("pull_request", [])
       |> Enum.map(fn reviewer -> Map.get(reviewer, "login") end)
 
+    assignees =
+      issue
+      |> Map.get("pull_request", %{})
+      |> Map.get("assignees", [])
+      |> Enum.map(fn reviewer -> Map.get(reviewer, "login") end)
+
     review_comments =
       issue
       |> get_in(["pull_request", "review_comments"])
 
-    Enum.member?(requested_reviewers, username) && review_comments == 0
+    (Enum.member?(requested_reviewers, username) && review_comments == 0) ||
+      Enum.member?(assignees, username)
   end
 
   defp process_issue(issue, user) do

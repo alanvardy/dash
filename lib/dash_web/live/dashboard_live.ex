@@ -7,7 +7,7 @@ defmodule DashWeb.DashboardLive do
     harvest = Api.get_harvest(user)
     issues = Api.get_issues(user)
 
-    if connected?(socket), do: :timer.send_interval(600_000, self(), :update)
+    if connected?(socket), do: :timer.send_interval(300_000, self(), :update)
 
     {:ok, assign(socket, harvest: harvest, issues: issues, user: user)}
   end
@@ -17,7 +17,7 @@ defmodule DashWeb.DashboardLive do
     harvest = Api.get_harvest(user)
     issues = Api.get_issues(user)
 
-    :timer.send_interval(600_000, self(), :update)
+    :timer.send_interval(300_000, self(), :update)
 
     {:noreply, assign(socket, harvest: harvest, issues: issues)}
   end

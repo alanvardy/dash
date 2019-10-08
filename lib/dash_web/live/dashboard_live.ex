@@ -4,7 +4,7 @@ defmodule DashWeb.DashboardLive do
   alias Dash.Api
 
   def mount(%{user: user}, socket) do
-    if connected?(socket), do: :timer.send_interval(300_000, self(), :update)
+    if connected?(socket), do: :timer.send_interval(60_000, self(), :update)
     harvest = Api.get_harvest(user)
     issues = Api.get_issues(user)
 
@@ -12,7 +12,7 @@ defmodule DashWeb.DashboardLive do
   end
 
   def handle_info(:update, socket) do
-    :timer.send_interval(300_000, self(), :update)
+    :timer.send_interval(60_000, self(), :update)
     user = socket.assigns.user
     harvest = Api.get_harvest(user)
     issues = Api.get_issues(user)

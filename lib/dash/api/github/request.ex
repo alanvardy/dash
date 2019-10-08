@@ -50,6 +50,7 @@ defmodule Dash.Api.Github.Request do
 
   def get(address, username, token) do
     key = "#{address}#{token}"
+
     case Cachex.fetch(
            :github,
            key,
@@ -58,11 +59,9 @@ defmodule Dash.Api.Github.Request do
            end
          ) do
       {:ok, result} ->
-        IO.puts("USED CACHE")
         result
 
       {:commit, result} ->
-        IO.puts("USED GITHUB")
         Cachex.expire(:github, key, :timer.seconds(50))
         result
     end

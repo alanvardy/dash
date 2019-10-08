@@ -48,9 +48,28 @@ defmodule Dash.Api.Github.Request do
     end
   end
 
-  # make a get request to the Github API
-  @spec get(String.t(), String.t(), String.t()) :: {any, any}
   def get(address, username, token) do
+    key = "#{address}#{token}"
+
+    case Cachex.fetch(
+           :github,
+           key,
+           fn _ ->
+             {:commit, do_get(address, username, token)}
+           end
+         ) do
+      {:ok, result} ->
+        result
+
+      {:commit, result} ->
+        Cachex.expire(:github, key, :timer.seconds(50))
+        result
+    end
+  end
+
+  # make a get request to the Github API
+  @spec do_get(String.t(), String.t(), String.t()) :: {any, any}
+  def do_get(address, username, token) do
     case Application.get_env(:dash, :env) do
       :test ->
         {FakeData.headers(), FakeData.generate(address)}

@@ -35,3 +35,4 @@ npm-debug.log
 .env
 .elixir_ls
 config/dev.secret.exs
+*.dump

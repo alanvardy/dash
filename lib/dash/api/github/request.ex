@@ -31,7 +31,7 @@ defmodule Dash.Api.Github.Request do
         body
 
       next_address ->
-        body ++ add_issues(user, Enum.at(next_address, 1))
+        body ++ add_issues(user, next_address)
     end
   end
 
@@ -43,8 +43,10 @@ defmodule Dash.Api.Github.Request do
         nil
 
       links ->
-        ~r/<https:\/\/api.github.com\/(.+)>; rel="next",/
+        ~r/<https:\/\/api.github.com\/(.+)>; rel="next"/
         |> Regex.run(links)
+        |> Enum.reject(fn link -> String.contains?(link, "http") end)
+        |> List.first()
     end
   end
 
@@ -63,6 +65,11 @@ defmodule Dash.Api.Github.Request do
 
       {:commit, result} ->
         Cachex.expire(:github, key, :timer.seconds(50))
+        result
+
+      {:error, _} ->
+        result = do_get(address, username, token)
+        Cachex.put(:github, key, result, ttl: :timer.seconds(50))
         result
     end
   end

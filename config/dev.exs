@@ -32,6 +32,12 @@ config :dash, DashWeb.Endpoint,
     ]
   ]
 
+config :ex_dokku,
+  app: :dash,
+  repo: Dash.Repo,
+  postgres_username: "postgres",
+  backup_directory: "/"
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

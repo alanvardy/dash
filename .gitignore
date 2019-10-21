@@ -36,3 +36,4 @@ npm-debug.log
 .elixir_ls
 config/dev.secret.exs
 *.dump
+.sobelow

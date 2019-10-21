@@ -36,18 +36,28 @@ defmodule Dash.Api.Github.Request do
   end
 
   defp next_page(headers) do
-    links = Map.get(headers, "Link")
+    headers
+    |> get_links()
+    |> parse_links()
+    |> filter_links()
+  end
 
-    case links do
-      nil ->
-        nil
+  defp get_links(nil), do: nil
+  defp get_links(headers), do: Map.get(headers, "Link")
 
-      links ->
-        ~r/<https:\/\/api.github.com\/(.+)>; rel="next"/
-        |> Regex.run(links)
-        |> Enum.reject(fn link -> String.contains?(link, "http") end)
-        |> List.first()
-    end
+  defp parse_links(nil), do: nil
+
+  defp parse_links(links) do
+    ~r/<https:\/\/api.github.com\/(.+)>; rel="next"/
+    |> Regex.run(links)
+  end
+
+  defp filter_links(nil), do: nil
+
+  defp filter_links(links) do
+    links
+    |> Enum.reject(fn link -> String.contains?(link, "http") end)
+    |> List.first()
   end
 
   def get(address, username, token) do

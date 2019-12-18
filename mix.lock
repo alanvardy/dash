@@ -55,7 +55,7 @@
   "recon": {:hex, :recon, "2.5.0", "2f7fcbec2c35034bade2f9717f77059dc54eb4e929a3049ca7ba6775c0bd66cd", [:mix, :rebar3], [], "hexpm"},
   "retry": {:hex, :retry, "0.13.0", "bb9b2713f70f39337837852337ad280c77662574f4fb852a8386c269f3d734c4", [:mix], [], "hexpm"},
   "sleeplocks": {:hex, :sleeplocks, "1.1.1", "3d462a0639a6ef36cc75d6038b7393ae537ab394641beb59830a1b8271faeed3", [:rebar3], [], "hexpm"},
-  "sobelow": {:hex, :sobelow, "0.9.2", "ccc4f951fb0e0c87356058884cd7a7a20bb557ad9b65804c8d0569b93fc7cf05", [:mix], [], "hexpm"},
+  "sobelow": {:hex, :sobelow, "0.9.3", "fcadf0a3fb7be0809825b7cca2f3430973fa8b03d71ecc0c65b70525f636a835", [:mix], [], "hexpm"},
   "sshex": {:hex, :sshex, "2.2.1", "e1270b8345ea2a66a11c2bb7aed22c93e3bc7bc813486f4ffd0a980e4a898160", [:mix], [], "hexpm"},
   "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.5", "6eaf7ad16cb568bb01753dbbd7a95ff8b91c7979482b95f38443fe2c8852a79b", [:make, :mix, :rebar3], [], "hexpm"},
   "telemetry": {:hex, :telemetry, "0.4.1", "ae2718484892448a24470e6aa341bc847c3277bfb8d4e9289f7474d752c09c7f", [:rebar3], [], "hexpm"},

@@ -26,6 +26,7 @@
     "tar": ">=5.0.5",
     "webpack-cli": "^3.3.10",
     "lodash": ">=4.17.15",
-    "set-value": ">=2.0.1"
+    "set-value": ">=2.0.1",
+    "serialize-javascript": ">=2.1.1"
   }
 }

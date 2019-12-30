@@ -1,4 +1,4 @@
-name: Elixir Dialyxir
+name: Phoenix - Cypress Acceptance Tests
 
 on: push
 
@@ -15,25 +15,27 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
     steps:
       - uses: actions/checkout@v1.0.0
       - uses: actions/cache@v1
         with:
           path: deps
-          key: ${{ runner.os }}-mix-dialyzer-${{ hashFiles('**/mix.lock') }}
+          key: ${{ runner.os }}-mix-cypress-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
-            ${{ runner.os }}-mix-dialyzer-
+            ${{ runner.os }}-mix-cypress-
       - uses: actions/cache@v1
         with:
           path: _build
-          key: ${{ runner.os }}-build-dialyzer-${{ hashFiles('**/mix.lock') }}
+          key: ${{ runner.os }}-build-cypress-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
-            ${{ runner.os }}-build-dialyzer-
+            ${{ runner.os }}-build-cypress-
       - run: cp config/dev.secret.exs.example config/dev.secret.exs
       - uses: actions/setup-elixir@v1.0.0
         with:
-          otp-version: 22.x
-          elixir-version: 1.9.x
+          otp-version: 22.1
+          elixir-version: 1.9.1
       - run: mix deps.get
-      - run: MIX_ENV=dev mix check --only dialyzer
+      - run: cd assets && npm install && npm install cypress --save-dev && cd ..
+      - run: npm run deploy --prefix ./assets
+      - run: mix phx.digest
+      - run: mix cypress.run

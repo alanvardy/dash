@@ -27,6 +27,7 @@
     "webpack-cli": "^3.3.10",
     "lodash": ">=4.17.15",
     "set-value": ">=2.0.1",
+    "cypress": "^3.7.0",
     "serialize-javascript": ">=2.1.1"
   }
 }

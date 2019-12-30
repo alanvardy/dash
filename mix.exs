@@ -93,7 +93,9 @@ defmodule Dash.MixProject do
       deps: [&no_parallel/1, &long_timeout/1, "deps.get"],
       alldeps: [&no_parallel/1, &long_timeout/1, "deps.update --all"],
       test: ["ecto.create --quiet", "ecto.migrate", "format", "test"],
-      credo: ["credo --strict"]
+      credo: ["credo --strict"],
+      "cypress.open": ["cmd ./cypress-open.sh"],
+      "cypress.run": ["cmd ./cypress-run.sh"]
     ]
   end
 

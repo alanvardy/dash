@@ -11,7 +11,7 @@ config :dash, Dash.Repo,
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :health, DashWeb.Endpoint,
+config :dash, DashWeb.Endpoint,
   http: [port: 5000],
   server: true
 

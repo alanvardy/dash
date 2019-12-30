@@ -12,29 +12,13 @@ defmodule Dash.Api.Backgrounds.Unsplash do
   @spec filter_picture_attrs(%Background{}) :: %Background{}
   def filter_picture_attrs(%Background{background: nil, response: response} = data) do
     background = %{
-      link:
-        response
-        |> Map.get("links")
-        |> Map.get("html"),
-      url:
-        response
-        |> Map.get("urls")
-        |> Map.get("full"),
+      link: get_in(response, ["links", "html"]),
+      url: get_in(response, ["urls", "full"]),
       alt: Map.get(response, "alt_description"),
       description: Map.get(response, "description"),
-      first_name:
-        response
-        |> Map.get("user")
-        |> Map.get("first_name"),
-      last_name:
-        response
-        |> Map.get("user")
-        |> Map.get("last_name"),
-      profile_image:
-        response
-        |> Map.get("user")
-        |> Map.get("profile_image")
-        |> Map.get("small"),
+      first_name: get_in(response, ["user", "first_name"]),
+      last_name: get_in(response, ["user", "last_name"]),
+      profile_image: get_in(response, ["user", "profile_image", "small"]),
       date: Timex.today()
     }
 

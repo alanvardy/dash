@@ -1,8 +1,8 @@
 defmodule DashWeb.PageController do
   use DashWeb, :controller
 
-  alias Dash.Api
   alias Dash.Accounts.User
+  alias Dash.Api
 
   plug :authenticate when action in [:new]
 

@@ -41,6 +41,7 @@ defmodule DashWeb.Endpoint do
   # Set :encryption_salt if you would also like to encrypt it.
   plug Plug.Session,
     store: :cookie,
+    max_age: 24*60*60*30,       # 30 days
     key: "_dash_key",
     signing_salt: "mMAuD+lz"
 

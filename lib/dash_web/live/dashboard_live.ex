@@ -3,7 +3,7 @@ defmodule DashWeb.DashboardLive do
   use Phoenix.LiveView
   alias Dash.Api
 
-  def mount(%{user: user}, socket) do
+  def mount(:not_mounted_at_router, %{"user" => user}, socket) do
     if connected?(socket), do: :timer.send_interval(60_000, self(), :update)
     harvest = Api.get_harvest(user)
     issues = Api.get_issues(user)

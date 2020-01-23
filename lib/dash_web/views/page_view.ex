@@ -1,6 +1,5 @@
 defmodule DashWeb.PageView do
   use DashWeb, :view
-  import Phoenix.LiveView
 
   @spec capitalize(nil | binary) :: nil | binary
   def capitalize(nil), do: nil

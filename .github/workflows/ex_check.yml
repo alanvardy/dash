@@ -4,7 +4,7 @@ on: push
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-16.04
 
     services:
       db:
@@ -20,15 +20,27 @@ jobs:
       - uses: actions/cache@v1
         with:
           path: deps
-          key: ${{ runner.os }}-mix-ex_check-${{ hashFiles('**/mix.lock') }}
+          key: ${{ runner.os }}-deps-ex_check-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
-            ${{ runner.os }}-mix-ex_check-
+            ${{ runner.os }}-deps-ex_check-
       - uses: actions/cache@v1
         with:
           path: _build
           key: ${{ runner.os }}-build-ex_check-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-build-ex_check-
+      - uses: actions/cache@v1
+        with:
+          path: assets/node_modules
+          key: ${{ runner.os }}-node_modules-ex_check-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-ex_check-
+      - uses: actions/cache@v1
+        with:
+          path: /home/runner/.cache/Cypress
+          key: ${{ runner.os }}-cypress-ex_check-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cypress-ex_check-
       - run: cp config/dev.secret.exs.example config/dev.secret.exs
       - uses: actions/setup-elixir@v1.0.0
         with:

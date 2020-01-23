@@ -1,11 +1,19 @@
 defmodule DashWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :dash
 
+  @session_options [
+    store: :cookie,
+    # expires in 30 days
+    max_age: 24 * 60 * 60 * 30,
+    key: "_dash_key",
+    signing_salt: "mMAuD+lz"
+  ]
+
   socket "/socket", DashWeb.UserSocket,
     websocket: true,
     longpoll: false
 
-  socket "/live", Phoenix.LiveView.Socket
+  socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -39,12 +47,6 @@ defmodule DashWeb.Endpoint do
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
-  plug Plug.Session,
-    store: :cookie,
-    # expires in 30 days
-    max_age: 24 * 60 * 60 * 30,
-    key: "_dash_key",
-    signing_salt: "mMAuD+lz"
-
-  plug DashWeb.Router
+  plug Plug.Session, @session_options
+  plug(DashWeb.Router)
 end

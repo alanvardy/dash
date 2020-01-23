@@ -3,7 +3,7 @@
   </div>
   <%= if assigns[:current_user] do %>
   <div class="column is-narrow">
-    <%= live_render(@conn, DashWeb.DashboardLive, session: %{user: @current_user}) %>
+    <%= live_render(@conn, DashWeb.DashboardLive, session: %{"user" => @current_user}) %>
   </div>
   <% else %>
     <%= render "intro.html", conn: @conn %>

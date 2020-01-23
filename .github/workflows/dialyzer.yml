@@ -4,7 +4,7 @@ on: push
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-16.04
 
     services:
       db:
@@ -20,15 +20,21 @@ jobs:
       - uses: actions/cache@v1
         with:
           path: deps
-          key: ${{ runner.os }}-mix-dialyzer-${{ hashFiles('**/mix.lock') }}
+          key: ${{ runner.os }}-deps-dialyzer-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
-            ${{ runner.os }}-mix-dialyzer-
+            ${{ runner.os }}-deps-dialyzer-
       - uses: actions/cache@v1
         with:
           path: _build
           key: ${{ runner.os }}-build-dialyzer-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-build-dialyzer-
+      - uses: actions/cache@v1
+        with:
+          path: assets/node_modules
+          key: ${{ runner.os }}-node_modules-dialyzer-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-dialyzer-
       - run: cp config/dev.secret.exs.example config/dev.secret.exs
       - uses: actions/setup-elixir@v1.0.0
         with:

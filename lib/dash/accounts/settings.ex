@@ -5,6 +5,16 @@ defmodule Dash.Accounts.Settings do
   alias Dash.Accounts.User
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          id: pos_integer | nil,
+          harvest_account_id: integer | nil,
+          harvest_api_key: String.t() | nil,
+          github_username: String.t() | nil,
+          github_api_token: String.t() | nil,
+          user_id: pos_integer | nil,
+          user: User.t() | nil
+        }
+
   schema "settings" do
     field :harvest_account_id, :integer
     field :harvest_api_key, :string
@@ -16,6 +26,7 @@ defmodule Dash.Accounts.Settings do
   end
 
   @doc false
+  @spec changeset(t(), map) :: Ecto.Changeset.t()
   def changeset(settings, attrs) do
     settings
     |> cast(attrs, [:harvest_api_key, :harvest_account_id, :github_username, :github_api_token])

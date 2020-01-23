@@ -23,6 +23,8 @@ defmodule Dash.Accounts do
     |> Repo.one()
   end
 
+  @spec authenticate_by_email_and_pass(binary, any) ::
+          {:error, :not_found | :unauthorized} | {:ok, Dash.Accounts.User.t()}
   def authenticate_by_email_and_pass(email, given_pass) do
     user = get_user_by_email(email)
 
@@ -72,6 +74,7 @@ defmodule Dash.Accounts do
     |> Repo.get!(id)
   end
 
+  @spec get_user(pos_integer) :: User.t() | Ecto.NoResultsError
   def get_user(id) do
     User
     |> preload(:settings)
@@ -79,6 +82,7 @@ defmodule Dash.Accounts do
   end
 
   @doc "get settings for user with settings id"
+  @spec get_settings!(pos_integer) :: Settings.t() | Ecto.NoResultsError
   def get_settings!(id) do
     Settings
     |> preload(:user)

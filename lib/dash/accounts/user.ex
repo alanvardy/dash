@@ -5,12 +5,12 @@ defmodule Dash.Accounts.User do
   import Ecto.Changeset
 
   @type t :: %__MODULE__{
-          id: integer,
-          email: String.t(),
-          name: String.t(),
+          id: integer | nil,
+          email: String.t() | nil,
+          name: String.t() | nil,
           # password: String.t(),
-          password_hash: String.t(),
-          settings: map()
+          password_hash: String.t() | nil,
+          settings: map() | nil
         }
 
   schema "users" do
@@ -25,6 +25,7 @@ defmodule Dash.Accounts.User do
   end
 
   @doc false
+  @spec changeset(t(), map) :: Ecto.Changeset.t()
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:email, :name, :password, :password_confirmation])

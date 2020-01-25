@@ -3,36 +3,39 @@ defmodule Dash.Api.Harvest.Time do
 
   alias Dash.Api.Harvest.Report
 
-  @spec add_countdown(Report.t()) :: Report.t()
+  @spec add_countdown(Report.t()) :: {:ok, Report.t()}
   def add_countdown(%Report{} = data) do
     days_left = days_left()
 
-    %Report{
-      data
-      | time: %{
-          days_left: days_left,
-          weekdays_left: weekdays_left(days_left),
-          month: month()
-        }
-    }
+    {:ok,
+     %Report{
+       data
+       | time: %{
+           days_left: days_left,
+           weekdays_left: weekdays_left(days_left),
+           month: month()
+         }
+     }}
   end
 
+  @spec add_hours_per_day(Report.t()) :: {:ok, Report.t()}
   def add_hours_per_day(%Report{time: %{weekdays_left: weekdays_left}} = data) do
     projects =
       Enum.map(data.projects, fn x ->
         Map.put(x, :hours_per_day, hours_per_day(x, weekdays_left))
       end)
 
-    %Report{data | projects: projects}
+    {:ok, %Report{data | projects: projects}}
   end
 
+  @spec add_nice_hours(Report.t()) :: {:ok, Report.t()}
   def add_nice_hours(%Report{projects: projects} = data) do
     projects =
       Enum.map(projects, fn x ->
         Map.put(x, :nice_hours, nice_hours(x.hours_per_day))
       end)
 
-    %Report{data | projects: projects}
+    {:ok, %Report{data | projects: projects}}
   end
 
   @spec days_left() :: non_neg_integer()

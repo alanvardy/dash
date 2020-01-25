@@ -1,0 +1,38 @@
+<div class="tile is-child">
+  <div class="panel has-background-white">
+    <div class="panel-heading has-background-primary has-text-white has-text-weight-bold flex-between">
+      <div>
+        <%= @project.name %>
+      </div>
+      <div>
+        <%= @project.client %>
+      </div>
+    </div>
+    <div class="panel-block">
+      <div class="tile is-vertical is-parent">
+        <p class="is-size-1 has-text-centered has-text-primary is-child">
+          <%= @project.nice_hours %>
+        </p>
+        <p class="has-text-centered is-child">
+          <%= if @harvest.time.days_left == 0 do %>
+          needed by end of day
+          <% else %>
+          per remaining weekday
+          <% end %>
+        </p>
+      </div>
+    </div>
+    <div class="panel-block flex-between">
+      <div>
+        <i class="fas fa-hourglass"></i>
+        <%= @project.hours %>/<%= @project.budget %> hours
+      </div>
+      <div class="has-text-right">
+        <%= if @project.fee > 0 do %>
+        <i class="fas fa-dollar-sign"></i>
+        <%= @project.fee %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

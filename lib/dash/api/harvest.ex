@@ -1,43 +1,32 @@
 defmodule Dash.Api.Harvest do
   @moduledoc "For interacting with the Harvest API"
   alias Dash.Accounts.User
-  alias Dash.Api.Harvest.{FakeData, Report, Time}
+  alias Dash.Api.Harvest.{Credentials, FakeData, Report, Time}
   use Retry
 
   @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 2000]
 
-  def get(%{settings: %{harvest_api_key: nil, harvest_account_id: nil}}),
-    do: []
-
-  def get(%{settings: %{harvest_api_key: _x, harvest_account_id: _y}} = user) do
-    %Report{}
-    |> add_credentials(user)
-    |> api_calls()
-    |> Time.add_countdown()
-    |> Time.add_hours_per_day()
-    |> Time.add_nice_hours()
+  @spec get(User.t()) :: {:ok, Report.t()} | {:error, binary}
+  def get(user) do
+    with {:ok, report} <- Credentials.add(user),
+         {:ok, report} <- api_calls(report),
+         {:ok, report} <- Time.add_countdown(report),
+         {:ok, report} <- Time.add_hours_per_day(report),
+         {:ok, report} <- Time.add_nice_hours(report) do
+      {:ok, report}
+    else
+      {:error, message} -> {:error, message}
+    end
   end
 
-  def get(_), do: []
-
-  @spec add_credentials(Report.t(), User.t()) :: Report.t()
-  def add_credentials(%Report{}, %User{
-        settings: %{
-          harvest_api_key: api_key,
-          harvest_account_id: account_id
-        }
-      }) do
-    %Report{keys: %{api_key: api_key, account_id: account_id}}
-  end
-
-  @spec api_calls(Report.t()) :: Report.t()
+  @spec api_calls(Report.t()) :: {:ok, Report.t()}
   def api_calls(%Report{} = data) do
     projects = Task.async(fn -> get_projects(data) end)
     time_entries = Task.async(fn -> get_time_entries(data) end)
 
     time_entries = entry_keys(Task.await(time_entries))
     projects = report_keys(Task.await(projects), time_entries)
-    %Report{data | projects: projects, time_entries: time_entries}
+    {:ok, %Report{data | projects: projects, time_entries: time_entries}}
   end
 
   # Pull in all projects as a map

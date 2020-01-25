@@ -1,0 +1,8 @@
+<div class="tile is-child">
+  <div class="box">
+    <span class="panel-icon">
+      <i class="fas fa-calendar-alt"></i>
+    </span>
+    <%= weekdays_left(@harvest) %> weekdays left for <%= month(@harvest) %>
+  </div>
+</div>

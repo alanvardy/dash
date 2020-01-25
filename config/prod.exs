@@ -54,12 +54,10 @@ config :dash,
   url: [host: full_web_host, port: 443]
 
 config :dash, DashWeb.Endpoint,
-
-config :dash, DashWeb.Endpoint,
-http: [:inet6, port: String.to_integer(System.get_env("PORT"))],
-url: [host: web_host, port: 5000],
-load_from_system_env: true,
-secret_key_base: secret_key_base,
+  http: [:inet6, port: String.to_integer(System.get_env("PORT"))],
+  url: [host: web_host, port: 5000],
+  load_from_system_env: true,
+  secret_key_base: secret_key_base,
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production

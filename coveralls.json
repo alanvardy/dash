@@ -13,6 +13,7 @@
     "repo.ex",
     "data_case.ex",
     "dash.ex",
-    "dash_web.ex"
+    "dash_web.ex",
+    "dashboard_live"
   ]
 }

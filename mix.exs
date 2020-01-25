@@ -62,7 +62,7 @@ defmodule Dash.MixProject do
       {:comeonin, "~> 5.1"},
       {:pbkdf2_elixir, "~> 1.0"},
       # Live View
-      {:phoenix_live_view, "~> 0.6.0"},
+      {:phoenix_live_view, "~> 0.7.0"},
       {:floki, ">= 0.0.0", only: :test},
       # authorization
       {:canada, "~> 1.0.1"},

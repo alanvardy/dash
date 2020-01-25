@@ -6,7 +6,8 @@
           <%= for project <- @harvest.projects do %>
             <%= render "_harvest_project.html", project: project, harvest: @harvest %>
           <% end %>
-
+        <% else %>
+          <%= render "_loading.html", resource: "Harvest API" %>
         <% end %>
         <%# Weekdays left %>
 
@@ -15,6 +16,8 @@
           <%= for issue <- @issues do %>
             <%= render "_issue.html", issue: issue %>
           <% end %>
+        <% else %>
+          <%= render "_loading.html", resource: "GitHub API" %>
         <% end %>
       </div>
     </div>

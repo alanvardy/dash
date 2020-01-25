@@ -4,20 +4,6 @@ defmodule Dash.Api.Github.Request do
   alias Dash.Api.Github.FakeData
   use Retry
 
-  # @doc "Recursively grabs all repositories,"
-  # @spec all_repos(User.t(), any) :: []
-  # def all_repos(user, address \\ "user/repos")
-
-  # def all_repos(user, address) do
-  #   %User{settings: %{github_username: username, github_api_token: token}} = user
-  #   {headers, body} = get(address, username, token)
-
-  #   case next_page(headers) do
-  #     nil -> body
-  #     next_address -> body ++ all_repos(user, next_address)
-  #   end
-  # end
-
   @doc "Recursively grabs all issues"
   @spec add_issues(User.t(), any) :: []
   def add_issues(user, address \\ "issues?per_page=1000&filter=all&page=1")

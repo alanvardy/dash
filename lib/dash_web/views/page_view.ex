@@ -31,4 +31,16 @@ defmodule DashWeb.PageView do
   def nice_status(%{status: nil, state: nil}), do: nil
   def nice_status(%{status: nil, state: state}), do: capitalize(state)
   def nice_status(%{status: status}), do: capitalize(status)
+
+  def weekdays_left(%{time: %{weekdays_left: weekdays_left}}) do
+    weekdays_left
+  end
+
+  def weekdays_left(_), do: "Unknown"
+
+  def month(%{time: %{month: month}}) do
+    month
+  end
+
+  def month(_), do: "current month"
 end

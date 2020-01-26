@@ -72,8 +72,9 @@ defmodule Dash.Api.Github.Request do
           end
 
         with {:ok, %{headers: headers, body: body}} <- response,
-             {:ok, body} <- Poison.decode(body) do
-          {:ok, Enum.into(headers, %{}), body}
+             {:ok, body} <- Poison.decode(body),
+             headers <- Enum.into(headers, %{}) do
+          {headers, body}
         else
           error -> error
         end

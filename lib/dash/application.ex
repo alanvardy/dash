@@ -14,8 +14,7 @@ defmodule Dash.Application do
       DashWeb.Endpoint,
       # Starts a worker by calling: Dash.Worker.start_link(arg)
       # {Dash.Worker, arg},
-      {Dash.Api.Backgrounds.Store, []},
-      {Cachex, :github}
+      {Dash.Api.Backgrounds.Store, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

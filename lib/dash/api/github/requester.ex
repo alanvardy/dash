@@ -19,8 +19,8 @@ defmodule Dash.Api.Github.Requester do
       {:ok, issues} ->
         GenServer.cast(parent, {:update_issues, issues})
 
-      {:error, message} ->
-        Logger.error("Harvest server error in #{__MODULE__}: #{inspect(message)}")
+        # {:error, message} ->
+        #   Logger.error("Harvest server error in #{__MODULE__}: #{inspect(message)}")
     end
 
     Process.send_after(self(), :tick, @refresh_time)

@@ -1,24 +1,27 @@
 defmodule Dash.Api.Github.Request do
   @moduledoc "For calling GitHub API"
   alias Dash.Accounts.User
-  alias Dash.Api.Github.FakeData
+  alias Dash.Api.Github.{FakeData, Issues}
   use Retry
 
+  @spec get_issues(User.t()) :: {:ok, Issues.t()}
+  def get_issues(user) do
+    case add_issues(user) do
+      response -> {:ok, %Issues{response: response, user: user}}
+    end
+  end
+
   @doc "Recursively grabs all issues"
-  @spec add_issues(User.t(), any) :: []
+  @spec add_issues(User.t(), any) :: [map]
   def add_issues(user, address \\ "issues?per_page=1000&filter=all&page=1")
+  def add_issues(_user, nil), do: []
 
   def add_issues(user, address) do
     %User{settings: %{github_username: username, github_api_token: token}} = user
     {headers, body} = get(address, username, token)
 
-    case next_page(headers) do
-      nil ->
-        body
-
-      next_address ->
-        body ++ add_issues(user, next_address)
-    end
+    next_address = next_page(headers)
+    body ++ add_issues(user, next_address)
   end
 
   defp next_page(headers) do
@@ -28,7 +31,6 @@ defmodule Dash.Api.Github.Request do
     |> filter_links()
   end
 
-  defp get_links(nil), do: nil
   defp get_links(headers), do: Map.get(headers, "Link")
 
   defp parse_links(nil), do: nil
@@ -46,33 +48,9 @@ defmodule Dash.Api.Github.Request do
     |> List.first()
   end
 
-  def get(address, username, token) do
-    key = "#{address}#{token}"
-
-    case Cachex.fetch(
-           :github,
-           key,
-           fn _ ->
-             {:commit, do_get(address, username, token)}
-           end
-         ) do
-      {:ok, result} ->
-        result
-
-      {:commit, result} ->
-        Cachex.expire(:github, key, :timer.seconds(50))
-        result
-
-      {:error, _} ->
-        result = do_get(address, username, token)
-        Cachex.put(:github, key, result, ttl: :timer.seconds(50))
-        result
-    end
-  end
-
   # make a get request to the Github API
-  @spec do_get(String.t(), String.t(), String.t()) :: {any, any}
-  def do_get(address, username, token) do
+  @spec get(String.t(), String.t(), String.t()) :: {any, any}
+  def get(address, username, token) do
     case Application.get_env(:dash, :env) do
       :test ->
         {FakeData.headers(), FakeData.generate(address)}
@@ -83,20 +61,23 @@ defmodule Dash.Api.Github.Request do
         address = "https://#{username}:#{token}@api.github.com/#{address}"
         options = [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 10_000]
 
-        %{headers: headers, body: body} =
+        response =
           retry with: exponential_backoff() |> cap(20_000) |> expiry(120_000),
                 rescue_only: [HTTPoison.Error] do
             HTTPoison.get!(address, headers, options)
           after
-            result -> result
+            result -> {:ok, result}
           else
             error -> error
           end
 
-        body = Poison.decode!(body)
-        headers = Enum.into(headers, %{})
-
-        {headers, body}
+        with {:ok, %{headers: headers, body: body}} <- response,
+             {:ok, body} <- Poison.decode(body),
+             headers <- Enum.into(headers, %{}) do
+          {headers, body}
+        else
+          error -> error
+        end
     end
   end
 

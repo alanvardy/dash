@@ -29,7 +29,7 @@ defmodule Dash.MixProject do
   def application do
     [
       mod: {Dash.Application, []},
-      extra_applications: [:logger, :runtime_tools, :timex, :cachex]
+      extra_applications: [:logger, :runtime_tools, :timex]
     ]
   end
 
@@ -57,7 +57,6 @@ defmodule Dash.MixProject do
       {:poison, "~> 4.0"},
       {:retry, "~> 0.13.0"},
       {:timex, "~> 3.0"},
-      {:cachex, "~> 3.2"},
       # authentication
       {:comeonin, "~> 5.1"},
       {:pbkdf2_elixir, "~> 1.0"},

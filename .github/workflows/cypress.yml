@@ -38,7 +38,7 @@ jobs:
       - run: cp config/dev.secret.exs.example config/dev.secret.exs
       - uses: actions/setup-elixir@v1.0.0
         with:
-          otp-version: 22.1
+          otp-version: 22.1.8
           elixir-version: 1.10.0
       - run: mix deps.get
       - run: cd assets && npm install && npm install cypress --save-dev && cd ..

@@ -39,7 +39,7 @@ jobs:
       - uses: actions/setup-elixir@v1.0.0
         with:
           otp-version: 22.1
-          elixir-version: 1.9.1
+          elixir-version: 1.10.0
       - run: mix deps.get
       - run: cd assets && npm install && npm install cypress --save-dev && cd ..
       - run: npm run deploy --prefix ./assets

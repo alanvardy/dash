@@ -22,7 +22,7 @@ defmodule DashWeb.DashboardLive do
   end
 
   def handle_info(:update, socket) do
-    :timer.send_interval(5_000, self(), :update)
+    :timer.send_interval(15_000, self(), :update)
 
     socket =
       socket

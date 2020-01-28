@@ -47,7 +47,6 @@ defmodule Dash.Api.Harvest.Server do
 
   @doc "Calling for info from the GenServer resets the cycles"
   def handle_call(:harvest, _from, %{harvest: nil} = state) do
-    Process.send_after(self(), :tick, 0)
     {:reply, nil, state}
   end
 

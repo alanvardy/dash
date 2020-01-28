@@ -3,6 +3,6 @@
     <span class="panel-icon">
       <i class="fas fa-hourglass"></i>
     </span>
-    <%= @resource %> is still loading
+    <%= @resource %> is loading
   </div>
 </div>

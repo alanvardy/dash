@@ -29,7 +29,12 @@ defmodule Dash.Api.Github.Requester do
 
   @doc "For catching unknown messages"
   def handle_info(message, state) do
-    Logger.error("Received unknown message in #{__MODULE__} \nMESSAGE: #{inspect(message)}\n STATE: #{inspect(state)}")
+    Logger.error(
+      "Received unknown message in #{__MODULE__} \nMESSAGE: #{inspect(message)}\n STATE: #{
+        inspect(state)
+      }"
+    )
+
     {:noreply, state}
   end
 end

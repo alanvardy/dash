@@ -44,6 +44,12 @@ defmodule Dash.Api.Harvest.Server do
     {:reply, harvest, state}
   end
 
+  @doc "For catching unknown messages"
+  def handle_info(message, state) do
+    Logger.error("Received unknown message in #{__MODULE__} \nMESSAGE: #{inspect(message)}\n STATE: #{inspect(state)}")
+    {:noreply, state}
+  end
+
   # HELPERS
 
   defp get_user(id) do

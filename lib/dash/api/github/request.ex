@@ -36,7 +36,7 @@ defmodule Dash.Api.Github.Request do
   defp parse_links(nil), do: nil
 
   defp parse_links(links) do
-    ~r/<https:\/\/api.github.com\/(.+)>; rel="next"/
+    ~r/<https:\/\/api.github.com\/(.{20,40})>; rel="next"/
     |> Regex.run(links)
   end
 

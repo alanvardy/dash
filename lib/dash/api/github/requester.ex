@@ -5,7 +5,7 @@ defmodule Dash.Api.Github.Requester do
   alias Dash.Api
 
   # 30 Seconds
-  @refresh_time 30_000
+  @refresh_time 60_000
 
   @doc "Create GenServer, make sure user exists"
   def init(state) do

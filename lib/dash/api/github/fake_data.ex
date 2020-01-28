@@ -108,7 +108,7 @@ defmodule Dash.Api.Github.FakeData do
             },
             "assignees" => [
               %{
-                "login" => "octocat",
+                "login" => "githubusername",
                 "id" => 1,
                 "node_id" => "MDQ6VXNlcjE=",
                 "avatar_url" => "https://github.com/images/error/octocat_happy.gif",
@@ -747,7 +747,7 @@ defmodule Dash.Api.Github.FakeData do
           "merged_at" => "2011-01-26T19:01:12Z",
           "merge_commit_sha" => "e5bd3914e2e596debea16f433f57875b5b90bcd6",
           "assignee" => %{
-            "login" => "octocat",
+            "login" => "githubusername",
             "id" => 1,
             "node_id" => "MDQ6VXNlcjE=",
             "avatar_url" => "https://github.com/images/error/octocat_happy.gif",
@@ -788,7 +788,7 @@ defmodule Dash.Api.Github.FakeData do
               "site_admin" => false
             },
             %{
-              "login" => "hubot",
+              "login" => "githubusername",
               "id" => 1,
               "node_id" => "MDQ6VXNlcjE=",
               "avatar_url" => "https://github.com/images/error/hubot_happy.gif",
@@ -810,7 +810,7 @@ defmodule Dash.Api.Github.FakeData do
           ],
           "requested_reviewers" => [
             %{
-              "login" => "other_user",
+              "login" => "githubusername",
               "id" => 1,
               "node_id" => "MDQ6VXNlcjE=",
               "avatar_url" => "https://github.com/images/error/other_user_happy.gif",

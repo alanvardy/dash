@@ -5,6 +5,7 @@ defmodule Dash.Api.Github.Server do
   alias Dash.Api.Github.Requester
   alias Dash.Repo
   import Ecto.Query
+  require Logger
 
   @doc "Create GenServer, make sure user exists"
   def init(%{id: id}) do
@@ -24,6 +25,17 @@ defmodule Dash.Api.Github.Server do
 
   def handle_cast({:update_issues, issues}, state) do
     {:noreply, %{state | issues: issues}}
+  end
+
+  @doc "For catching unknown messages"
+  def handle_info(message, state) do
+    Logger.error(
+      "Received unknown message in #{__MODULE__} \nMESSAGE: #{inspect(message)}\n STATE: #{
+        inspect(state)
+      }"
+    )
+
+    {:noreply, state}
   end
 
   # HELPERS

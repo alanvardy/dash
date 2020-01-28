@@ -32,18 +32,9 @@ defmodule Dash.Api.Harvest.Request do
       _ ->
         headers = build_headers(keys)
 
-        response =
-          retry with: exponential_backoff() |> cap(1_000) |> expiry(10_000),
-                rescue_only: [HTTPoison.Error] do
-            HTTPoison.get!("https://api.harvestapp.com/api#{address}", headers, @options)
-          after
-            result ->
-              {:ok, result}
-          else
-            _error -> {:error, "Could not access Harvest API"}
-          end
-
-        with {:ok, %{body: body}} <- response,
+        with {:ok, response} <-
+               HTTPoison.get("https://api.harvestapp.com/api#{address}", headers, @options),
+             {:ok, body} <- Map.fetch(response, :body),
              {:ok, decoded} <- Poison.decode(body),
              {:ok, entry} <- Map.fetch(decoded, key) do
           {:ok, entry}

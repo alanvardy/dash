@@ -4,24 +4,30 @@ defmodule Dash.Api.Github.Request do
   alias Dash.Api.Github.{FakeData, Issues}
   use Retry
 
-  @spec get_issues(User.t()) :: {:ok, Issues.t()}
+  @spec get_issues(User.t()) :: {:ok, Issues.t()} | {:error, binary}
   def get_issues(user) do
     case add_issues(user) do
+      {:error, message} -> {:error, message}
       response -> {:ok, %Issues{response: response, user: user}}
     end
   end
 
   @doc "Recursively grabs all issues"
-  @spec add_issues(User.t(), any) :: [map]
+  # @spec add_issues(User.t(), any) :: [map] | {:error, binary}
   def add_issues(user, address \\ "issues?per_page=1000&filter=all&page=1")
   def add_issues(_user, nil), do: []
 
   def add_issues(user, address) do
     %User{settings: %{github_username: username, github_api_token: token}} = user
-    {headers, body} = get(address, username, token)
 
-    next_address = next_page(headers)
-    body ++ add_issues(user, next_address)
+    case get(address, username, token) do
+      {:ok, headers, body} ->
+        next_address = next_page(headers)
+        body ++ add_issues(user, next_address)
+
+      {:error, message} ->
+        {:error, message}
+    end
   end
 
   defp next_page(headers) do
@@ -36,7 +42,7 @@ defmodule Dash.Api.Github.Request do
   defp parse_links(nil), do: nil
 
   defp parse_links(links) do
-    ~r/<https:\/\/api.github.com\/(.+)>; rel="next"/
+    ~r/<https:\/\/api.github.com\/(.{20,40})>; rel="next"/
     |> Regex.run(links)
   end
 
@@ -49,11 +55,11 @@ defmodule Dash.Api.Github.Request do
   end
 
   # make a get request to the Github API
-  @spec get(String.t(), String.t(), String.t()) :: {any, any}
+  @spec get(String.t(), String.t(), String.t()) :: {:ok, any, any} | {:error, any}
   def get(address, username, token) do
     case Application.get_env(:dash, :env) do
       :test ->
-        {FakeData.headers(), FakeData.generate(address)}
+        {:ok, FakeData.headers(), FakeData.generate(address)}
 
       # coveralls-ignore-start
       _ ->
@@ -61,20 +67,12 @@ defmodule Dash.Api.Github.Request do
         address = "https://#{username}:#{token}@api.github.com/#{address}"
         options = [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 10_000]
 
-        response =
-          retry with: exponential_backoff() |> cap(20_000) |> expiry(120_000),
-                rescue_only: [HTTPoison.Error] do
-            HTTPoison.get!(address, headers, options)
-          after
-            result -> {:ok, result}
-          else
-            error -> error
-          end
-
-        with {:ok, %{headers: headers, body: body}} <- response,
-             {:ok, body} <- Poison.decode(body),
-             headers <- Enum.into(headers, %{}) do
-          {headers, body}
+        with {:ok, response} <- HTTPoison.get(address, headers, options),
+             {:ok, headers} = Map.fetch(response, :headers),
+             {:ok, body} = Map.fetch(response, :body),
+             {:ok, body} <- Poison.decode(body) do
+          headers = Enum.into(headers, %{})
+          {:ok, headers, body}
         else
           error -> error
         end

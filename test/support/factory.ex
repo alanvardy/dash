@@ -30,7 +30,7 @@ defmodule Dash.Factory do
     %Settings{
       harvest_api_key: "123jkh12k123",
       harvest_account_id: "56781",
-      github_username: "asdfasdfasdf",
+      github_username: "githubusername",
       github_api_token: "s8ad7f9s"
     }
   end

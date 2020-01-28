@@ -10,7 +10,7 @@ defmodule Dash.Api.Github do
          {:ok, issues} <- Process.issues(issues) do
       {:ok, issues}
     else
-      error -> error
+      {:error, message} -> {:error, message}
     end
   end
 end

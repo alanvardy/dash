@@ -34,6 +34,17 @@ defmodule Dash.Api.Harvest.Server do
     end
   end
 
+  @doc "For catching unknown messages"
+  def handle_info(message, state) do
+    Logger.error(
+      "Received unknown message in #{__MODULE__} \nMESSAGE: #{inspect(message)}\n STATE: #{
+        inspect(state)
+      }"
+    )
+
+    {:noreply, state}
+  end
+
   @doc "Calling for info from the GenServer resets the cycles"
   def handle_call(:harvest, _from, %{harvest: nil} = state) do
     Process.send_after(self(), :tick, 0)

@@ -1,5 +1,9 @@
 # Dash
 
+## Video
+
+[![Watch the video](https://img.youtube.com/vi/Bh3neB1ZG3I/0.jpg)](https://www.youtube.com/watch?v=Bh3neB1ZG3I)
+
 To start your Phoenix server: 
 
   * Install dependencies with `mix deps.get`

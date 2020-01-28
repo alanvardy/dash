@@ -7,6 +7,7 @@ defmodule Dash.Api.Github.Request do
   @spec get_issues(User.t()) :: {:ok, Issues.t()}
   def get_issues(user) do
     case add_issues(user) do
+      {:error, message} -> {:error, message}
       response -> {:ok, %Issues{response: response, user: user}}
     end
   end
@@ -18,10 +19,15 @@ defmodule Dash.Api.Github.Request do
 
   def add_issues(user, address) do
     %User{settings: %{github_username: username, github_api_token: token}} = user
-    {headers, body} = get(address, username, token)
 
-    next_address = next_page(headers)
-    body ++ add_issues(user, next_address)
+    case get(address, username, token) do
+      {:ok, headers, body} ->
+        next_address = next_page(headers)
+        body ++ add_issues(user, next_address)
+
+      {:error, message} ->
+        {:error, message}
+    end
   end
 
   defp next_page(headers) do
@@ -61,20 +67,12 @@ defmodule Dash.Api.Github.Request do
         address = "https://#{username}:#{token}@api.github.com/#{address}"
         options = [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 10_000]
 
-        response =
-          retry with: exponential_backoff() |> cap(20_000) |> expiry(120_000),
-                rescue_only: [HTTPoison.Error] do
-            HTTPoison.get!(address, headers, options)
-          after
-            result -> {:ok, result}
-          else
-            error -> error
-          end
-
-        with {:ok, %{headers: headers, body: body}} <- response,
+        with {:ok, response} <- HTTPoison.get(address, headers, options),
+             {:ok, headers} = Map.fetch(response, :headers),
+             {:ok, body} = Map.fetch(response, :body),
              {:ok, body} <- Poison.decode(body),
              headers <- Enum.into(headers, %{}) do
-          {headers, body}
+          {:ok, headers, body}
         else
           error -> error
         end

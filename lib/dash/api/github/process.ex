@@ -5,7 +5,11 @@ defmodule Dash.Api.Github.Process do
   alias Dash.Accounts.User
   alias Dash.Api.Github.{Issues, Request}
 
-  @spec issues(Issues.t()) :: {:ok, [map]}
+  @spec issues(Issues.t()) :: {:ok, [map]} | {:error, binary}
+  def issues(%Issues{response: nil}) do
+    {:error, "No response to process"}
+  end
+
   def issues(%Issues{response: response, user: user}) do
     issues =
       response
@@ -89,12 +93,16 @@ defmodule Dash.Api.Github.Process do
   defp add_pull_request_data(%{pull_request: pull_request, age: age} = issue, user) do
     %User{settings: %{github_username: username, github_api_token: token}} = user
 
-    pull_request =
+    address =
       ~r/https:\/\/api.github.com\/(.+)/
       |> Regex.run(pull_request)
       |> Enum.at(1)
-      |> Request.get(username, token)
-      |> elem(1)
+
+    pull_request =
+      case Request.get(address, username, token) do
+        {:ok, _header, body} -> body
+        {:error, _struct} -> %{}
+      end
 
     state =
       case Map.get(pull_request, "mergeable_state") do
@@ -133,26 +141,25 @@ defmodule Dash.Api.Github.Process do
   defp add_status(%{statuses_url: statuses_url} = issue, user) do
     %User{settings: %{github_username: username, github_api_token: token}} = user
 
-    statuses =
-      ~r/https:\/\/api.github.com\/(.+)/
-      |> Regex.run(statuses_url)
-      |> Enum.at(1)
-      |> Request.get(username, token)
-      |> elem(1)
+    with [_full, matches] <- Regex.run(~r/https:\/\/api.github.com\/(.+)/, statuses_url),
+         {:ok, address} <- Enum.fetch(matches, 1),
+         {:ok, _header, body} <- Request.get(address, username, token) do
+      status =
+        case body do
+          %{"state" => state} ->
+            state
 
-    status =
-      case statuses do
-        [] ->
-          nil
+          [%{"state" => state} | _tail] ->
+            state
 
-        %{"state" => state} ->
-          state
+          _ ->
+            nil
+        end
 
-        [%{"state" => state} | _tail] ->
-          state
-      end
-
-    Map.put(issue, :status, status)
+      Map.put(issue, :status, status)
+    else
+      _ -> issue
+    end
   end
 
   defp add_status(issue, _user), do: Map.put(issue, :status, nil)

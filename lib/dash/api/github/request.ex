@@ -4,7 +4,7 @@ defmodule Dash.Api.Github.Request do
   alias Dash.Api.Github.{FakeData, Issues}
   use Retry
 
-  @spec get_issues(User.t()) :: {:ok, Issues.t()}
+  @spec get_issues(User.t()) :: {:ok, Issues.t()} | {:error, binary}
   def get_issues(user) do
     case add_issues(user) do
       {:error, message} -> {:error, message}
@@ -13,7 +13,7 @@ defmodule Dash.Api.Github.Request do
   end
 
   @doc "Recursively grabs all issues"
-  @spec add_issues(User.t(), any) :: [map]
+  # @spec add_issues(User.t(), any) :: [map] | {:error, binary}
   def add_issues(user, address \\ "issues?per_page=1000&filter=all&page=1")
   def add_issues(_user, nil), do: []
 
@@ -55,7 +55,7 @@ defmodule Dash.Api.Github.Request do
   end
 
   # make a get request to the Github API
-  @spec get(String.t(), String.t(), String.t()) :: {any, any}
+  @spec get(String.t(), String.t(), String.t()) :: {:ok, any, any} | {:error, any}
   def get(address, username, token) do
     case Application.get_env(:dash, :env) do
       :test ->
@@ -70,8 +70,8 @@ defmodule Dash.Api.Github.Request do
         with {:ok, response} <- HTTPoison.get(address, headers, options),
              {:ok, headers} = Map.fetch(response, :headers),
              {:ok, body} = Map.fetch(response, :body),
-             {:ok, body} <- Poison.decode(body),
-             headers <- Enum.into(headers, %{}) do
+             {:ok, body} <- Poison.decode(body) do
+          headers = Enum.into(headers, %{})
           {:ok, headers, body}
         else
           error -> error

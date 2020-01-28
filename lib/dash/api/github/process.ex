@@ -107,7 +107,7 @@ defmodule Dash.Api.Github.Process do
 
     requested_reviewers =
       pull_request
-      |> Map.get("requested_reviewers")
+      |> Map.get("requested_reviewers", [])
       |> Enum.map(fn reviewer -> Map.get(reviewer, "login") end)
 
     assignees =

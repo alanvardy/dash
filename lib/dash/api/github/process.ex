@@ -93,10 +93,7 @@ defmodule Dash.Api.Github.Process do
   defp add_pull_request_data(%{pull_request: pull_request, age: age} = issue, user) do
     %User{settings: %{github_username: username, github_api_token: token}} = user
 
-    address =
-      ~r/https:\/\/api.github.com\/(.+)/
-      |> Regex.run(pull_request)
-      |> Enum.at(1)
+    [_full, address] = Regex.run(~r/https:\/\/api.github.com\/(.+)/, pull_request)
 
     pull_request =
       case Request.get(address, username, token) do
@@ -141,8 +138,7 @@ defmodule Dash.Api.Github.Process do
   defp add_status(%{statuses_url: statuses_url} = issue, user) do
     %User{settings: %{github_username: username, github_api_token: token}} = user
 
-    with [_full, matches] <- Regex.run(~r/https:\/\/api.github.com\/(.+)/, statuses_url),
-         {:ok, address} <- Enum.fetch(matches, 1),
+    with [_full, address] <- Regex.run(~r/https:\/\/api.github.com\/(.+)/, statuses_url),
          {:ok, _header, body} <- Request.get(address, username, token) do
       status =
         case body do
@@ -158,7 +154,7 @@ defmodule Dash.Api.Github.Process do
 
       Map.put(issue, :status, status)
     else
-      _ -> issue
+      _ -> Map.put(issue, :status, nil)
     end
   end
 

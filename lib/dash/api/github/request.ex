@@ -59,7 +59,7 @@ defmodule Dash.Api.Github.Request do
   def get(address, username, token) do
     case Application.get_env(:dash, :env) do
       :test ->
-        {FakeData.headers(), FakeData.generate(address)}
+        {:ok, FakeData.headers(), FakeData.generate(address)}
 
       # coveralls-ignore-start
       _ ->

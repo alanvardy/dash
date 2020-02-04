@@ -37,6 +37,7 @@ defmodule DashWeb.DashboardLive do
   end
 
   # Start a server unless it has already been created
+
   defp start_harvest_server(%{assigns: %{harvest_server: _}} = socket) do
     socket
   end
@@ -58,7 +59,7 @@ defmodule DashWeb.DashboardLive do
   end
 
   defp get_harvest(%{assigns: %{harvest_server: pid}} = socket) do
-    harvest = GenServer.call(pid, :harvest)
+    harvest = GenServer.call(pid, :reports)
     assign(socket, :harvest, harvest)
   end
 

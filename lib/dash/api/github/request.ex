@@ -65,7 +65,7 @@ defmodule Dash.Api.Github.Request do
       _ ->
         headers = []
         address = "https://#{username}:#{token}@api.github.com/#{address}"
-        options = [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 10_000]
+        options = [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 20_000]
 
         with {:ok, %{status_code: 200} = response} <- HTTPoison.get(address, headers, options),
              {:ok, headers} = Map.fetch(response, :headers),

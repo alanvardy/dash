@@ -65,9 +65,9 @@ defmodule Dash.Api.Github.Request do
       _ ->
         headers = []
         address = "https://#{username}:#{token}@api.github.com/#{address}"
-        options = [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 10_000]
+        options = [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 20_000]
 
-        with {:ok, response} <- HTTPoison.get(address, headers, options),
+        with {:ok, %{status_code: 200} = response} <- HTTPoison.get(address, headers, options),
              {:ok, headers} = Map.fetch(response, :headers),
              {:ok, body} = Map.fetch(response, :body),
              {:ok, body} <- Poison.decode(body) do

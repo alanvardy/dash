@@ -1,37 +1,30 @@
 defmodule Dash.Api.Harvest.Server do
-  @moduledoc "For handling and storing requests to the Harvest API"
+  @moduledoc "For handling and storing requests to the GitHub API"
   use GenServer
-  require Logger
   alias Dash.Accounts.User
-  alias Dash.{Api, Repo}
+  alias Dash.Api.Harvest.Requester
+  alias Dash.Repo
   import Ecto.Query
-
-  # 30 Seconds
-  @refresh_time 30_000
+  require Logger
 
   @doc "Create GenServer, make sure user exists"
   def init(%{id: id}) do
     case get_user(id) do
       {:ok, user} ->
-        state = %{id: id, user: user, harvest: nil}
-        {:ok, state}
+        GenServer.start_link(Requester, %{parent: self(), user: user})
+        {:ok, %{reports: nil}}
 
       {:error, :not_found} ->
         {:stop, "User does not exist"}
     end
   end
 
-  def handle_info(:tick, %{user: user} = state) do
-    Process.send_after(self(), :tick, @refresh_time)
+  def handle_call(:reports, _from, %{reports: reports} = state) do
+    {:reply, reports, state}
+  end
 
-    case Api.get_harvest(user) do
-      {:ok, harvest} ->
-        {:noreply, %{state | harvest: harvest}}
-
-      {:error, message} ->
-        Logger.error("Harvest server error in #{__MODULE__}: #{inspect(message)}")
-        {:noreply, state}
-    end
+  def handle_cast({:update_reports, reports}, state) do
+    {:noreply, %{state | reports: reports}}
   end
 
   @doc "For catching unknown messages"
@@ -45,25 +38,12 @@ defmodule Dash.Api.Harvest.Server do
     {:noreply, state}
   end
 
-  @doc "Calling for info from the GenServer resets the cycles"
-  def handle_call(:harvest, _from, %{harvest: nil} = state) do
-    {:reply, nil, state}
-  end
-
-  def handle_call(:harvest, _from, %{harvest: harvest} = state) do
-    {:reply, harvest, state}
-  end
-
   # HELPERS
 
   defp get_user(id) do
     case Repo.one(from(u in User, where: u.id == ^id, preload: [:settings])) do
-      nil ->
-        Logger.error("User not found in #{__MODULE__}")
-        {:error, :not_found}
-
-      user ->
-        {:ok, user}
+      nil -> {:error, :not_found}
+      user -> {:ok, user}
     end
   end
 end

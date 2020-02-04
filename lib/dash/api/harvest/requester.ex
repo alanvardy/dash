@@ -1,5 +1,5 @@
-defmodule Dash.Api.Github.Requester do
-  @moduledoc "For pulling information from the GitHub api"
+defmodule Dash.Api.Harvest.Requester do
+  @moduledoc "For pulling information from the Harvest api"
   use GenServer
   require Logger
   alias Dash.Api
@@ -15,12 +15,12 @@ defmodule Dash.Api.Github.Requester do
 
   @doc "Tick refreshes data from the API"
   def handle_info(:tick, %{parent: parent, user: user} = state) do
-    case Api.get_issues(user) do
-      {:ok, issues} ->
-        GenServer.cast(parent, {:update_issues, issues})
+    case Api.get_harvest(user) do
+      {:ok, harvest} ->
+        GenServer.cast(parent, {:update_reports, harvest})
 
       {:error, message} ->
-        Logger.error("Github server error in #{__MODULE__}: #{inspect(message)}")
+        Logger.error("Harvest server error in #{__MODULE__}: #{inspect(message)}")
     end
 
     Process.send_after(self(), :tick, @refresh_time)

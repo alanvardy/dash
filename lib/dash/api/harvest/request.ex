@@ -2,7 +2,7 @@ defmodule Dash.Api.Harvest.Request do
   @moduledoc "Makes requests to the Harvest API"
   use Retry
   alias Dash.Api.Harvest.{FakeData, Report}
-  @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 2000]
+  @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 5000]
 
   @doc "Pull in all projects as a map"
   @spec projects(Report.t()) :: {:ok, Report.t()}
@@ -32,7 +32,7 @@ defmodule Dash.Api.Harvest.Request do
       _ ->
         headers = build_headers(keys)
 
-        with {:ok, response} <-
+        with {:ok, %{status_code: 200} = response} <-
                HTTPoison.get("https://api.harvestapp.com/api#{address}", headers, @options),
              {:ok, body} <- Map.fetch(response, :body),
              {:ok, decoded} <- Poison.decode(body),

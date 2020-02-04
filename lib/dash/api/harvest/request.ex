@@ -32,7 +32,7 @@ defmodule Dash.Api.Harvest.Request do
       _ ->
         headers = build_headers(keys)
 
-        with {:ok, response} <-
+        with {:ok, %{status_code: 200} = response} <-
                HTTPoison.get("https://api.harvestapp.com/api#{address}", headers, @options),
              {:ok, body} <- Map.fetch(response, :body),
              {:ok, decoded} <- Poison.decode(body),

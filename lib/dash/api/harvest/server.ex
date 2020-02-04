@@ -13,6 +13,7 @@ defmodule Dash.Api.Harvest.Server do
   def init(%{id: id}) do
     case get_user(id) do
       {:ok, user} ->
+        Process.send_after(self(), :tick, 0)
         state = %{id: id, user: user, harvest: nil}
         {:ok, state}
 

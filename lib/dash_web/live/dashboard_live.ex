@@ -6,7 +6,6 @@ defmodule DashWeb.DashboardLive do
 
   def mount(:not_mounted_at_router, %{"user" => user}, socket) do
     if connected?(socket) do
-
       socket =
         socket
         |> assign(:user, user)

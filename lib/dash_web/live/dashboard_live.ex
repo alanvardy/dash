@@ -14,7 +14,7 @@ defmodule DashWeb.DashboardLive do
         |> get_harvest()
         |> get_issues()
 
-      :timer.send_interval(5_000, self(), :update)
+      :timer.send_interval(15_000, self(), :update)
       {:ok, socket}
     else
       {:ok, socket}
@@ -22,8 +22,6 @@ defmodule DashWeb.DashboardLive do
   end
 
   def handle_info(:update, socket) do
-    :timer.send_interval(15_000, self(), :update)
-
     socket =
       socket
       |> get_issues()

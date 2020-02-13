@@ -47,7 +47,7 @@ defmodule Dash.MixProject do
       {:phoenix_ecto, "~> 4.0"},
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
-      {:phoenix_html, "~> 2.11"},
+      {:phoenix_html, "~> 2.14"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
@@ -61,7 +61,7 @@ defmodule Dash.MixProject do
       {:comeonin, "~> 5.1"},
       {:pbkdf2_elixir, "~> 1.0"},
       # Live View
-      {:phoenix_live_view, "~> 0.6.0"},
+      {:phoenix_live_view, "~> 0.7.1"},
       {:floki, ">= 0.0.0", only: :test},
       # authorization
       {:canada, "~> 1.0.1"},

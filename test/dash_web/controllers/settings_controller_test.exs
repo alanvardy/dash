@@ -23,7 +23,7 @@ defmodule DashWeb.SettingsControllerTest do
 
       conn = log_in_(conn, user2)
       conn = get(conn, Routes.settings_path(conn, :edit, settings))
-      assert redirected_to(conn) == Routes.page_path(conn, :index)
+      assert_forbidden(conn)
     end
 
     test "will edit settings if for same user", %{conn: conn} do
@@ -65,7 +65,7 @@ defmodule DashWeb.SettingsControllerTest do
           settings: %{harvest_account_id: new_attribute, harvest_api_key: new_attribute2}
         )
 
-      assert redirected_to(conn) == Routes.page_path(conn, :index)
+      assert_forbidden(conn)
       settings = Accounts.get_settings!(settings.id)
       refute settings.harvest_account_id == new_attribute
       refute settings.harvest_api_key == new_attribute2

@@ -14,22 +14,6 @@ defmodule DashWeb.UserControllerTest do
 
   @invalid_attrs %{email: nil, name: nil, password: nil, password_confirmation: nil}
 
-  ##### INDEX ACTIONS #####
-
-  # describe "index" do
-  #   test "doesnt list all users when not logged in", %{conn: conn} do
-  #     conn = get(conn, Routes.user_path(conn, :index))
-  #     assert redirected_to(conn) == Routes.session_path(conn, :new)
-  #   end
-
-  #   test "doesnt list all users when logged in", %{conn: conn} do
-  #     user = insert(:user)
-  #     conn = log_in_(conn, user)
-  #     conn = get(conn, Routes.user_path(conn, :index))
-  #     assert redirected_to(conn) == Routes.page_path(conn, :index)
-  #   end
-  # end
-
   ##### NEW ACTIONS #####
 
   describe "new user" do
@@ -67,7 +51,7 @@ defmodule DashWeb.UserControllerTest do
       user2 = insert(:user2)
       conn = log_in_(conn, user2)
       conn = get(conn, Routes.user_path(conn, :edit, user))
-      assert redirected_to(conn) == Routes.page_path(conn, :index)
+      assert_forbidden(conn)
     end
 
     test "renders form for editing chosen user when user", %{conn: conn} do
@@ -92,7 +76,7 @@ defmodule DashWeb.UserControllerTest do
       user2 = insert(:user2)
       conn = log_in_(conn, user2)
       conn = put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
-      assert redirected_to(conn) == Routes.page_path(conn, :index)
+      assert_forbidden(conn)
     end
 
     test "updates user when user", %{conn: conn} do
@@ -128,7 +112,7 @@ defmodule DashWeb.UserControllerTest do
       user2 = insert(:user2)
       conn = log_in_(conn, user2)
       conn = delete(conn, Routes.user_path(conn, :delete, user))
-      assert redirected_to(conn) == Routes.page_path(conn, :index)
+      assert_forbidden(conn)
 
       inserted =
         [user, user2]

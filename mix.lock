@@ -1,4 +1,5 @@
 %{
+  "bodyguard": {:hex, :bodyguard, "2.4.0", "b41eeee4de613c466298edb07ae845f65d529141a68153b9bf5332e99b630c1d", [:mix], [{:plug, "~> 1.0", [hex: :plug, repo: "hexpm", optional: false]}], "hexpm", "2420f403c79613dde20e99a91b266652531428da3c4d3a90dd2c12b4c61a43f3"},
   "bunt": {:hex, :bunt, "0.2.0", "951c6e801e8b1d2cbe58ebbd3e616a869061ddadcc4863d0a2182541acae9a38", [:mix], [], "hexpm", "7af5c7e09fe1d40f76c8e4f9dd2be7cebd83909f31fee7cd0e9eadc567da8353"},
   "canada": {:hex, :canada, "1.0.2", "040e4c47609b0a67d5773ac1fbe5e99f840cef173d69b739beda7c98453e0770", [:mix], [], "hexpm", "4269f74153fe89583fe50bd4d5de57bfe01f31258a6b676d296f3681f1483c68"},
   "canary": {:hex, :canary, "1.1.1", "4138d5e05db8497c477e4af73902eb9ae06e49dceaa13c2dd9f0b55525ded48b", [:mix], [{:canada, "~> 1.0.1", [hex: :canada, repo: "hexpm", optional: false]}, {:ecto, ">= 1.1.0", [hex: :ecto, repo: "hexpm", optional: false]}, {:plug, "~> 1.0", [hex: :plug, repo: "hexpm", optional: false]}], "hexpm", "f348d9848693c830a65b707bba9e4dfdd6434e8c356a8d4477e4535afb0d653b"},

@@ -6,7 +6,7 @@ defmodule Dash.MixProject do
     [
       app: :dash,
       version: "0.1.0",
-      elixir: "~> 1.10.0",
+      elixir: "~> 1.10",
       elixirc_paths: elixirc_paths(Mix.env()),
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
@@ -57,15 +57,14 @@ defmodule Dash.MixProject do
       {:poison, "~> 4.0"},
       {:retry, "~> 0.13.0"},
       {:timex, "~> 3.0"},
-      # authentication
+      # Auth
       {:comeonin, "~> 5.1"},
       {:pbkdf2_elixir, "~> 1.0"},
+      {:bodyguard, "~> 2.4"},
       # Live View
       {:phoenix_live_view, "~> 0.7.1"},
       {:floki, ">= 0.0.0", only: :test},
-      # authorization
-      {:canada, "~> 1.0.1"},
-      {:canary, "~> 1.1.1"},
+      # Testing
       {:ex_machina, "~> 2.3", only: :test},
       # ex_check stack
       {:ex_check, ">= 0.0.0", only: :dev, runtime: false},

@@ -1,14 +1,15 @@
 defmodule DashWeb.PageController do
   use DashWeb, :controller
 
-  alias Dash.Accounts.User
+  alias Dash.Accounts
+  alias Dash.Accounts.{Policy, User}
   alias Dash.Api
 
   plug :authenticate when action in [:new]
 
   @spec index(Plug.Conn.t(), any) :: Plug.Conn.t()
   def index(conn, _params) do
-    user = conn.assigns.current_user
+    user = Accounts.get_current_user(conn)
 
     cond do
       is_nil(user) ->
@@ -27,11 +28,15 @@ defmodule DashWeb.PageController do
 
   @spec new(Plug.Conn.t(), any) :: Plug.Conn.t()
   def new(conn, _params) do
-    user = conn.assigns.current_user
-    Api.new_background(user)
-    redirect(conn, to: "/")
+    user = Accounts.get_current_user(conn)
+
+    with :ok <- permit(Policy, :new, :background, user) do
+      Api.new_background(user)
+      redirect(conn, to: "/")
+    end
   end
 
+  # Check if there is a logged in user
   defp authenticate(conn, _opts) do
     if conn.assigns.current_user do
       conn

@@ -1,4 +1,6 @@
 defmodule DashWeb do
+  alias DashWeb.FallbackController
+
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, views, channels and so on.
@@ -20,8 +22,9 @@ defmodule DashWeb do
   def controller do
     quote do
       use Phoenix.Controller, namespace: DashWeb
-      import Canary.Plugs
       import Plug.Conn
+      import Bodyguard
+      action_fallback FallbackController
       import DashWeb.Gettext
       alias DashWeb.Router.Helpers, as: Routes
       import Phoenix.LiveView.Controller

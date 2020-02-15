@@ -2,7 +2,12 @@ defmodule Dash.Helpers do
   @moduledoc "Test helpers"
   use Phoenix.ConnTest
   alias DashWeb.Router.Helpers, as: Routes
+  import ExUnit.Assertions
   @endpoint DashWeb.Endpoint
+
+  def assert_forbidden(conn) do
+    assert html_response(conn, 403) =~ "Forbidden"
+  end
 
   def log_in_(conn, user) do
     post(conn, Routes.session_path(conn, :create),

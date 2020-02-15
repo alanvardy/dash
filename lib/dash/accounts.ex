@@ -9,6 +9,9 @@ defmodule Dash.Accounts do
   alias Ecto.Multi
   import Ecto.Query, warn: false
 
+  def get_current_user(%Plug.Conn{assigns: %{current_user: current_user}}), do: current_user
+  def get_current_user(_), do: nil
+
   @spec get_user_by_email(String.t()) :: %User{} | nil
   def get_user_by_email(email) do
     User

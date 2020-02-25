@@ -7,7 +7,7 @@ defmodule Dash.GithubServerTest do
   describe "init" do
     test "starts with issues: nil" do
       user = insert(:user)
-      assert Server.init(%{id: user.id}) == {:ok, %{issues: nil}}
+      assert Server.init(%{user_id: user.id}) == {:ok, %{issues: nil}}
     end
   end
 

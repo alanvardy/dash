@@ -3,24 +3,25 @@ defmodule DashWeb.DashboardLive do
   use Phoenix.LiveView
   alias Dash.Api.Github.Server, as: GithubServer
   alias Dash.Api.Harvest.Server, as: HarvestServer
+  alias Phoenix.LiveView.Socket
 
-  def mount(:not_mounted_at_router, %{"user" => user}, socket) do
+  @spec mount(:not_mounted_at_router, map, Socket.t()) :: {:ok, Socket.t()}
+  def mount(:not_mounted_at_router, %{"user_id" => user_id}, socket) do
     if connected?(socket) do
       socket =
         socket
-        |> assign(:user, user)
-        |> start_github_server()
-        |> start_harvest_server()
+        |> assign(:user_id, user_id)
         |> get_harvest()
         |> get_issues()
 
-      :timer.send_interval(15_000, self(), :update)
+      :timer.send_interval(5_000, self(), :update)
       {:ok, socket}
     else
       {:ok, socket}
     end
   end
 
+  @spec handle_info(:update, Socket.t()) :: {:noreply, Socket.t()}
   def handle_info(:update, socket) do
     socket =
       socket
@@ -34,43 +35,13 @@ defmodule DashWeb.DashboardLive do
     DashWeb.PageView.render("dashboard_live.html", assigns)
   end
 
-  # Start a server unless it has already been created
-
-  defp start_harvest_server(%{assigns: %{harvest_server: _}} = socket) do
-    socket
-  end
-
-  defp start_harvest_server(socket) do
-    %{assigns: %{user: %{id: id}}} = socket
-    {:ok, pid} = GenServer.start_link(HarvestServer, %{id: id})
-    assign(socket, :harvest_server, pid)
-  end
-
-  defp start_github_server(%{assigns: %{github_server: _}} = socket) do
-    socket
-  end
-
-  defp start_github_server(socket) do
-    %{assigns: %{user: %{id: id}}} = socket
-    {:ok, pid} = GenServer.start_link(GithubServer, %{id: id})
-    assign(socket, :github_server, pid)
-  end
-
-  defp get_harvest(%{assigns: %{harvest_server: pid}} = socket) do
-    harvest = GenServer.call(pid, :reports)
+  defp get_harvest(%{assigns: %{user_id: user_id}} = socket) do
+    harvest = HarvestServer.fetch(user_id)
     assign(socket, :harvest, harvest)
   end
 
-  defp get_harvest(socket) do
-    socket
-  end
-
-  defp get_issues(%{assigns: %{github_server: pid}} = socket) do
-    issues = GenServer.call(pid, :issues)
+  defp get_issues(%{assigns: %{user_id: user_id}} = socket) do
+    issues = GithubServer.fetch(user_id)
     assign(socket, :issues, issues)
-  end
-
-  defp get_issues(socket) do
-    socket
   end
 end

@@ -8,7 +8,7 @@ defmodule Dash.Api.Github.Server do
   require Logger
 
   # Client
-  
+
   @spec start_link(pos_integer) :: :ignore | {:error, any} | {:ok, pid}
   def start_link(user_id) do
     find_or_create_server(user_id)

@@ -74,16 +74,19 @@ defmodule Dash.Api.Harvest.Time do
     current_month == month && current_year == year
   end
 
-  @spec hours_per_day(integer(), integer(), integer()) :: float()
+  @spec hours_per_day(integer(), integer(), integer()) :: number()
   def hours_per_day(budget, hours, 0), do: budget - hours
   def hours_per_day(budget, hours, days_left), do: (budget - hours) / days_left
 
-  @spec hours_per_day(%{budget: number, hours: number}, number) :: float
+  @spec hours_per_day(%{budget: number, hours: number}, number) :: number
   def hours_per_day(%{budget: budget, hours: hours}, weekdays_left) do
     budget
     |> hours_per_day(hours, weekdays_left)
-    |> Float.round(2)
+    |> maybe_round()
   end
+
+  defp maybe_round(number) when is_integer(number), do: number
+  defp maybe_round(number), do: Float.round(number, 2)
 
   defp nice_hours(hours) do
     minutes = trunc(hours * 60)

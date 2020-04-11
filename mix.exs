@@ -55,7 +55,7 @@ defmodule Dash.MixProject do
       # json and api
       {:httpoison, "~> 1.4"},
       {:poison, "~> 4.0"},
-      {:retry, "~> 0.13.0"},
+      {:retry, "~> 0.14.0"},
       {:timex, "~> 3.0"},
       # Auth
       {:comeonin, "~> 5.1"},

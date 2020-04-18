@@ -17,10 +17,10 @@
     # {:my_arbitrary_check, command: "npm test", cd: "assets"},
 
     # {:cypress, command: "mix cypress.run"},
-    {:ex_coveralls,
-     command: "mix coveralls.html",
-     require_files: ["test/test_helper.exs"],
-     env: %{"MIX_ENV" => "test"}},
+    # {:ex_coveralls,
+    #  command: "mix coveralls.html",
+    #  require_files: ["test/test_helper.exs"],
+    #  env: %{"MIX_ENV" => "test"}},
     {:sobelow, command: "mix sobelow --config"},
     {:credo, command: "mix credo --strict"},
     {:ex_unit, command: "mix test", env: %{"MIX_ENV" => "test"}}

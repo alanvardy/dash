@@ -14,8 +14,8 @@ defmodule Dash.Github.Requester do
 
   # Server
 
-  # 60 Seconds
-  @refresh_time 90_000
+  # 5 minutes
+  @refresh_time 300_000
 
   @doc "Create GenServer, make sure user exists"
   def init(state) do

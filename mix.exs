@@ -6,7 +6,7 @@ defmodule Dash.MixProject do
     [
       app: :dash,
       version: "0.1.0",
-      elixir: "~> 1.10",
+      elixir: "~> 1.10.2",
       elixirc_paths: elixirc_paths(Mix.env()),
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [

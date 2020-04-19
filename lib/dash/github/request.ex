@@ -1,14 +1,14 @@
 defmodule Dash.Github.Request do
   @moduledoc "For calling GitHub API"
   alias Dash.Accounts.User
-  alias Dash.Github.{FakeData, Issues}
+  alias Dash.Github.FakeData
   use Retry
 
-  @spec get_issues(User.t()) :: {:ok, Issues.t()} | {:error, binary}
+  @spec get_issues(User.t()) :: {:ok, [map]} | {:error, binary}
   def get_issues(user) do
     case add_issues(user) do
       {:error, message} -> {:error, message}
-      response -> {:ok, %Issues{response: response, user: user}}
+      issues -> {:ok, issues}
     end
   end
 
@@ -55,7 +55,7 @@ defmodule Dash.Github.Request do
   end
 
   # make a get request to the Github API
-  @spec get(String.t(), String.t(), String.t()) :: {:ok, any, any} | {:error, any}
+  @spec get(String.t(), String.t(), String.t()) :: {:ok, map, any} | {:error, any}
   def get(address, username, token) do
     case Application.get_env(:dash, :env) do
       :test ->

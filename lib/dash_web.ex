@@ -1,6 +1,9 @@
 defmodule DashWeb do
   alias DashWeb.FallbackController
-  use Boundary, deps: [Dash], exports: [Endpoint]
+
+  use Boundary,
+    deps: [Dash.{Accounts, Backgrounds, Github, Harvest}],
+    exports: [Endpoint]
 
   @moduledoc """
   The entrypoint for defining your web interface, such

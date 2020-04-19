@@ -1,11 +1,11 @@
-defmodule DashTest do
+defmodule Dash.HarvestTest do
   @moduledoc false
   alias Dash.Harvest
   alias Dash.Harvest.Report
   import Dash.Factory
   use Dash.DataCase, async: true
 
-  describe "get_harvest/1" do
+  describe "get/1" do
     test "errors when passed a nil value" do
       assert Harvest.get(nil) == {:error, "No harvest credentials"}
     end

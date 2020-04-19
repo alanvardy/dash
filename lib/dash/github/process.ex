@@ -3,16 +3,16 @@ defmodule Dash.Github.Process do
   Processes Github API response to only extract the keys/data that we want
   """
   alias Dash.Accounts.User
-  alias Dash.Github.{Issues, Request}
+  alias Dash.Github.Request
 
-  @spec issues(Issues.t()) :: {:ok, [map]} | {:error, binary}
-  def issues(%Issues{response: nil}) do
+  @spec issues([map] | nil, User.t()) :: {:ok, [map]} | {:error, binary}
+  def issues(nil, _user) do
     {:error, "No response to process"}
   end
 
-  def issues(%Issues{response: response, user: user}) do
+  def issues(issues, user) do
     issues =
-      response
+      issues
       |> Enum.filter(fn issue -> filter_issues(issue, user) end)
       |> Enum.map(fn issue -> process_issue(issue, user) end)
       |> Enum.filter(fn issue -> filter_pull_requests(issue, user) end)

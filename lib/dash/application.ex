@@ -1,5 +1,5 @@
 defmodule Dash.Application do
-  use Boundary, deps: [Dash, DashWeb]
+  use Boundary, deps: [DashWeb], exports: []
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false

@@ -1,5 +1,7 @@
 defmodule Dash.Harvest do
+  use Boundary, deps: [Dash.{Accounts, Repo}], exports: []
   @moduledoc "For interacting with the Harvest API"
+
   alias Dash.Accounts.User
   alias Dash.Harvest.{Credentials, Filter, Report, Request, Server, Time}
 

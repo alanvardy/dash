@@ -1,7 +1,7 @@
-defmodule Dash.Api.Backgrounds do
+defmodule Dash.Backgrounds do
   @moduledoc "Nice pretty backgrounds for users"
 
-  alias Dash.Api.Backgrounds.{Background, Query, Unsplash}
+  alias Dash.Backgrounds.{Background, Query, Unsplash}
 
   def get(user) do
     %Background{}

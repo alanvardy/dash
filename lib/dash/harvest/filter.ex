@@ -1,6 +1,6 @@
-defmodule Dash.Api.Harvest.Filter do
+defmodule Dash.Harvest.Filter do
   @moduledoc "Turns raw API data into something usable"
-  alias Dash.Api.Harvest.{Report, Time}
+  alias Dash.Harvest.{Report, Time}
 
   @doc "Cherry pick the report attributes we want"
   @spec report_keys(Report.t()) :: {:ok, Report.t()}

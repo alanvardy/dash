@@ -1,4 +1,4 @@
-defmodule Dash.Api.Harvest.FakeData do
+defmodule Dash.Harvest.FakeData do
   @moduledoc """
   Fake API data for development testing and Travis CI
   """

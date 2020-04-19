@@ -1,4 +1,4 @@
-defmodule Dash.Api.Github.Issues do
+defmodule Dash.Github.Issues do
   @moduledoc "Issues and Pull Requests from GitHub"
   alias Dash.Accounts.User
 

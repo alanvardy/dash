@@ -1,4 +1,4 @@
-defmodule Dash.Api.Github.FakeData do
+defmodule Dash.Github.FakeData do
   @moduledoc """
   Fake API data for development testing and Travis CI
   """

@@ -1,13 +1,13 @@
 defmodule DashWeb.UserController do
   use DashWeb, :controller
 
-  alias Dash.{Accounts, Api}
+  alias Dash.{Accounts, Backgrounds}
   alias Dash.Accounts.{Policy, User}
   alias DashWeb.Auth
 
   plug :authenticate when action in [:index, :edit, :update, :delete]
 
-  @spec new(Plug.Conn.t(), any) :: Plug.Conn.t()
+  @spec new(Plug.Conn.t(), map) :: Plug.Conn.t()
   def new(conn, _params) do
     user = Accounts.get_current_user(conn)
 
@@ -41,7 +41,7 @@ defmodule DashWeb.UserController do
     current_user = Accounts.get_current_user(conn)
 
     with :ok <- permit(Policy, :edit, user, current_user) do
-      background = Api.get_background(current_user)
+      background = Backgrounds.get(current_user)
       changeset = Accounts.change_user(user)
       render(conn, "edit.html", user: user, changeset: changeset, background: background)
     end
@@ -65,6 +65,7 @@ defmodule DashWeb.UserController do
     end
   end
 
+  @spec delete(Plug.Conn.t(), map) :: {:error, any} | Plug.Conn.t()
   def delete(conn, %{"id" => id}) do
     current_user = Accounts.get_current_user(conn)
     user = Accounts.get_user!(id)
@@ -89,6 +90,7 @@ defmodule DashWeb.UserController do
     end
   end
 
+  @spec handle_unauthorized(Plug.Conn.t()) :: Plug.Conn.t()
   def handle_unauthorized(conn) do
     conn
     |> put_flash(:warning, "You are not authorized to access this page")

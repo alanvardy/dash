@@ -2,7 +2,7 @@ defmodule DashWeb.SettingsControllerTest do
   @moduledoc false
   alias Dash.Accounts
   import Dash.Factory
-  import Dash.Helpers
+  import DashWeb.Helpers
   use DashWeb.ConnCase, async: true
 
   describe "settings" do

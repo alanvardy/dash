@@ -1,7 +1,7 @@
 defmodule DashWeb.PageControllerTest do
   @moduledoc false
   import Dash.Factory
-  import Dash.Helpers
+  import DashWeb.Helpers
   use DashWeb.ConnCase, async: true
 
   describe "Index" do

@@ -1,7 +1,7 @@
 defmodule DashWeb.SettingsController do
   use DashWeb, :controller
 
-  alias Dash.{Accounts, Api}
+  alias Dash.{Accounts, Backgrounds}
   alias Dash.Accounts.Policy
 
   plug :authenticate when action in [:edit, :update]
@@ -13,7 +13,7 @@ defmodule DashWeb.SettingsController do
 
     with :ok <- permit(Policy, :edit, settings, user) do
       changeset = Accounts.change_settings(settings)
-      background = Api.get_background(user)
+      background = Backgrounds.get(user)
       render(conn, "edit.html", settings: settings, changeset: changeset, background: background)
     end
   end

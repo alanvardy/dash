@@ -1,7 +1,7 @@
-defmodule Dash.Api.Github do
+defmodule Dash.Github do
   @moduledoc "Queries the GitHub API"
   alias Dash.Accounts.User
-  alias Dash.Api.Github.{Credentials, Process, Request}
+  alias Dash.Github.{Credentials, Process, Request, Server}
 
   @spec issues(User.t()) :: {:ok, [map]} | {:error, binary}
   def issues(user) do
@@ -13,4 +13,7 @@ defmodule Dash.Api.Github do
       {:error, message} -> {:error, message}
     end
   end
+
+  defdelegate fetch(user_id), to: Server
+  defdelegate update(pid, user_id), to: Server
 end

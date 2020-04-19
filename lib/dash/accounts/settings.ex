@@ -1,22 +1,12 @@
 defmodule Dash.Accounts.Settings do
-  use Ecto.Schema
+  use TypedEctoSchema
   @moduledoc "Stores all user settings"
 
   alias Dash.Accounts.User
   import Ecto.Changeset
 
-  @type t :: %__MODULE__{
-          id: pos_integer | nil,
-          harvest_account_id: integer | nil,
-          harvest_api_key: String.t() | nil,
-          github_username: String.t() | nil,
-          github_api_token: String.t() | nil,
-          user_id: pos_integer | nil,
-          user: User.t() | nil
-        }
-
-  schema "settings" do
-    field :harvest_account_id, :integer
+  typed_schema "settings" do
+    field(:harvest_account_id, :integer) :: pos_integer | nil
     field :harvest_api_key, :string
     field :github_username, :string
     field :github_api_token, :string

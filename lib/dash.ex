@@ -1,4 +1,6 @@
 defmodule Dash do
+  use Boundary, deps: [], exports: [Accounts, Backgrounds, Github, Harvest]
+
   @moduledoc """
   Dash keeps the contexts that define your domain
   and business logic.

@@ -17,7 +17,7 @@ defmodule Dash.HarvestTest do
     end
 
     test "returns a struct when passed a valid user" do
-      user = insert(:user)
+      user = insert(:harvest_user)
 
       assert {:ok, %Report{}} = Harvest.get(user)
     end

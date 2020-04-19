@@ -12,7 +12,7 @@ defmodule Dash.GithubRequesterTest do
 
   describe "handle_info" do
     test "gets issues and sends to the parent" do
-      state = %{parent: self(), user: insert(:user)}
+      state = %{parent: self(), user: insert(:github_user)}
       assert Requester.handle_info(:tick, state) == {:noreply, state}
       assert_received {:"$gen_cast", {:update_issues, []}}
     end

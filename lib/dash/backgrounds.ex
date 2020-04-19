@@ -1,4 +1,5 @@
 defmodule Dash.Backgrounds do
+  use Boundary, deps: [], exports: []
   @moduledoc "Nice pretty backgrounds for users"
 
   alias Dash.Backgrounds.{Background, Query, Unsplash}

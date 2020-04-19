@@ -27,11 +27,6 @@ defmodule DashWeb.PageView do
     end
   end
 
-  @spec nice_status(map) :: binary | nil
-  def nice_status(%{status: nil, state: nil}), do: nil
-  def nice_status(%{status: nil, state: state}), do: capitalize(state)
-  def nice_status(%{status: status}), do: capitalize(status)
-
   def weekdays_left(%{time: %{weekdays_left: weekdays_left}}) do
     weekdays_left
   end
@@ -43,4 +38,21 @@ defmodule DashWeb.PageView do
   end
 
   def month(_), do: "current month"
+
+  def maybe_white_text(hex_color) do
+    ~r/.{2}/
+    |> Regex.scan(hex_color)
+    |> List.flatten()
+    |> Enum.map(&hex_to_int/1)
+    |> Enum.reduce(fn x, acc -> x + acc end)
+    |> case do
+      num when num < 450 -> "has-text-white"
+      _ -> ""
+    end
+  end
+
+  defp hex_to_int(hex) do
+    <<number>> = Base.decode16!(hex, case: :mixed)
+    number
+  end
 end

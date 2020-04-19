@@ -38,7 +38,7 @@ jobs:
       - run: cp config/dev.secret.exs.example config/dev.secret.exs
       - uses: actions/setup-elixir@v1.0.0
         with:
-          otp-version: 22.1.8
-          elixir-version: 1.10.0
+          otp-version: 22.3
+          elixir-version: 1.10.2
       - run: mix deps.get
       - run: MIX_ENV=dev mix check --only dialyzer

@@ -5,10 +5,9 @@ defmodule Dash.Github.RateLimit do
   Current rate limit as of Apr 2020 is 5k/hour
   """
 
-  alias Dash.Accounts.User
-  alias Dash.Github.Request
+  alias Dash.Github.{Request, User}
 
-  @spec check_remaining(Dash.Accounts.User.t()) :: :ok | {:error, :rate_limit}
+  @spec check_remaining(User.t()) :: :ok | {:error, :rate_limit}
   def check_remaining(user) do
     %User{settings: %{github_username: username, github_api_token: token}} = user
     env = Application.get_env(:dash, :env)

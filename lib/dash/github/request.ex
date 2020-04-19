@@ -1,7 +1,6 @@
 defmodule Dash.Github.Request do
   @moduledoc "For calling GitHub API"
-  alias Dash.Accounts.User
-  alias Dash.Github.FakeData
+  alias Dash.Github.{FakeData, User}
   use Retry
 
   @spec get_issues(User.t()) :: {:ok, [map]} | {:error, binary}

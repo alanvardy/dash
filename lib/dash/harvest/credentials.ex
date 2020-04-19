@@ -1,7 +1,6 @@
 defmodule Dash.Harvest.Credentials do
   @moduledoc "Checks user credentials for Harvest"
-  alias Dash.Accounts.User
-  alias Dash.Harvest.Report
+  alias Dash.Harvest.{Report, User}
 
   @spec add(User.t()) :: {:ok, Report.t()} | {:error, binary}
   def add(%User{

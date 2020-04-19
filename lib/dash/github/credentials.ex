@@ -1,6 +1,6 @@
 defmodule Dash.Github.Credentials do
   @moduledoc "Checks GitHub credentials"
-  alias Dash.Accounts.User
+  alias Dash.Github.User
 
   @spec(exist?(User.t()) :: :ok, {:error, binary})
   def exist?(%User{settings: %{github_username: username, github_api_token: token}})

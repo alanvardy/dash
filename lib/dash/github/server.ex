@@ -1,7 +1,6 @@
 defmodule Dash.Github.Server do
   @moduledoc "For handling and storing requests to the GitHub API"
   use GenServer
-  alias Dash.Accounts.User
   alias Dash.Github.{Requester, User}
   alias Dash.{ProcessRegistry, Repo}
   import Ecto.Query

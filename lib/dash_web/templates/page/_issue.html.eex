@@ -31,9 +31,6 @@
                 <i class="fas fa-hourglass"></i>
                 <%= @issue.age |> nice_age() %>
               </div>
-              <div class="has-text-right">
-                <%= nice_status(@issue) %>
-              </div>
             </div>
           </div>
         </div>

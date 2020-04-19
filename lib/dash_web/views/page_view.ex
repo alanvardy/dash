@@ -26,12 +26,6 @@ defmodule DashWeb.PageView do
         "#{div(result, 86_400)} days"
     end
   end
-
-  @spec nice_status(map) :: binary | nil
-  def nice_status(%{status: nil, state: nil}), do: nil
-  def nice_status(%{status: nil, state: state}), do: capitalize(state)
-  def nice_status(%{status: status}), do: capitalize(status)
-
   def weekdays_left(%{time: %{weekdays_left: weekdays_left}}) do
     weekdays_left
   end

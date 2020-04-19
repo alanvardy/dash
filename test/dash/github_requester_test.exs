@@ -1,6 +1,6 @@
 defmodule Dash.GithubRequesterTest do
   @moduledoc false
-  alias Dash.Api.Github.Requester
+  alias Dash.Github.Requester
   use Dash.DataCase, async: true
   import Dash.Factory
 

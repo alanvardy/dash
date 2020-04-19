@@ -1,5 +1,6 @@
 defmodule DashWeb do
   alias DashWeb.FallbackController
+  use Boundary, deps: [Dash], exports: [Endpoint]
 
   @moduledoc """
   The entrypoint for defining your web interface, such

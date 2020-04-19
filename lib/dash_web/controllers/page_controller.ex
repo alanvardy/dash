@@ -1,9 +1,8 @@
 defmodule DashWeb.PageController do
   use DashWeb, :controller
 
-  alias Dash.Accounts
+  alias Dash.{Accounts, Backgrounds}
   alias Dash.Accounts.{Policy, User}
-  alias Dash.Api
 
   plug :authenticate when action in [:new]
 
@@ -16,7 +15,7 @@ defmodule DashWeb.PageController do
         render(conn, "index.html")
 
       has_settings(user) ->
-        background = Api.get_background(user)
+        background = Backgrounds.get(user)
         render(conn, "index.html", background: background)
 
       true ->
@@ -31,7 +30,7 @@ defmodule DashWeb.PageController do
     user = Accounts.get_current_user(conn)
 
     with :ok <- permit(Policy, :new, :background, user) do
-      Api.new_background(user)
+      Backgrounds.new(user)
       redirect(conn, to: "/")
     end
   end

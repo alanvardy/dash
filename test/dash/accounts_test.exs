@@ -3,7 +3,7 @@ defmodule Dash.AccountsTest do
   alias Dash.Accounts
   alias Dash.Accounts.Settings
   alias Dash.Accounts.User
-  import Dash.Helpers
+  import DashWeb.Helpers
   import Dash.Factory
   use Dash.DataCase, async: true
 

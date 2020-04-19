@@ -1,7 +1,7 @@
-defmodule Dash.Api.Harvest.Request do
+defmodule Dash.Harvest.Request do
   @moduledoc "Makes requests to the Harvest API"
   use Retry
-  alias Dash.Api.Harvest.{FakeData, Report}
+  alias Dash.Harvest.{FakeData, Report}
   @options [ssl: [{:versions, [:"tlsv1.2"]}], recv_timeout: 5000]
 
   @doc "Pull in all projects as a map"
@@ -26,7 +26,8 @@ defmodule Dash.Api.Harvest.Request do
   defp get(%Report{keys: keys}, address, key) do
     case Application.get_env(:dash, :env) do
       :test ->
-        {:ok, FakeData.generate(address) |> Map.get(key)}
+        data = address |> FakeData.generate() |> Map.get(key)
+        {:ok, data}
 
       # coveralls-ignore-start
       _ ->

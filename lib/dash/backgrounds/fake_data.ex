@@ -1,4 +1,4 @@
-defmodule Dash.Api.Backgrounds.FakeData do
+defmodule Dash.Backgrounds.FakeData do
   @moduledoc """
   Fake API data for development testing and CI
   """

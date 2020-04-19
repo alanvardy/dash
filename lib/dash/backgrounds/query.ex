@@ -1,7 +1,7 @@
-defmodule Dash.Api.Backgrounds.Query do
+defmodule Dash.Backgrounds.Query do
   @moduledoc "For interacting with backgrounds table"
 
-  alias Dash.Api.Backgrounds.{Background, Store}
+  alias Dash.Backgrounds.{Background, Store}
 
   @spec update_background(Background.t()) :: map()
   def update_background(%Background{background: background, needs_update: false}), do: background

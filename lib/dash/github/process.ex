@@ -1,9 +1,9 @@
-defmodule Dash.Api.Github.Process do
+defmodule Dash.Github.Process do
   @moduledoc """
   Processes Github API response to only extract the keys/data that we want
   """
   alias Dash.Accounts.User
-  alias Dash.Api.Github.{Issues, Request}
+  alias Dash.Github.{Issues, Request}
 
   @spec issues(Issues.t()) :: {:ok, [map]} | {:error, binary}
   def issues(%Issues{response: nil}) do

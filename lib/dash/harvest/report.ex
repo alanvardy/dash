@@ -1,4 +1,4 @@
-defmodule Dash.Api.Harvest.Report do
+defmodule Dash.Harvest.Report do
   @moduledoc "Struct for building Harvest API reports"
   @type t :: %__MODULE__{
           keys: map() | nil,

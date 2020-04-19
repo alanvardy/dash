@@ -1,8 +1,8 @@
-defmodule Dash.Api.Harvest.Server do
+defmodule Dash.Github.Server do
   @moduledoc "For handling and storing requests to the GitHub API"
   use GenServer
   alias Dash.Accounts.User
-  alias Dash.Api.Harvest.Requester
+  alias Dash.Github.Requester
   alias Dash.{ProcessRegistry, Repo}
   import Ecto.Query
   require Logger
@@ -14,19 +14,18 @@ defmodule Dash.Api.Harvest.Server do
     find_or_create_server(user_id)
   end
 
-  @spec update(atom | pid | {atom, any} | {:via, atom, any}, any) :: :ok
-  def update(pid, reports) do
-    GenServer.cast(pid, {:update_reports, reports})
+  def update(pid, issues) do
+    GenServer.cast(pid, {:update_issues, issues})
   end
 
   @spec fetch(pos_integer) :: [map] | nil
   def fetch(user_id) do
     pid = find_or_create_server(user_id)
-    GenServer.call(pid, :reports)
+    GenServer.call(pid, :issues)
   end
 
   defp find_or_create_server(user_id) do
-    server_name = "server-harvest-#{user_id}"
+    server_name = "server-github-#{user_id}"
 
     case Registry.lookup(ProcessRegistry, server_name) do
       # Server does not exist for user
@@ -48,19 +47,19 @@ defmodule Dash.Api.Harvest.Server do
     case get_user(user_id) do
       {:ok, user} ->
         Requester.start_link(self(), user)
-        {:ok, %{reports: nil}}
+        {:ok, %{issues: nil}}
 
       {:error, :not_found} ->
         {:stop, "User does not exist"}
     end
   end
 
-  def handle_call(:reports, _from, %{reports: reports} = state) do
-    {:reply, reports, state}
+  def handle_call(:issues, _from, %{issues: issues} = state) do
+    {:reply, issues, state}
   end
 
-  def handle_cast({:update_reports, reports}, state) do
-    {:noreply, %{state | reports: reports}}
+  def handle_cast({:update_issues, issues}, state) do
+    {:noreply, %{state | issues: issues}}
   end
 
   @doc "For catching unknown messages"

@@ -1,19 +1,10 @@
 defmodule Dash.Accounts.User do
-  use Ecto.Schema
+  use TypedEctoSchema
   @moduledoc "Site user"
   alias Dash.Accounts.Settings
   import Ecto.Changeset
 
-  @type t :: %__MODULE__{
-          id: integer | nil,
-          email: String.t() | nil,
-          name: String.t() | nil,
-          # password: String.t(),
-          password_hash: String.t() | nil,
-          settings: map() | nil
-        }
-
-  schema "users" do
+  typed_schema "users" do
     field :email, :string
     field :name, :string
     field :password, :string, virtual: true

@@ -104,7 +104,7 @@ defmodule Dash.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_user(attrs \\ %{}) do
+  def create_user(attrs) do
     Multi.new()
     |> Multi.insert(:user, User.changeset(%User{}, attrs))
     |> Multi.insert(:settings, fn %{user: user} ->
@@ -166,6 +166,7 @@ defmodule Dash.Accounts do
     User.changeset(user, %{})
   end
 
+  @spec change_settings(Dash.Accounts.Settings.t()) :: Ecto.Changeset.t()
   def change_settings(%Settings{} = settings) do
     Settings.changeset(settings, %{})
   end

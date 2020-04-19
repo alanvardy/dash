@@ -1,7 +1,7 @@
-defmodule Dash.Api.Harvest do
+defmodule Dash.Harvest do
   @moduledoc "For interacting with the Harvest API"
   alias Dash.Accounts.User
-  alias Dash.Api.Harvest.{Credentials, Filter, Report, Request, Time}
+  alias Dash.Harvest.{Credentials, Filter, Report, Request, Server, Time}
 
   @spec get(User.t()) :: {:ok, Report.t()} | {:error, binary}
   def get(user) do
@@ -18,4 +18,7 @@ defmodule Dash.Api.Harvest do
       {:error, message} -> {:error, message}
     end
   end
+
+  defdelegate fetch(user_id), to: Server
+  defdelegate update(pid, user_id), to: Server
 end

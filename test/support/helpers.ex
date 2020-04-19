@@ -1,4 +1,4 @@
-defmodule Dash.Helpers do
+defmodule DashWeb.Helpers do
   @moduledoc "Test helpers"
   use Phoenix.ConnTest
   alias DashWeb.Router.Helpers, as: Routes

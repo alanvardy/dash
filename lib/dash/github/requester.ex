@@ -1,22 +1,21 @@
-defmodule Dash.Api.Harvest.Requester do
-  @moduledoc "For pulling information from the Harvest api"
+defmodule Dash.Github.Requester do
+  @moduledoc "For pulling information from the GitHub api"
   use GenServer
   require Logger
-  alias Dash.Accounts.User
-  alias Dash.Api
-  alias Dash.Api.Harvest.Server
+  alias Dash
+  alias Dash.Github
 
   # Client
 
-  @spec start_link(pid, User.t()) :: :ignore | {:error, any} | {:ok, pid}
-  def start_link(parent_pid, user) do
-    GenServer.start_link(__MODULE__, %{parent: parent_pid, user: user})
+  @spec start_link(any, any) :: :ignore | {:error, any} | {:ok, pid}
+  def start_link(pid, user) do
+    GenServer.start_link(__MODULE__, %{parent: pid, user: user})
   end
 
   # Server
 
   # 60 Seconds
-  @refresh_time 60_000
+  @refresh_time 90_000
 
   @doc "Create GenServer, make sure user exists"
   def init(state) do
@@ -26,12 +25,12 @@ defmodule Dash.Api.Harvest.Requester do
 
   @doc "Tick refreshes data from the API"
   def handle_info(:tick, %{parent: parent, user: user} = state) do
-    case Api.get_harvest(user) do
-      {:ok, reports} ->
-        Server.update(parent, reports)
+    case Github.issues(user) do
+      {:ok, issues} ->
+        Github.update(parent, issues)
 
       {:error, message} ->
-        Logger.error("Harvest server error in #{__MODULE__}: #{inspect(message)}")
+        Logger.error("Github server error in #{__MODULE__}: #{inspect(message)}")
     end
 
     Process.send_after(self(), :tick, @refresh_time)

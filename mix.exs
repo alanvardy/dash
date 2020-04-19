@@ -16,7 +16,7 @@ defmodule Dash.MixProject do
         "coveralls.html": :test
       ],
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
+      compilers: [:boundary, :phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
@@ -74,7 +74,9 @@ defmodule Dash.MixProject do
       {:excoveralls, "~> 0.10", only: :test, runtime: false},
       {:ex_doc, "~> 0.21", only: :dev, runtime: false},
       {:ex_dokku, "~> 0.1.0", only: :dev},
-      {:observer_cli, "~> 1.5"}
+      {:observer_cli, "~> 1.5"},
+      {:typed_ecto_schema, "~> 0.1.1"},
+      {:boundary, "~> 0.4.0", runtime: false}
     ]
   end
 

@@ -1,4 +1,4 @@
-defmodule Dash.Api.Github.Credentials do
+defmodule Dash.Github.Credentials do
   @moduledoc "Checks GitHub credentials"
   alias Dash.Accounts.User
 

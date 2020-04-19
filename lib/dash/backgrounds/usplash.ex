@@ -1,7 +1,7 @@
-defmodule Dash.Api.Backgrounds.Unsplash do
+defmodule Dash.Backgrounds.Unsplash do
   @moduledoc "Pulls background data from Unsplash API"
 
-  alias Dash.Api.Backgrounds.{Background, FakeData}
+  alias Dash.Backgrounds.{Background, FakeData}
 
   @options [
     ssl: [{:versions, [:"tlsv1.2"]}],

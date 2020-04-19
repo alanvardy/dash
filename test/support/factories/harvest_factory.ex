@@ -3,7 +3,8 @@ defmodule Dash.HarvestFactory do
   defmacro __using__(_opts) do
     quote do
       alias Dash.Harvest.{Settings, User}
-      @spec harvest_user_factory() :: Harvest.User.t()
+
+      @spec harvest_user_factory() :: User.t()
       def harvest_user_factory do
         %User{
           settings: build(:harvest_settings)

@@ -10,7 +10,7 @@
               </div>
               <div class="is-size-6 has-text-white">
                 <%= for label <- @issue.labels do %>
-                <span class="tag has-border-white" style="background-color: #<%= label.color %>;">
+                <span class="tag has-border-white <%= maybe_white_text(label.color)%>" style="background-color: #<%= label.color %>;">
                   <%= capitalize(label.name) %>
                 </span>
                 <% end %>

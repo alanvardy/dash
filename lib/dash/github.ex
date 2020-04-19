@@ -17,6 +17,8 @@ defmodule Dash.Github do
     end
   end
 
+  @spec fetch(pos_integer) :: nil | [map]
   defdelegate fetch(user_id), to: Server
+  @spec update(atom | pid | {atom, any} | {:via, atom, any}, any) :: :ok
   defdelegate update(pid, issues), to: Server
 end

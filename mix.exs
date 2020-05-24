@@ -77,7 +77,7 @@ defmodule Dash.MixProject do
       {:observer_cli, "~> 1.5"},
       {:typed_ecto_schema, "~> 0.1.1"},
       {:boundary, "~> 0.4.0", runtime: false},
-      {:stream_data, "~> 0.1", only: :test}
+      {:stream_data, "~> 0.1", only: [:dev, :test]}
     ]
   end
 

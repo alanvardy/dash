@@ -75,8 +75,12 @@ defmodule Dash.Harvest.Time do
   end
 
   @spec hours_per_day(integer(), integer(), integer()) :: number()
+  def hours_per_day(0, _hours, _days_left), do: 0
   def hours_per_day(budget, hours, 0), do: budget - hours
-  def hours_per_day(budget, hours, days_left), do: (budget - hours) / days_left
+
+  def hours_per_day(budget, hours, days_left) when days_left in 0..31 do
+    (budget - hours) / days_left
+  end
 
   @spec hours_per_day(%{budget: number, hours: number}, number) :: number
   def hours_per_day(%{budget: budget, hours: hours}, weekdays_left) do
@@ -88,13 +92,18 @@ defmodule Dash.Harvest.Time do
   defp maybe_round(number) when is_integer(number), do: number
   defp maybe_round(number), do: Float.round(number, 2)
 
-  defp nice_hours(hours) do
+  @spec nice_hours(number) :: String.t()
+  def nice_hours(hours) when hours > 0 do
     minutes = trunc(hours * 60)
+    hours = div(minutes, 60)
+    remaining_minutes = rem(minutes, 60)
 
-    if minutes >= 60 do
-      "#{div(minutes, 60)}h:#{rem(minutes, 60)}m"
-    else
-      "#{minutes}m"
+    cond do
+      hours == 0 -> "#{minutes}m"
+      remaining_minutes > 9 -> "#{hours}h:#{remaining_minutes}m"
+      true -> "#{hours}h:0#{remaining_minutes}m"
     end
   end
+
+  def nice_hours(_hours), do: "0"
 end

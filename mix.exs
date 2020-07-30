@@ -62,7 +62,7 @@ defmodule Dash.MixProject do
       {:pbkdf2_elixir, "~> 1.0"},
       {:bodyguard, "~> 2.4"},
       # Live View
-      {:phoenix_live_view, "~> 0.12.0"},
+      {:phoenix_live_view, "~> 0.14.0"},
       {:floki, ">= 0.0.0", only: :test},
       # Testing
       {:ex_machina, "~> 2.3", only: :test},
